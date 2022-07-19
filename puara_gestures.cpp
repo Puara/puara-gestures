@@ -196,14 +196,6 @@ float PuaraGestures::touchAverage (int * touchArrayStrips, int firstStrip, int l
     return  ((float) sum) / (lastStrip - firstStrip);
 }
 
-float PuaraGestures::touchAverage (int * touchArrayStrips, int firstStrip, int lastStrip) {
-    int sum = 0;
-    for (int i = firstStrip; i < lastStrip-1; ++i)
-      sum += (float)touchArrayStrips[i];
-      
-    return  ((float) sum) / (lastStrip - firstStrip);
-}
-
 void PuaraGestures::blobDetection1D (int *discrete_touch, int touchSize) {
     blobAmount = 0;
     int sizeCounter = 0;
