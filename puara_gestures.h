@@ -47,14 +47,11 @@ class PuaraGestures {
             int blobPos[4];     // starting position (index) of each blob
             float blobSize[4];  // "size" (amount of stripes) of each blob
         void blobDetection1D (int *discrete_touch, int touchSize);
-        float leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer);
         const int leakyBrushFreq = 100; // leaking frequency (Hz)
         unsigned long leakyBrushTimer = 0;
         const int leakyRubFreq = 100;
         unsigned long leakyRubTimer = 0;
         int brushCounter[4];
-        const int leakyShakeFreq = 10;
-        unsigned long leakyShakeTimer[3];
         float arrayAverageZero (float * Array, int ArraySize);
         void bitShiftArrayL (int * origArray, int * shiftedArray, int arraySize, int shift);
     
