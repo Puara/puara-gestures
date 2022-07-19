@@ -40,7 +40,6 @@ class PuaraGestures {
         int touchSizeEdge = 4;  // amount of touch stripes for top and bottom portions (arbitrary)
         float touchAverage (float * touchArrayStrips, int firstStrip, int lastStrip);
         float touchAverage (int * touchArrayStrips, int firstStrip, int lastStrip);
-        float touchAverage (int * touchArrayStrips, int firstStrip, int lastStrip);
         int lastState_blobPos[4];
             int maxBlobs = 4;   // max amount of blobs to be detected
             int blobAmount;     // amount of detected blobs
