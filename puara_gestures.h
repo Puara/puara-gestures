@@ -68,7 +68,7 @@ class PuaraGestures {
         unsigned int buttonFilterPeriod = 10;
         long buttonTimer;
         unsigned long buttonPressTime;
-        unsigned int buttonThreshold = 870;
+        unsigned int buttonThreshold = 1;
 
     public:
         float leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer);
@@ -95,6 +95,7 @@ class PuaraGestures {
 
         // button
         void updateButton(int buttonValue);
+        void updateTrigButton(int buttonValue);
         unsigned int getButtonCount();
         bool getButtonTouch();
         unsigned int getButtonPressTime();

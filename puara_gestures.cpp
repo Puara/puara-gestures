@@ -368,6 +368,58 @@ void PuaraGestures::updateButton(int buttonValue) {
     }
 }
 
+void PuaraGestures::updateTrigButton(int buttonValue) {
+  long currentTime = esp_timer_get_time()/1000LL;
+    PuaraGestures::buttonValue = buttonValue;
+    if (buttonValue >= PuaraGestures::buttonThreshold) {
+        if (!PuaraGestures::buttonPress) {
+            PuaraGestures::buttonPress = true;
+            PuaraGestures::buttonTimer = currentTime;
+        }
+        if (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonHoldInterval) {
+            PuaraGestures::buttonHold = true;
+        }
+    }
+    else if (PuaraGestures::buttonHold) {
+        PuaraGestures::buttonHold = false;
+        PuaraGestures::buttonPress = false;
+        PuaraGestures::buttonCount = 0;
+    }
+    else {
+        if (PuaraGestures::buttonPress) {
+            PuaraGestures::buttonPress = false;
+            PuaraGestures::buttonPressTime = currentTime - PuaraGestures::buttonTimer;
+            PuaraGestures::buttonTimer = currentTime;
+            PuaraGestures::buttonCount++;
+        }
+    }
+    if (!PuaraGestures::buttonPress && (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonCountInterval)) {
+        switch (PuaraGestures::buttonCount) {
+            case 0:
+                PuaraGestures::buttonTap = 0;
+                PuaraGestures::buttonDtap = 0;
+                PuaraGestures::buttonTtap = 0;
+                break;
+            case 1: 
+                PuaraGestures::buttonTap = 1;
+                PuaraGestures::buttonDtap = 0;
+                PuaraGestures::buttonTtap = 0;
+                break;
+            case 2:
+                PuaraGestures::buttonTap = 0;
+                PuaraGestures::buttonDtap = 1;
+                PuaraGestures::buttonTtap = 0;
+                break;
+            case 3:
+                PuaraGestures::buttonTap = 0;
+                PuaraGestures::buttonDtap = 0;
+                PuaraGestures::buttonTtap = 1;
+                break;
+        }
+        PuaraGestures::buttonCount = 0;
+    }
+}
+
 unsigned int PuaraGestures::getButtonCount() {
     return PuaraGestures::buttonCount;
 }
