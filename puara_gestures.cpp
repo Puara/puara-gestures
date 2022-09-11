@@ -190,7 +190,7 @@ float PuaraGestures::touchAverage (float * touchArrayStrips, int firstStrip, int
 
 float PuaraGestures::touchAverage (int * touchArrayStrips, int firstStrip, int lastStrip) {
     int sum = 0;
-    for (int i = firstStrip; i < lastStrip-1; ++i)
+    for (int i = firstStrip; i < lastStrip; i++)
       sum += (float)touchArrayStrips[i];
       
     return  ((float) sum) / (lastStrip - firstStrip);
