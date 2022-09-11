@@ -172,7 +172,7 @@ void PuaraGestures::updateTouchArray(int *discrete_touch, int touchSize) { // ra
             multiBrush[i] = leakyIntegrator(0, multiBrush[i], 0.6, leakyBrushFreq, leakyBrushTimer);
         } else {
             multiBrush[i] = leakyIntegrator(movement*0.15, multiBrush[i], 0.8, leakyBrushFreq, leakyBrushTimer);
-            multiRub[i] = leakyIntegrator(abs(movement*0.15), multiRub[i], 0.99, leakyRubFreq, leakyRubTimer);
+            multiRub[i] = leakyIntegrator(abs(movement)*0.15, multiRub[i], 0.99, leakyRubFreq, leakyRubTimer);
             brushCounter[i] = 0;
         }
     }
