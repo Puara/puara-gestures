@@ -106,7 +106,7 @@ ImuOrientation::Quaternion ImuOrientation::getOrientation(Quaternion &prev, Axes
     orientation = qam.slerp(orientation, weight);
 
     // use the shortest distance from previous orientation
-    orientation = delayed.getMinimumDistance(orientation);
+    return delayed.getMinimumDistance(orientation);
 }
 
 ImuOrientation::Quaternion ImuOrientation::Quaternion::multiply(Quaternion &q)
