@@ -167,6 +167,7 @@ ImuOrientation::Quaternion ImuOrientation::Quaternion::slerp(Quaternion &q, doub
     o.x = x * cos(theta) + o.x * sin(theta);
     o.y = y * cos(theta) + o.y * sin(theta);
     o.z = z * cos(theta) + o.z * sin(theta);
+    return o;
 }
 
 double ImuOrientation::Quaternion::dotProduct(Quaternion &q)
