@@ -17,8 +17,7 @@
 #ifndef IMU_ORIENTATION_H
 #define IMU_ORIENTATION_H
 
-class ImuOrientation {
-public:
+namespace ImuOrientation {
     // Data structures
     class Quaternion
     {
@@ -27,12 +26,7 @@ public:
         Quaternion(double w, double x, double y, double z): w(w), x(x), y(y), z(z) {}
         Quaternion(Quaternion& q): w(q.w), x(q.x), y(q.y), z(q.z) {}
         ~Quaternion() {}
-        double  w;
-        double  x;
-        double  y;
-        double  z;
-    private:
-        friend ImuOrientation;
+        
         Quaternion multiply(Quaternion &q);
         Quaternion inverse();
         Quaternion conjugate();
@@ -41,7 +35,13 @@ public:
         void normalize();
         Quaternion normalized();
         Quaternion getMinimumDistance(Quaternion &q);
-        static Quaternion copy(Quaternion &q);
+
+        // Quaternion members
+        double  w;
+        double  x;
+        double  y;
+        double  z;
+    private:
     };
 
     /* Only x, y, z set for inputs; roll, tilt and magnitude calculated by this class */
@@ -54,9 +54,9 @@ public:
         double  tilt;
         double  magnitude;
     } Axes;
-    
-    Quaternion getOrientation(Quaternion& prev, Axes accel, Axes mag, Axes gyro, double weight);
-private:
+
+    /* Returns the current orientation as a quaternion */
+    static Quaternion getOrientation(Quaternion &prev, Axes& accel, Axes& mag, Axes& gyro, double weight);
 
 };
 

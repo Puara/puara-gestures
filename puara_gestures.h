@@ -13,17 +13,18 @@
 #include <cmath>
 #include <algorithm>
 #include "esp_timer.h"
+#include "imu_orientation.h"
 
 class PuaraGestures {
     
     private:
 
+        // Intertial measurements
+        const int BUFFER_SIZE = 5;
+        std::deque<float> accelBuffers[3];
+        std::deque<float> gyroBuffers[3];
+        std::deque<float> magBuffers[3];
         // Shake and Jab
-        int queueAmount = 5;          // # of values stored
-        std::deque<float> gyroXArray; // store last values
-        std::deque<float> gyroYArray;
-        std::deque<float> gyroZArray;
-        int arraycounter = 0;
         const int leakyShakeFreq = 10;
         unsigned long leakyShakeTimerX;
         unsigned long leakyShakeTimerY;
@@ -35,6 +36,14 @@ class PuaraGestures {
         float jabY;
         float jabZ;
         int jabThreshold = 10;
+        void updateJabShake();
+        // Orientation
+        const float DECLINATION = -14.14; // Declination at Montreal on 2020-03-12
+        ImuOrientation::Axes accelAxes;
+        ImuOrientation::Axes gyroAxes;
+        ImuOrientation::Axes magAxes;
+        ImuOrientation::Quaternion orientation;
+        void updateOrientation();
 
         // touch array
         int touchSizeEdge = 4;  // amount of touch stripes for top and bottom portions (arbitrary)
@@ -73,14 +82,39 @@ class PuaraGestures {
     public:
         float leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer);
         
+        // Inertial measurement updates (accelerometer, gyroscope, magnetometer)
+        void updateAccel(float accelX, float accelY, float accelZ); // in m/sec^2
+        void updateGyro(float gyroX, float gyroY, float gyroZ); // in rad/sec
+        void updateMag(float magX, float magY, float magZ); // in uTesla
+        void updateInertialGestures(); // Updates shake, jab and orientation
+
+        // General inertial sensor signals
+        float getAccelX(); // in m/s^2, converted from g's
+        float getAccelY();
+        float getAccelZ();
+        float getGyroX(); // in radians per second, converted from DPS
+        float getGyroY();
+        float getGyroZ();
+        float getMagX(); // in uTesla, converted from Gauss
+        float getMagY();
+        float getMagZ();
+        float getYaw();
+        float getPitch();
+        float getRoll();
+
         // Shake and Jab
-        void updateJabShake (float gyroX, float gyroY, float gyroZ); // in radians per second
         float getShakeX();
         float getShakeY();
         float getShakeZ();
         float getJabX();
         float getJabY();
         float getJabZ();
+
+        // Orientation
+        double getOrientationW();
+        double getOrientationX();
+        double getOrientationY();
+        double getOrientationZ();
         
         // touch array
         void updateTouchArray (int *discrete_touch, int touchSize);

@@ -23,7 +23,7 @@ double PI = 3.141592653589793;
 double halfPI = 1.570796326794897;
 double twoPI = 6.283185307179586;
 
-ImuOrientation::Quaternion ImuOrientation::getOrientation(Quaternion &prev, Axes accel, Axes mag, Axes gyro, double weight)
+ImuOrientation::Quaternion ImuOrientation::getOrientation(Quaternion &prev, Axes& accel, Axes& mag, Axes& gyro, double weight)
 {
     // calculate polar representation of accelerometer data
     accel.roll = atan2(accel.z, accel.y);

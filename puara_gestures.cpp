@@ -8,76 +8,115 @@
 
 #include "puara_gestures.h"
 
-  // expect gyro values in radians per second
-  void PuaraGestures::updateJabShake (float gyroX, float gyroY, float gyroZ) {
+void PuaraGestures::updateInertialGestures() {
+  updateJabShake();
+  updateOrientation();
+}
 
-    PuaraGestures::gyroXArray.push_back(gyroX);
-    PuaraGestures::gyroYArray.push_back(gyroY);
-    PuaraGestures::gyroZArray.push_back(gyroZ);
-    if (PuaraGestures::gyroXArray.size() > PuaraGestures::queueAmount) {
-      PuaraGestures::gyroXArray.pop_front();
-      PuaraGestures::gyroYArray.pop_front();
-      PuaraGestures::gyroZArray.pop_front();
-    }
+void PuaraGestures::updateJabShake() {
+  std::deque<float>::iterator minX = std::min_element(gyroBuffers[0].begin(), gyroBuffers[0].end());
+  std::deque<float>::iterator maxX = std::max_element(gyroBuffers[0].begin(), gyroBuffers[0].end());
+  std::deque<float>::iterator minY = std::min_element(gyroBuffers[1].begin(), gyroBuffers[1].end());
+  std::deque<float>::iterator maxY = std::max_element(gyroBuffers[1].begin(), gyroBuffers[1].end());
+  std::deque<float>::iterator minZ = std::min_element(gyroBuffers[2].begin(), gyroBuffers[2].end());
+  std::deque<float>::iterator maxZ = std::max_element(gyroBuffers[2].begin(), gyroBuffers[2].end());
 
-    std::deque<float>::iterator minX = std::min_element(PuaraGestures::gyroXArray.begin(), PuaraGestures::gyroXArray.end());
-    std::deque<float>::iterator maxX = std::max_element(PuaraGestures::gyroXArray.begin(), PuaraGestures::gyroXArray.end());
-    std::deque<float>::iterator minY = std::min_element(PuaraGestures::gyroYArray.begin(), PuaraGestures::gyroYArray.end());
-    std::deque<float>::iterator maxY = std::max_element(PuaraGestures::gyroYArray.begin(), PuaraGestures::gyroYArray.end());
-    std::deque<float>::iterator minZ = std::min_element(PuaraGestures::gyroZArray.begin(), PuaraGestures::gyroZArray.end());
-    std::deque<float>::iterator maxZ = std::max_element(PuaraGestures::gyroZArray.begin(), PuaraGestures::gyroZArray.end());
-
-    float gyroAbsX = std::abs(gyroX);
-    float gyroAbsY = std::abs(gyroY);
-    float gyroAbsZ = std::abs(gyroZ);
+  float gyroAbsX = std::abs(gyroBuffers[0].end());
+  float gyroAbsY = std::abs(gyroBuffers[1].end());
+  float gyroAbsZ = std::abs(gyroBuffers[2].end());
     
-    // Instrument shake
-      if (gyroAbsX > 0.1) {
-        PuaraGestures::shakeX = leakyIntegrator(gyroAbsX/10, PuaraGestures::shakeX, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
-      } else {
-        PuaraGestures::shakeX = leakyIntegrator(0, PuaraGestures::shakeX, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
-        if (PuaraGestures::shakeX < 0.01) {
-            PuaraGestures::shakeX = 0;
-          }
+  // Instrument shake
+  if (gyroAbsX > 0.1) {
+    PuaraGestures::shakeX = leakyIntegrator(gyroAbsX/10, PuaraGestures::shakeX, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
+  } else {
+    PuaraGestures::shakeX = leakyIntegrator(0, PuaraGestures::shakeX, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
+    if (PuaraGestures::shakeX < 0.01) {
+        PuaraGestures::shakeX = 0;
       }
-      if (gyroAbsY > 0.1) {
-        PuaraGestures::shakeY = leakyIntegrator(gyroAbsY/10, PuaraGestures::shakeY, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerY);
-      } else {
-        PuaraGestures::shakeY = leakyIntegrator(0, PuaraGestures::shakeY, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerY);
-        if (PuaraGestures::shakeY < 0.01) {
-            PuaraGestures::shakeY = 0;
-          }
+  }
+  if (gyroAbsY > 0.1) {
+    PuaraGestures::shakeY = leakyIntegrator(gyroAbsY/10, PuaraGestures::shakeY, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerY);
+  } else {
+    PuaraGestures::shakeY = leakyIntegrator(0, PuaraGestures::shakeY, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerY);
+    if (PuaraGestures::shakeY < 0.01) {
+        PuaraGestures::shakeY = 0;
       }
-      if (gyroAbsZ > 0.1) {
-        PuaraGestures::shakeZ = leakyIntegrator(gyroAbsZ/10, PuaraGestures::shakeZ, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerZ);
-      } else {
-        PuaraGestures::shakeZ = leakyIntegrator(0, PuaraGestures::shakeZ, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerZ);
-        if (PuaraGestures::shakeZ < 0.01) {
-            PuaraGestures::shakeZ = 0;
-          }
+  }
+  if (gyroAbsZ > 0.1) {
+    PuaraGestures::shakeZ = leakyIntegrator(gyroAbsZ/10, PuaraGestures::shakeZ, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerZ);
+  } else {
+    PuaraGestures::shakeZ = leakyIntegrator(0, PuaraGestures::shakeZ, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerZ);
+    if (PuaraGestures::shakeZ < 0.01) {
+        PuaraGestures::shakeZ = 0;
       }
-
-    // Instrument jab
-      if (*maxX-*minX > PuaraGestures::jabThreshold) {
-        if (*maxX >= 0 && *minX >= 0) {
-          PuaraGestures::jabX = *maxX - *minX;
-        } else if (*maxX < 0 && *minX < 0) {
-          PuaraGestures::jabX = *minX - *maxX;
-        } else {
-        PuaraGestures::jabX = 0;
-        }
-      }
-      if (*maxY-*minY > 10) {
-        PuaraGestures::jabY = *maxY - *minY;
-      } else {
-        PuaraGestures::jabY = 0;
-      }
-      if (*maxZ-*minZ > 10) {
-        PuaraGestures::jabZ = *maxZ - *minZ;
-      } else {
-        PuaraGestures::jabZ = 0;
+  }
+  // Instrument jab
+  if (*maxX-*minX > PuaraGestures::jabThreshold) {
+    if (*maxX >= 0 && *minX >= 0) {
+      PuaraGestures::jabX = *maxX - *minX;
+    } else if (*maxX < 0 && *minX < 0) {
+      PuaraGestures::jabX = *minX - *maxX;
+    } else {
+    PuaraGestures::jabX = 0;
     }
-  }  
+  }
+  if (*maxY-*minY > 10) {
+    PuaraGestures::jabY = *maxY - *minY;
+  } else {
+    PuaraGestures::jabY = 0;
+  }
+  if (*maxZ-*minZ > 10) {
+    PuaraGestures::jabZ = *maxZ - *minZ;
+  } else {
+    PuaraGestures::jabZ = 0;
+  }
+}
+
+void PuaraGestures::updateOrientation() {
+  orientation = ImuOrientation::getOrientation(orientation, accelAxes, gyroAxes, magAxes, 1.0);
+}
+
+void PuaraGestures::updateAccel(float accelX, float accelY, float accelZ) {
+  accelBuffers[0].push_back(accelX);
+  accelBuffers[1].push_back(accelY);
+  accelBuffers[2].push_back(accelZ);
+  if (accelBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
+    accelBuffers[0].pop_front();
+    accelBuffers[1].pop_front();
+    accelBuffers[2].pop_front();
+  }
+  accelAxes.x = accelX;
+  accelAxes.y = accelY;
+  accelAxes.z = accelZ;
+}
+
+void PuaraGestures::updateGyro(float gyroX, float gyroY, float gyroZ) {        
+  gyroBuffers[0].push_back(gyroX);
+  gyroBuffers[1].push_back(gyroY);
+  gyroBuffers[2].push_back(gyroZ);
+  if (gyroBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
+    gyroBuffers[0].pop_front();
+    gyroBuffers[1].pop_front();
+    gyroBuffers[2].pop_front();
+  }
+  gyroAxes.x = gyroX;
+  gyroAxes.y = gyroY;
+  gyroAxes.z = gyroZ;
+}
+
+void PuaraGestures::updateMag(float magX, float magY, float magZ) {
+  magBuffer[0].push_back(magX);
+  magBuffer[1].push_back(magY);
+  magBuffer[2].push_back(magZ);
+  if (magBuffer[0].size() > PuaraGestures::BUFFER_SIZE) {
+    magBuffer[0].pop_front();
+    magBuffer[1].pop_front();
+    magBuffer[2].pop_front();
+  }
+  magAxes.x = magX;
+  magAxes.y = magY;
+  magAxes.z = magZ;
+}
 
 // Simple leaky integrator implementation
 // Create a unsigned long global variable for time counter for each leak implementation (timer)
@@ -95,29 +134,103 @@ float PuaraGestures::leakyIntegrator (float reading, float old_value, float leak
   return new_value;
 }
 
+float PuaraGestures::getAccelX() {
+  return accelAxes.x;
+};
+
+float PuaraGestures::getAccelY() {
+  return accelAxes.y;
+};
+
+float PuaraGestures::getAccelZ() {
+  return accelAxes.z;
+};
+
+float PuaraGestures::getGyroX() {
+  return gyroAxes.x;
+};
+
+float PuaraGestures::getGyroY() {
+  return gyroAxes.y;
+};
+
+float PuaraGestures::getGyroZ() {
+  return gyroAxes.z;
+};
+
+float PuaraGestures::getMagX() {
+  return magAxes.x;
+};
+
+float PuaraGestures::getMagY() {
+  return magAxes.y;
+};
+
+float PuaraGestures::getMagZ() {
+  return magAxes.z;
+};
+
+float PuaraGestures::getYaw() {
+  ImuOrientation o = orientation;
+  float yaw = atan2(2.0f * (o.w * o.x + o.y * o.z), o.w * o.w - o.x * o.x - o.y * o.y + o.z * o.z);
+  yaw *= 180.0f / M_PI;
+  return yaw;
+}
+
+float PuaraGestures::getPitch() {
+  ImuOrientation o = orientation;
+  float pitch = -asin(2.0f * (o.x * o.z - o.w * o.y));
+  pitch *= 180.0f / M_PI;
+  return pitch;
+}
+
+float PuaraGestures::getRoll() {
+  ImuOrientation o = orientation;
+  float roll = atan2(2.0f * (o.x * o.y + o.w * o.z), o.w * o.w + o.x * o.x - o.y * o.y - o.z * o.z);
+  roll *= 180.0f / M_PI;
+  roll += DECLINATION;
+  return roll;
+}
+
 float PuaraGestures::getShakeX() {
-  return PuaraGestures::shakeX;
+  return shakeX;
 };
 
 float PuaraGestures::getShakeY() {
-  return PuaraGestures::shakeY;
+  return shakeY;
 };
 
 float PuaraGestures::getShakeZ() {
-  return PuaraGestures::shakeZ;
+  return shakeZ;
 };
 
 float PuaraGestures::getJabX() {
-  return PuaraGestures::jabX;
+  return jabX;
 };
 
 float PuaraGestures::getJabY() {
-  return PuaraGestures::jabY;
+  return jabY;
 };
 
 float PuaraGestures::getJabZ() {
-  return PuaraGestures::jabZ;
+  return jabZ;
 };
+
+double getOrientationW() {
+  return orientation.w;
+}
+
+double getOrientationX() {
+  return orientation.x;
+}
+
+double getOrientationY() {
+  return orientation.y;
+}
+
+double getOrientationZ() {
+  return orientation.z;
+}
 
 /* Expects an array of discrete touch values (int, 0 or 1) and
  * the size of the array
