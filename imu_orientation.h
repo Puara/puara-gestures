@@ -24,7 +24,9 @@ namespace ImuOrientation {
     public:
         Quaternion(): w(1), x(0), y(0), z(0) {}
         Quaternion(double w, double x, double y, double z): w(w), x(x), y(y), z(z) {}
-        Quaternion(Quaternion& q): w(q.w), x(q.x), y(q.y), z(q.z) {}
+        Quaternion(const Quaternion&) = default;
+        Quaternion& operator= (const Quaternion&) = default;
+
         ~Quaternion() {}
         
         Quaternion multiply(Quaternion &q);
