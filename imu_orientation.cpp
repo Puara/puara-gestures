@@ -1,7 +1,8 @@
 /**************************************************************************
  *                                                                         *
  * Sensor Fusion code for estimating orientation of Arduino-based IMU      *
- * 2011 Joseph Malloch / Input Devices and Music Interaction Laboratory    *
+ * 2022 Joseph Malloch, Brady Boettcher                                    *
+ * Input Devices and Music Interaction Laboratory                          *
  *                                                                         *
  ***************************************************************************
  *                                                                         *
@@ -22,8 +23,6 @@ double PI = 3.141592653589793;
 double halfPI = 1.570796326794897;
 double twoPI = 6.283185307179586;
 
-// *********************************************************
-// -(anything)----------------------------------------------
 ImuOrientation::Quaternion ImuOrientation::getOrientation(Quaternion &prev, Axes accel, Axes mag, Axes gyro, double weight)
 {
     // calculate polar representation of accelerometer data
