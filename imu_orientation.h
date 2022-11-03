@@ -58,8 +58,7 @@ namespace ImuOrientation {
     } Axes;
 
     /* Returns the current orientation as a quaternion */
-    static Quaternion getOrientation(Quaternion &prev, Axes& accel, Axes& mag, Axes& gyro, double weight);
-
+    Quaternion getOrientation(Quaternion &prev, Axes& accel, Axes& mag, Axes& gyro, double weight);
 };
 
 #endif
