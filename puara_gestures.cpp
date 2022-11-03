@@ -21,9 +21,9 @@ void PuaraGestures::updateJabShake() {
   std::deque<float>::iterator minZ = std::min_element(gyroBuffers[2].begin(), gyroBuffers[2].end());
   std::deque<float>::iterator maxZ = std::max_element(gyroBuffers[2].begin(), gyroBuffers[2].end());
 
-  float gyroAbsX = std::abs(gyroBuffers[0].end());
-  float gyroAbsY = std::abs(gyroBuffers[1].end());
-  float gyroAbsZ = std::abs(gyroBuffers[2].end());
+  float gyroAbsX = std::abs(gyroBuffers[0].back());
+  float gyroAbsY = std::abs(gyroBuffers[1].back());
+  float gyroAbsZ = std::abs(gyroBuffers[2].back());
     
   // Instrument shake
   if (gyroAbsX > 0.1) {
@@ -105,13 +105,13 @@ void PuaraGestures::updateGyro(float gyroX, float gyroY, float gyroZ) {
 }
 
 void PuaraGestures::updateMag(float magX, float magY, float magZ) {
-  magBuffer[0].push_back(magX);
-  magBuffer[1].push_back(magY);
-  magBuffer[2].push_back(magZ);
-  if (magBuffer[0].size() > PuaraGestures::BUFFER_SIZE) {
-    magBuffer[0].pop_front();
-    magBuffer[1].pop_front();
-    magBuffer[2].pop_front();
+  magBuffers[0].push_back(magX);
+  magBuffers[1].push_back(magY);
+  magBuffers[2].push_back(magZ);
+  if (magBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
+    magBuffers[0].pop_front();
+    magBuffers[1].pop_front();
+    magBuffers[2].pop_front();
   }
   magAxes.x = magX;
   magAxes.y = magY;
@@ -171,21 +171,21 @@ float PuaraGestures::getMagZ() {
 };
 
 float PuaraGestures::getYaw() {
-  ImuOrientation o = orientation;
+  ImuOrientation::Quaternion o = orientation;
   float yaw = atan2(2.0f * (o.w * o.x + o.y * o.z), o.w * o.w - o.x * o.x - o.y * o.y + o.z * o.z);
   yaw *= 180.0f / M_PI;
   return yaw;
 }
 
 float PuaraGestures::getPitch() {
-  ImuOrientation o = orientation;
+  ImuOrientation::Quaternion o = orientation;
   float pitch = -asin(2.0f * (o.x * o.z - o.w * o.y));
   pitch *= 180.0f / M_PI;
   return pitch;
 }
 
 float PuaraGestures::getRoll() {
-  ImuOrientation o = orientation;
+  ImuOrientation::Quaternion o = orientation;
   float roll = atan2(2.0f * (o.x * o.y + o.w * o.z), o.w * o.w + o.x * o.x - o.y * o.y - o.z * o.z);
   roll *= 180.0f / M_PI;
   roll += DECLINATION;
@@ -216,19 +216,19 @@ float PuaraGestures::getJabZ() {
   return jabZ;
 };
 
-double getOrientationW() {
+double PuaraGestures::getOrientationW() {
   return orientation.w;
 }
 
-double getOrientationX() {
+double PuaraGestures::getOrientationX() {
   return orientation.x;
 }
 
-double getOrientationY() {
+double PuaraGestures::getOrientationY() {
   return orientation.y;
 }
 
-double getOrientationZ() {
+double PuaraGestures::getOrientationZ() {
   return orientation.z;
 }
 
