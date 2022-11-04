@@ -73,7 +73,7 @@ void PuaraGestures::updateJabShake() {
 }
 
 void PuaraGestures::updateOrientation() {
-  orientation = ImuOrientation::getOrientation(orientation, accelAxes, gyroAxes, magAxes, 1.0);
+  orientation = ImuOrientation::getOrientation(orientation, accelAxes, gyroAxes, magAxes, 0.5);
 }
 
 void PuaraGestures::updateAccel(float accelX, float accelY, float accelZ) {
