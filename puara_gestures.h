@@ -83,19 +83,31 @@ class PuaraGestures {
         float leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer);
         
         // Inertial measurement updates (accelerometer, gyroscope, magnetometer)
+        /* IMPORTANT NOTE- axes should be updated following:
+        *
+        * Top view
+        *  ___________
+        * |    Y      |
+        * |    ^      |
+        * |    |      |
+        * |    o--->X |
+        * |   Z^      |
+        * |___________|
+        * 
+        */
         void updateAccel(float accelX, float accelY, float accelZ); // in m/sec^2
-        void updateGyro(float gyroX, float gyroY, float gyroZ); // in rad/sec
-        void updateMag(float magX, float magY, float magZ); // in uTesla
+        void updateGyro(float gyroX, float gyroY, float gyroZ); // in degrees/sec
+        void updateMag(float magX, float magY, float magZ); // in Gauss
         void updateInertialGestures(); // Updates shake, jab and orientation
 
         // General inertial sensor signals
-        float getAccelX(); // in m/s^2, converted from g's
+        float getAccelX();
         float getAccelY();
         float getAccelZ();
-        float getGyroX(); // in radians per second, converted from DPS
+        float getGyroX();
         float getGyroY();
         float getGyroZ();
-        float getMagX(); // in uTesla, converted from Gauss
+        float getMagX();
         float getMagY();
         float getMagZ();
         float getYaw();
@@ -110,7 +122,7 @@ class PuaraGestures {
         float getJabY();
         float getJabZ();
 
-        // Orientation
+        // Orientation quaternion values
         double getOrientationW();
         double getOrientationX();
         double getOrientationY();
