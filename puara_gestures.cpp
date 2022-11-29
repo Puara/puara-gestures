@@ -73,7 +73,7 @@ void PuaraGestures::updateJabShake() {
 }
 
 void PuaraGestures::updateOrientation() {
-  orientation.update();
+  orientation.update(0.01);
 }
 
 void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float accelZ) {
@@ -83,7 +83,11 @@ void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float acc
   this->accelZ = accelZ;
 }
 
-void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {        
+void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {   
+  static long then = esp_timer_get_time();
+  long now = esp_timer_get_time();
+  orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, (now - then) * 0.000001);
+  then = now;     
   orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, 0.01);
   gyroBuffers[0].push_back(gyroX);
   gyroBuffers[1].push_back(gyroY);
