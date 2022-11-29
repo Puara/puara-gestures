@@ -73,7 +73,7 @@ void PuaraGestures::updateJabShake() {
 }
 
 void PuaraGestures::updateOrientation() {
-  orientation.update(0.01);
+  orientation.update(0.01); // Weight of 0.01 towards previous orientation
 }
 
 void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float accelZ) {
