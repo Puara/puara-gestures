@@ -13,7 +13,7 @@
 #include <cmath>
 #include <algorithm>
 #include "esp_timer.h"
-#include "imu_orientation.h"
+#include "IMU_Sensor_Fusion/imu_orientation.h"
 
 class PuaraGestures {
     
@@ -21,9 +21,13 @@ class PuaraGestures {
 
         // Intertial measurements
         const int BUFFER_SIZE = 5;
-        std::deque<float> accelBuffers[3];
-        std::deque<float> gyroBuffers[3];
-        std::deque<float> magBuffers[3];
+        float accelX;
+        float accelY;
+        float accelZ;
+        std::deque<float> gyroBuffers[3]; // Need buffer to compute shake/jab
+        float magX;
+        float magY;
+        float magZ;
         // Shake and Jab
         const int leakyShakeFreq = 10;
         unsigned long leakyShakeTimerX;
@@ -39,10 +43,7 @@ class PuaraGestures {
         void updateJabShake();
         // Orientation
         const float DECLINATION = -14.14; // Declination at Montreal on 2020-03-12
-        ImuOrientation::Axes accelAxes;
-        ImuOrientation::Axes gyroAxes;
-        ImuOrientation::Axes magAxes;
-        ImuOrientation::Quaternion orientation;
+        IMU_Orientation orientation;
         void updateOrientation();
 
         // touch array
@@ -83,7 +84,7 @@ class PuaraGestures {
         float leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer);
         
         // Inertial measurement updates (accelerometer, gyroscope, magnetometer)
-        /* IMPORTANT NOTE- axes should be updated following:
+        /* IMPORTANT NOTE- axes signs should be updated following below:
         *
         * Top view
         *  ___________
@@ -95,9 +96,9 @@ class PuaraGestures {
         * |___________|
         * 
         */
-        void updateAccel(float accelX, float accelY, float accelZ); // in m/sec^2
-        void updateGyro(float gyroX, float gyroY, float gyroZ); // in degrees/sec
-        void updateMag(float magX, float magY, float magZ); // in Gauss
+        void setAccelerometerValues(float accelX, float accelY, float accelZ); // in m/sec^2
+        void setGyroscopeValues(float gyroX, float gyroY, float gyroZ); // in degrees/sec
+        void setMagnetometerValues(float magX, float magY, float magZ); // in Gauss
         void updateInertialGestures(); // Updates shake, jab and orientation
 
         // General inertial sensor signals
@@ -122,11 +123,9 @@ class PuaraGestures {
         float getJabY();
         float getJabZ();
 
-        // Orientation quaternion values
-        double getOrientationW();
-        double getOrientationX();
-        double getOrientationY();
-        double getOrientationZ();
+        // Orientation quaternion and euler values
+        IMU_Orientation::Quaternion getOrientationQuaternion();
+        IMU_Orientation::Euler getOrientationEuler();
         
         // touch array
         void updateTouchArray (int *discrete_touch, int touchSize);

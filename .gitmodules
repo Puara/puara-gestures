@@ -1,0 +1,3 @@
+[submodule "IMU_Sensor_Fusion"]
+	path = IMU_Sensor_Fusion
+	url = https://github.com/malloch/IMU_Sensor_Fusion

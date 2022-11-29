@@ -73,24 +73,18 @@ void PuaraGestures::updateJabShake() {
 }
 
 void PuaraGestures::updateOrientation() {
-  orientation = ImuOrientation::getOrientation(orientation, accelAxes, gyroAxes, magAxes, 0.5);
+  orientation.update();
 }
 
-void PuaraGestures::updateAccel(float accelX, float accelY, float accelZ) {
-  accelBuffers[0].push_back(accelX);
-  accelBuffers[1].push_back(accelY);
-  accelBuffers[2].push_back(accelZ);
-  if (accelBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
-    accelBuffers[0].pop_front();
-    accelBuffers[1].pop_front();
-    accelBuffers[2].pop_front();
-  }
-  accelAxes.x = accelX;
-  accelAxes.y = accelY;
-  accelAxes.z = accelZ;
+void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float accelZ) {
+  orientation.setAccelerometerValues(accelX, accelY, accelZ);
+  this->accelX = accelX;
+  this->accelY = accelY;
+  this->accelZ = accelZ;
 }
 
-void PuaraGestures::updateGyro(float gyroX, float gyroY, float gyroZ) {        
+void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {        
+  orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, 0.01);
   gyroBuffers[0].push_back(gyroX);
   gyroBuffers[1].push_back(gyroY);
   gyroBuffers[2].push_back(gyroZ);
@@ -99,23 +93,13 @@ void PuaraGestures::updateGyro(float gyroX, float gyroY, float gyroZ) {
     gyroBuffers[1].pop_front();
     gyroBuffers[2].pop_front();
   }
-  gyroAxes.x = gyroX;
-  gyroAxes.y = gyroY;
-  gyroAxes.z = gyroZ;
 }
 
-void PuaraGestures::updateMag(float magX, float magY, float magZ) {
-  magBuffers[0].push_back(magX);
-  magBuffers[1].push_back(magY);
-  magBuffers[2].push_back(magZ);
-  if (magBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
-    magBuffers[0].pop_front();
-    magBuffers[1].pop_front();
-    magBuffers[2].pop_front();
-  }
-  magAxes.x = magX;
-  magAxes.y = magY;
-  magAxes.z = magZ;
+void PuaraGestures::setMagnetometerValues(float magX, float magY, float magZ) {
+  orientation.setMagnetometerValues(magX, magY, magZ);
+  this->magX = magX;
+  this->magY = magY;
+  this->magZ = magZ;
 }
 
 // Simple leaky integrator implementation
@@ -135,61 +119,51 @@ float PuaraGestures::leakyIntegrator (float reading, float old_value, float leak
 }
 
 float PuaraGestures::getAccelX() {
-  return accelAxes.x;
+  return accelX;
 };
 
 float PuaraGestures::getAccelY() {
-  return accelAxes.y;
+  return accelY;
 };
 
 float PuaraGestures::getAccelZ() {
-  return accelAxes.z;
+  return accelZ;
 };
 
 float PuaraGestures::getGyroX() {
-  return gyroAxes.x;
+  return gyroBuffers[0].back();
 };
 
 float PuaraGestures::getGyroY() {
-  return gyroAxes.y;
+  return gyroBuffers[1].back();
 };
 
 float PuaraGestures::getGyroZ() {
-  return gyroAxes.z;
+  return gyroBuffers[2].back();
 };
 
 float PuaraGestures::getMagX() {
-  return magAxes.x;
+  return magX;
 };
 
 float PuaraGestures::getMagY() {
-  return magAxes.y;
+  return magY;
 };
 
 float PuaraGestures::getMagZ() {
-  return magAxes.z;
+  return magZ;
 };
 
 float PuaraGestures::getYaw() {
-  ImuOrientation::Quaternion o = orientation;
-  float yaw = atan2(2.0f * (o.w * o.x + o.y * o.z), o.w * o.w - o.x * o.x - o.y * o.y + o.z * o.z);
-  yaw *= 180.0f / M_PI;
-  return yaw;
+  return orientation.euler.azimuth;
 }
 
 float PuaraGestures::getPitch() {
-  ImuOrientation::Quaternion o = orientation;
-  float pitch = -asin(2.0f * (o.x * o.z - o.w * o.y));
-  pitch *= 180.0f / M_PI;
-  return pitch;
+  return orientation.euler.pitch;
 }
 
 float PuaraGestures::getRoll() {
-  ImuOrientation::Quaternion o = orientation;
-  float roll = atan2(2.0f * (o.x * o.y + o.w * o.z), o.w * o.w + o.x * o.x - o.y * o.y - o.z * o.z);
-  roll *= 180.0f / M_PI;
-  roll += DECLINATION;
-  return roll;
+  return orientation.euler.roll;
 }
 
 float PuaraGestures::getShakeX() {
@@ -216,20 +190,12 @@ float PuaraGestures::getJabZ() {
   return jabZ;
 };
 
-double PuaraGestures::getOrientationW() {
-  return orientation.w;
+IMU_Orientation::Quaternion PuaraGestures::getOrientationQuaternion() {
+  return orientation.quaternion;
 }
 
-double PuaraGestures::getOrientationX() {
-  return orientation.x;
-}
-
-double PuaraGestures::getOrientationY() {
-  return orientation.y;
-}
-
-double PuaraGestures::getOrientationZ() {
-  return orientation.z;
+IMU_Orientation::Euler PuaraGestures::getOrientationEuler() {
+  return orientation.euler;
 }
 
 /* Expects an array of discrete touch values (int, 0 or 1) and
