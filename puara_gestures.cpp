@@ -88,7 +88,6 @@ void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {
   long now = esp_timer_get_time();
   orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, (now - then) * 0.000001);
   then = now;     
-  orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, 0.01);
   gyroBuffers[0].push_back(gyroX);
   gyroBuffers[1].push_back(gyroY);
   gyroBuffers[2].push_back(gyroZ);
@@ -97,6 +96,9 @@ void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {
     gyroBuffers[1].pop_front();
     gyroBuffers[2].pop_front();
   }
+  this->gyroX = gyroX;
+  this->gyroY = gyroY;
+  this->gyroZ = gyroZ;
 }
 
 void PuaraGestures::setMagnetometerValues(float magX, float magY, float magZ) {
@@ -135,15 +137,15 @@ float PuaraGestures::getAccelZ() {
 };
 
 float PuaraGestures::getGyroX() {
-  return gyroBuffers[0].back();
+  return gyroX;
 };
 
 float PuaraGestures::getGyroY() {
-  return gyroBuffers[1].back();
+  return gyroY;
 };
 
 float PuaraGestures::getGyroZ() {
-  return gyroBuffers[2].back();
+  return gyroZ;
 };
 
 float PuaraGestures::getMagX() {

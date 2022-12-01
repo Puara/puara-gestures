@@ -25,6 +25,9 @@ class PuaraGestures {
         float accelY;
         float accelZ;
         std::deque<float> gyroBuffers[3]; // Need buffer to compute shake/jab
+        float gyroX;
+        float gyroY;
+        float gyroZ;
         float magX;
         float magY;
         float magZ;
