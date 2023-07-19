@@ -43,9 +43,6 @@ class PuaraGestures {
         float jabX;
         float jabY;
         float jabZ;
-        int jabXThreshold = 0;
-        int jabYThreshold = 0;
-        int jabZThreshold = 0;
         void updateJabShake();
         void updateJabShakeAccl();
         // Orientation
@@ -88,6 +85,9 @@ class PuaraGestures {
         unsigned int buttonThreshold = 1;
 
     public:
+        int jabXThreshold = 5;
+        int jabYThreshold = 5;
+        int jabZThreshold = 5;
         float leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer);
         
         // Inertial measurement updates (accelerometer, gyroscope, magnetometer)

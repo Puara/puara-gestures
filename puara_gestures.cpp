@@ -57,7 +57,7 @@ void PuaraGestures::updateJabShake() {
     } else if (*maxX < 0 && *minX < 0) {
       PuaraGestures::jabX = *minX - *maxX;
     } else {
-    PuaraGestures::jabX = 0;
+    PuaraGestures::jabX = *maxX - *minX;
     }
   }
   if (*maxY-*minY > PuaraGestures::jabYThreshold) {
@@ -66,7 +66,7 @@ void PuaraGestures::updateJabShake() {
     } else if (*maxY < 0 && *minY < 0) {
       PuaraGestures::jabX = *minY - *maxY;
     } else {
-    PuaraGestures::jabX = 0;
+    PuaraGestures::jabY = *maxX - *minX;
     }
   }
   if (*maxZ-*minZ > PuaraGestures::jabZThreshold) {
@@ -75,7 +75,7 @@ void PuaraGestures::updateJabShake() {
     } else if (*maxZ < 0 && *minZ < 0) {
       PuaraGestures::jabZ = *minZ - *maxZ;
     } else {
-    PuaraGestures::jabZ = 0;
+    PuaraGestures::jabZ = *maxX - *minX;
     }
   }
 }
@@ -124,16 +124,16 @@ void PuaraGestures::updateJabShakeAccl() {
     } else if (*maxX < 0 && *minX < 0) {
       PuaraGestures::jabX = *minX - *maxX;
     } else {
-    PuaraGestures::jabX = 0;
+    PuaraGestures::jabX = *minX - *maxX;
     }
   }
   if (*maxY-*minY > PuaraGestures::jabYThreshold) {
     if (*maxY >= 0 && *minY >= 0) {
-      PuaraGestures::jabX = *maxY - *minY;
+      PuaraGestures::jabY = *maxY - *minY;
     } else if (*maxY < 0 && *minY < 0) {
-      PuaraGestures::jabX = *minY - *maxY;
+      PuaraGestures::jabY = *minY - *maxY;
     } else {
-    PuaraGestures::jabX = 0;
+    PuaraGestures::jabY = *maxY - *minY;
     }
   }
   if (*maxZ-*minZ > PuaraGestures::jabZThreshold) {
@@ -142,7 +142,7 @@ void PuaraGestures::updateJabShakeAccl() {
     } else if (*maxZ < 0 && *minZ < 0) {
       PuaraGestures::jabZ = *minZ - *maxZ;
     } else {
-    PuaraGestures::jabZ = 0;
+    PuaraGestures::jabZ = *maxZ - *minZ;
     }
   }
 }
