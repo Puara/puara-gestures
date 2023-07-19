@@ -43,9 +43,9 @@ class PuaraGestures {
         float jabX;
         float jabY;
         float jabZ;
-        int jabXThreshold = 10;
-        int jabYThreshold = 10;
-        int jabZThreshold = 10;
+        int jabXThreshold = 0;
+        int jabYThreshold = 0;
+        int jabZThreshold = 0;
         void updateJabShake();
         void updateJabShakeAccl();
         // Orientation
