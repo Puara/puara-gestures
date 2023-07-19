@@ -9,7 +9,7 @@
 #include "puara_gestures.h"
 
 void PuaraGestures::updateInertialGestures() {
-  updateJabShake();
+  updateJabShakeAccl();
   updateOrientation();
 }
 
