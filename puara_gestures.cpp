@@ -158,9 +158,9 @@ void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float acc
   this->accelZ = accelZ;
 
   // Add accl data
-  acclBuffers[0].push_back(acclX);
-  acclBuffers[1].push_back(acclY);
-  acclBuffers[2].push_back(acclZ);
+  acclBuffers[0].push_back(accelX);
+  acclBuffers[1].push_back(accelY);
+  acclBuffers[2].push_back(accelZ);
 
   // clear out old data
   if (acclBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
