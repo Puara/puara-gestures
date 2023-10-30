@@ -25,6 +25,7 @@ class PuaraGestures {
         float accelY;
         float accelZ;
         std::deque<float> gyroBuffers[3]; // Need buffer to compute shake/jab
+        std::deque<float> acclBuffers[3]; // Need buffer to compute shake/jab
         float gyroX;
         float gyroY;
         float gyroZ;
@@ -42,8 +43,8 @@ class PuaraGestures {
         float jabX;
         float jabY;
         float jabZ;
-        int jabThreshold = 10;
         void updateJabShake();
+        void updateJabShakeAccl();
         // Orientation
         const float DECLINATION = -14.14; // Declination at Montreal on 2020-03-12
         IMU_Orientation orientation;
@@ -84,6 +85,9 @@ class PuaraGestures {
         unsigned int buttonThreshold = 1;
 
     public:
+        int jabXThreshold = 5;
+        int jabYThreshold = 5;
+        int jabZThreshold = 5;
         float leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer);
         
         // Inertial measurement updates (accelerometer, gyroscope, magnetometer)

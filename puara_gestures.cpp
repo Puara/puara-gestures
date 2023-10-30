@@ -9,7 +9,7 @@
 #include "puara_gestures.h"
 
 void PuaraGestures::updateInertialGestures() {
-  updateJabShake();
+  updateJabShakeAccl();
   updateOrientation();
 }
 
@@ -51,24 +51,99 @@ void PuaraGestures::updateJabShake() {
       }
   }
   // Instrument jab
-  if (*maxX-*minX > PuaraGestures::jabThreshold) {
+  if (*maxX-*minX > PuaraGestures::jabXThreshold) {
     if (*maxX >= 0 && *minX >= 0) {
       PuaraGestures::jabX = *maxX - *minX;
     } else if (*maxX < 0 && *minX < 0) {
       PuaraGestures::jabX = *minX - *maxX;
     } else {
-    PuaraGestures::jabX = 0;
+    PuaraGestures::jabX = *maxX - *minX;
     }
   }
-  if (*maxY-*minY > 10) {
-    PuaraGestures::jabY = *maxY - *minY;
-  } else {
-    PuaraGestures::jabY = 0;
+  if (*maxY-*minY > PuaraGestures::jabYThreshold) {
+    if (*maxY >= 0 && *minY >= 0) {
+      PuaraGestures::jabX = *maxY - *minY;
+    } else if (*maxY < 0 && *minY < 0) {
+      PuaraGestures::jabX = *minY - *maxY;
+    } else {
+    PuaraGestures::jabY = *maxX - *minX;
+    }
   }
-  if (*maxZ-*minZ > 10) {
-    PuaraGestures::jabZ = *maxZ - *minZ;
+  if (*maxZ-*minZ > PuaraGestures::jabZThreshold) {
+    if (*maxZ >= 0 && *minZ >= 0) {
+      PuaraGestures::jabZ = *maxZ - *minZ;
+    } else if (*maxZ < 0 && *minZ < 0) {
+      PuaraGestures::jabZ = *minZ - *maxZ;
+    } else {
+    PuaraGestures::jabZ = *maxX - *minX;
+    }
+  }
+}
+
+void PuaraGestures::updateJabShakeAccl() {
+  std::deque<float>::iterator minX = std::min_element(acclBuffers[0].begin(), acclBuffers[0].end());
+  std::deque<float>::iterator maxX = std::max_element(acclBuffers[0].begin(), acclBuffers[0].end());
+  std::deque<float>::iterator minY = std::min_element(acclBuffers[1].begin(), acclBuffers[1].end());
+  std::deque<float>::iterator maxY = std::max_element(acclBuffers[1].begin(), acclBuffers[1].end());
+  std::deque<float>::iterator minZ = std::min_element(acclBuffers[2].begin(), acclBuffers[2].end());
+  std::deque<float>::iterator maxZ = std::max_element(acclBuffers[2].begin(), acclBuffers[2].end());
+
+  float acclAbsX = std::abs(acclBuffers[0].back());
+  float acclAbsY = std::abs(acclBuffers[1].back());
+  float acclAbsZ = std::abs(acclBuffers[2].back());
+    
+  // Instrument shake
+  if (acclAbsX > 0.1) {
+    PuaraGestures::shakeX = leakyIntegrator(acclAbsX/10, PuaraGestures::shakeX, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
   } else {
-    PuaraGestures::jabZ = 0;
+    PuaraGestures::shakeX = leakyIntegrator(0, PuaraGestures::shakeX, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
+    if (PuaraGestures::shakeX < 0.01) {
+        PuaraGestures::shakeX = 0;
+      }
+  }
+  if (acclAbsY > 0.1) {
+    PuaraGestures::shakeY = leakyIntegrator(acclAbsY/10, PuaraGestures::shakeY, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerY);
+  } else {
+    PuaraGestures::shakeY = leakyIntegrator(0, PuaraGestures::shakeY, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerY);
+    if (PuaraGestures::shakeY < 0.01) {
+        PuaraGestures::shakeY = 0;
+      }
+  }
+  if (acclAbsZ > 0.1) {
+    PuaraGestures::shakeZ = leakyIntegrator(acclAbsZ/10, PuaraGestures::shakeZ, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerZ);
+  } else {
+    PuaraGestures::shakeZ = leakyIntegrator(0, PuaraGestures::shakeZ, 0.3, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerZ);
+    if (PuaraGestures::shakeZ < 0.01) {
+        PuaraGestures::shakeZ = 0;
+      }
+  }
+  // Instrument jab
+  if (*maxX-*minX > PuaraGestures::jabXThreshold) {
+    if (*maxX >= 0 && *minX >= 0) {
+      PuaraGestures::jabX = *maxX - *minX;
+    } else if (*maxX < 0 && *minX < 0) {
+      PuaraGestures::jabX = *minX - *maxX;
+    } else {
+    PuaraGestures::jabX = *minX - *maxX;
+    }
+  }
+  if (*maxY-*minY > PuaraGestures::jabYThreshold) {
+    if (*maxY >= 0 && *minY >= 0) {
+      PuaraGestures::jabY = *maxY - *minY;
+    } else if (*maxY < 0 && *minY < 0) {
+      PuaraGestures::jabY = *minY - *maxY;
+    } else {
+    PuaraGestures::jabY = *maxY - *minY;
+    }
+  }
+  if (*maxZ-*minZ > PuaraGestures::jabZThreshold) {
+    if (*maxZ >= 0 && *minZ >= 0) {
+      PuaraGestures::jabZ = *maxZ - *minZ;
+    } else if (*maxZ < 0 && *minZ < 0) {
+      PuaraGestures::jabZ = *minZ - *maxZ;
+    } else {
+    PuaraGestures::jabZ = *maxZ - *minZ;
+    }
   }
 }
 
@@ -81,6 +156,18 @@ void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float acc
   this->accelX = accelX;
   this->accelY = accelY;
   this->accelZ = accelZ;
+
+  // Add accl data
+  acclBuffers[0].push_back(accelX);
+  acclBuffers[1].push_back(accelY);
+  acclBuffers[2].push_back(accelZ);
+
+  // clear out old data
+  if (acclBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
+    acclBuffers[0].pop_front();
+    acclBuffers[1].pop_front();
+    acclBuffers[2].pop_front();
+  }
 }
 
 void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {   
