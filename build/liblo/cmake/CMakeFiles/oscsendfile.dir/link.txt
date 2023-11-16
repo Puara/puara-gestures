@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/oscsendfile.dir/__/src/tools/oscsendfile.c.o -o tools/oscsendfile  -Wl,-rpath,/home/edu/Documents/Projetos/Puara/puara-gestures/build/liblo/cmake: liblo.so.7.4.1 

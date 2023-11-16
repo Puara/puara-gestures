@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/cpp_test.dir/__/src/cpp_test.cpp.o -o tests/cpp_test  -Wl,-rpath,/home/edu/Documents/Projetos/Puara/puara-gestures/build/liblo/cmake liblo.so.7.4.1 

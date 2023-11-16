@@ -13,6 +13,19 @@ void PuaraGestures::updateInertialGestures() {
   updateOrientation();
 }
 
+long long PuaraGestures::getCurrentTimeMicroseconds() {
+    using namespace std::chrono;
+
+    // Get the current time point
+    auto currentTimePoint = high_resolution_clock::now();
+
+    // Get the duration since the epoch
+    auto duration = duration_cast<microseconds>(currentTimePoint.time_since_epoch());
+
+    // Return the time in microseconds
+    return duration.count();
+}
+
 void PuaraGestures::updateJabShake() {
   std::deque<float>::iterator minX = std::min_element(gyroBuffers[0].begin(), gyroBuffers[0].end());
   std::deque<float>::iterator maxX = std::max_element(gyroBuffers[0].begin(), gyroBuffers[0].end());
@@ -194,6 +207,9 @@ void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {
   calibrateGyroscope(gyroX, gyroY, gyroZ);
 
   orientation.setGyroscopeDegreeValues(gyroCal[0], gyroCal[1], gyroCal[2], (now - then) * 0.000001);
+  static long then = getCurrentTimeMicroseconds();
+  long now = getCurrentTimeMicroseconds();
+  orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, (now - then) * 0.000001);
   then = now;     
   gyroBuffers[0].push_back(gyroCal[0]);
   gyroBuffers[1].push_back(gyroCal[1]);
@@ -250,11 +266,11 @@ float PuaraGestures::leakyIntegrator (float reading, float old_value, float leak
   float new_value;
   if (frequency <= 0) {
     new_value = reading + (old_value * leak);
-  } else if ((esp_timer_get_time()/1000LL)  - (1000 / frequency) < timer) {  
+  } else if ((getCurrentTimeMicroseconds()/1000LL)  - (1000 / frequency) < timer) {  
     new_value = reading + old_value;
   } else {
     new_value = reading + (old_value * leak);
-    timer = (esp_timer_get_time()/1000LL);
+    timer = (getCurrentTimeMicroseconds()/1000LL);
   }
   return new_value;
 }
@@ -537,7 +553,7 @@ void PuaraGestures::bitShiftArrayL (int * origArray, int * shiftedArray, int arr
 }
 
 void PuaraGestures::updateButton(int buttonValue) {
-  long currentTime = esp_timer_get_time()/1000LL;
+  long currentTime = getCurrentTimeMicroseconds()/1000LL;
     PuaraGestures::buttonValue = buttonValue;
     if (buttonValue < PuaraGestures::buttonThreshold) {
         if (!PuaraGestures::buttonPress) {
@@ -589,7 +605,7 @@ void PuaraGestures::updateButton(int buttonValue) {
 }
 
 void PuaraGestures::updateTrigButton(int buttonValue) {
-  long currentTime = esp_timer_get_time()/1000LL;
+  long currentTime = getCurrentTimeMicroseconds()/1000LL;
     PuaraGestures::buttonValue = buttonValue;
     if (buttonValue >= PuaraGestures::buttonThreshold) {
         if (!PuaraGestures::buttonPress) {
@@ -689,3 +705,27 @@ unsigned int PuaraGestures::setButtonHoldInterval(int value) {
     PuaraGestures::buttonHoldInterval = value;
     return 1;
 }
+
+float PuaraGestures::mapRange(float in, float inMin, float inMax, float outMin, float outMax) {
+        if (outMin != outMax) {
+            return (in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        } else {
+            return in;
+        }
+    }
+
+int PuaraGestures::mapRange(int in, int inMin, int inMax, float outMin, float outMax) {
+        if (outMin != outMax) {
+            return round((in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin);
+        } else {
+            return in;
+        }
+    }
+
+double PuaraGestures::mapRange(double in, double inMin, double inMax, double outMin, double outMax) {
+        if (outMin != outMax) {
+            return (in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        } else {
+            return in;
+        }
+    }
