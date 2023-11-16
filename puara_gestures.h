@@ -12,12 +12,18 @@
 #include <deque>
 #include <cmath>
 #include <algorithm>
-#include "esp_timer.h"
+
+// NEED TO CHECK ON CROSSPLATFORM ALTERNATIVE
+// #include "esp_timer.h"
+#include <chrono>
+
 #include "IMU_Sensor_Fusion/imu_orientation.h"
 
 class PuaraGestures {
     
     private:
+
+        long long getCurrentTimeMicroseconds();
 
         // Intertial measurements
         const int BUFFER_SIZE = 5;
@@ -85,6 +91,11 @@ class PuaraGestures {
         unsigned int buttonThreshold = 1;
 
     public:
+
+        int mapRange(int in, int inMin, int inMax, float outMin, float outMax);
+        float mapRange(float in, float inMin, float inMax, float outMin, float outMax);
+        double mapRange(double in, double inMin, double inMax, double outMin, double outMax);
+
         int jabXThreshold = 5;
         int jabYThreshold = 5;
         int jabZThreshold = 5;

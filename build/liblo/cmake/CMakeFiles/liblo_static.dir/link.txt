@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblo.a CMakeFiles/liblo_static.dir/__/src/address.c.o CMakeFiles/liblo_static.dir/__/src/blob.c.o CMakeFiles/liblo_static.dir/__/src/bundle.c.o CMakeFiles/liblo_static.dir/__/src/message.c.o CMakeFiles/liblo_static.dir/__/src/method.c.o CMakeFiles/liblo_static.dir/__/src/pattern_match.c.o CMakeFiles/liblo_static.dir/__/src/send.c.o CMakeFiles/liblo_static.dir/__/src/server.c.o CMakeFiles/liblo_static.dir/__/src/timetag.c.o CMakeFiles/liblo_static.dir/__/src/version.c.o CMakeFiles/liblo_static.dir/__/src/server_thread.c.o
+/usr/bin/ranlib liblo.a

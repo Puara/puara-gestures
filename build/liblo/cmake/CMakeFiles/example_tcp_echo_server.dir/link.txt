@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/example_tcp_echo_server.dir/__/examples/example_tcp_echo_server.c.o -o examples/example_tcp_echo_server  -Wl,-rpath,/home/edu/Documents/Projetos/Puara/puara-gestures/build/liblo/cmake liblo.so.7.4.1 
