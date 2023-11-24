@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/puara_gestures.dir/IMU_Sensor_Fusion/imu_orientation.cpp.o CMakeFiles/puara_gestures.dir/puara_gestures.cpp.o CMakeFiles/puara_gestures.dir/main.cpp.o -o puara_gestures  liblo/cmake/liblo.a -lm 

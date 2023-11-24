@@ -1,1 +1,0 @@
-/usr/bin/cc -rdynamic CMakeFiles/testlo.dir/__/src/testlo.c.o -o tests/testlo  -Wl,-rpath,/home/edu/Documents/Projetos/Puara/puara-gestures/build/liblo/cmake liblo.so.7.4.1 
