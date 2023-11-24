@@ -2,5 +2,5 @@
 	path = IMU_Sensor_Fusion
 	url = https://github.com/malloch/IMU_Sensor_Fusion
 [submodule "liblo"]
-	path = liblo
+	path = standalone/liblo
 	url = https://github.com/radarsat1/liblo.git
