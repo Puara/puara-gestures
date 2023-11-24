@@ -1,1 +1,0 @@
-/usr/bin/cc -rdynamic CMakeFiles/nonblocking_server_example.dir/__/examples/nonblocking_server_example.c.o -o examples/nonblocking_server_example  -Wl,-rpath,/home/edu/Documents/Projetos/Puara/puara-gestures/build/liblo/cmake liblo.so.7.4.1 

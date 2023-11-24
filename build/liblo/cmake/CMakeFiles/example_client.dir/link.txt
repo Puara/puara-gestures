@@ -1,1 +1,0 @@
-/usr/bin/cc -rdynamic CMakeFiles/example_client.dir/__/examples/example_client.c.o -o examples/example_client  -Wl,-rpath,/home/edu/Documents/Projetos/Puara/puara-gestures/build/liblo/cmake liblo.so.7.4.1 

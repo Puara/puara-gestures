@@ -1,1 +1,0 @@
-/usr/bin/cc -rdynamic CMakeFiles/oscdump.dir/__/src/tools/oscdump.c.o -o tools/oscdump  -Wl,-rpath,/home/edu/Documents/Projetos/Puara/puara-gestures/build/liblo/cmake: liblo.so.7.4.1 
