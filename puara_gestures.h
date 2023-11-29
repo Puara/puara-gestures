@@ -18,17 +18,17 @@
 // Calibration parameter input structure
 struct calibrationParameters {
     // Accelerometer Parameters
-    float accel_zerog[3],
+    float accel_zerog[3];
 
     // Gyroscope Parameters
-    float gyro_zerorate[3],
+    float gyro_zerorate[3];
     
     // Magnetometer Parameters
-    float sx[3],
-    float sy[3],
-    float sz[3],
-    float h[3]
-}
+    float sx[3];
+    float sy[3];
+    float sz[3];
+    float h[3];
+};
 
 class PuaraGestures {
     
@@ -150,9 +150,9 @@ class PuaraGestures {
         IMU_Orientation::Euler getOrientationEuler();
 
         // Calibration Methods
-        float calibrateMagnetometer(float magX, float magY, float magZ);
-        float calibrateAccelerometer(float accelX, float accelY, float accelZ);
-        float calibrateGyroscope(float gyroX, float gyroY, float gyroZ);
+        void calibrateMagnetometer(float magX, float magY, float magZ);
+        void calibrateAccelerometer(float accelX, float accelY, float accelZ);
+        void calibrateGyroscope(float gyroX, float gyroY, float gyroZ);
         void setCalibrationParameters(calibrationParameters calParams);
 
         // Magnetometer Calibration Variables
@@ -160,12 +160,15 @@ class PuaraGestures {
         float sy[3] = {0.333, 0.333, 0.333};
         float sz[3] = {0.333, 0.333, 0.333};
         float h[3] = {0,0,0};
+        float magCal[3];
 
         // Accelerometer Calibration variables
         float accel_zerog[3] = {0,0,0};
+        float accelCal[3];
 
         /// Gyroscope Calibration variables
         float gyro_zerorate[3] = {0,0,0};
+        float gyroCal[3];
 
         // touch array
         void updateTouchArray (int *discrete_touch, int touchSize);
