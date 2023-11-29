@@ -15,6 +15,21 @@
 #include "esp_timer.h"
 #include "IMU_Sensor_Fusion/imu_orientation.h"
 
+// Calibration parameter input structure
+struct calibrationParameters {
+    // Accelerometer Parameters
+    float accel_zerog[3],
+
+    // Gyroscope Parameters
+    float gyro_zerorate[3],
+    
+    // Magnetometer Parameters
+    float sx[3],
+    float sy[3],
+    float sz[3],
+    float h[3]
+}
+
 class PuaraGestures {
     
     private:
@@ -133,7 +148,25 @@ class PuaraGestures {
         // Orientation quaternion and euler values
         IMU_Orientation::Quaternion getOrientationQuaternion();
         IMU_Orientation::Euler getOrientationEuler();
-        
+
+        // Calibration Methods
+        float calibrateMagnetometer(float magX, float magY, float magZ);
+        float calibrateAccelerometer(float accelX, float accelY, float accelZ);
+        float calibrateGyroscope(float gyroX, float gyroY, float gyroZ);
+        void setCalibrationParameters(calibrationParameters calParams);
+
+        // Magnetometer Calibration Variables
+        float sx[3] = {0.333, 0.333, 0.333};
+        float sy[3] = {0.333, 0.333, 0.333};
+        float sz[3] = {0.333, 0.333, 0.333};
+        float h[3] = {0,0,0};
+
+        // Accelerometer Calibration variables
+        float accel_zerog[3] = {0,0,0};
+
+        /// Gyroscope Calibration variables
+        float gyro_zerorate[3] = {0,0,0};
+
         // touch array
         void updateTouchArray (int *discrete_touch, int touchSize);
         float touchAll;         // f, 0--1
