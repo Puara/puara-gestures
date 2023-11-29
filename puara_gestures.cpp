@@ -230,16 +230,16 @@ void PuaraGestures::calibrateMagnetometer(float magX, float magY, float magZ) {
 
 void PuaraGestures::calibrateAccelerometer(float accelX, float accelY, float accelZ) {
   // Calibrate accelerometer
-  accelCal[0] -= accel_zerog[0];
-  accelCal[1] -= accel_zerog[1];
-  accelCal[2] -= accel_zerog[2];
+  accelCal[0] = accelX - accel_zerog[0];
+  accelCal[1] = accelY - accel_zerog[1];
+  accelCal[2] = accelZ - accel_zerog[2];
 }
 
 void PuaraGestures::calibrateGyroscope(float gyroX, float gyroY, float gyroZ) {
   // Calibrate magnetometer
-  gyroCal[0]-= gyro_zerorate[0];
-  gyroCal[1]-= gyro_zerorate[1];
-  gyroCal[2]-= gyro_zerorate[2];
+  gyroCal[0] = gyroX - gyro_zerorate[0];
+  gyroCal[1] = gyroY - gyro_zerorate[1];
+  gyroCal[2] = gyroZ - gyro_zerorate[2];
 }
 
 
