@@ -151,11 +151,28 @@ void PuaraGestures::updateOrientation() {
   orientation.update(0.01); // Weight of 0.01 towards previous orientation
 }
 
+void PuaraGestures::setCalibrationParameters(calibrationParameters calParams) {
+  // Save calibration parameters to class
+  // Magnetometer Cal
+  std::copy(std::begin(sx), std::end(sx), std::begin(calParams.sx));
+  std::copy(std::begin(sy), std::end(sy), std::begin(calParams.sy));
+  std::copy(std::begin(sz), std::end(sz), std::begin(calParams.sz));
+  std::copy(std::begin(h), std::end(h), std::begin(calParams.h));
+  // Accel Cal
+  std::copy(std::begin(accel_zerog), std::end(accel_zerog), std::begin(calParams.accel_zerog));
+  // Gyro Cal
+  std::copy(std::begin(gyro_zerorate), std::end(gyro_zerorate), std::begin(calParams.gyro_zerorate));
+}
+
 void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float accelZ) {
-  orientation.setAccelerometerValues(accelX, accelY, accelZ);
-  this->accelX = accelX;
-  this->accelY = accelY;
-  this->accelZ = accelZ;
+  // Calibrate accelerometer
+  calibrateAccelerometer(accelX, accelY, accelZ);
+
+  // Save calibrate values for sensor fusion and puara gestures
+  orientation.setAccelerometerValues(accelCal[0], accelCal[1], accelCal[2]);
+  this->accelX = accelCal[0];
+  this->accelY = accelCal[1];
+  this->accelZ = accelCal[2];
 
   // Add accl data
   acclBuffers[0].push_back(accelX);
@@ -173,27 +190,58 @@ void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float acc
 void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {   
   static long then = esp_timer_get_time();
   long now = esp_timer_get_time();
-  orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, (now - then) * 0.000001);
+  // Calibrate Gyroscope
+  calibrateGyroscope(gyroX, gyroY, gyroZ);
+
+  orientation.setGyroscopeDegreeValues(gyroCal[0], gyroCal[1], gyroCal[2], (now - then) * 0.000001);
   then = now;     
-  gyroBuffers[0].push_back(gyroX);
-  gyroBuffers[1].push_back(gyroY);
-  gyroBuffers[2].push_back(gyroZ);
+  gyroBuffers[0].push_back(gyroCal[0]);
+  gyroBuffers[1].push_back(gyroCal[1]);
+  gyroBuffers[2].push_back(gyroCal[2]);
   if (gyroBuffers[0].size() > PuaraGestures::BUFFER_SIZE) {
     gyroBuffers[0].pop_front();
     gyroBuffers[1].pop_front();
     gyroBuffers[2].pop_front();
   }
-  this->gyroX = gyroX;
-  this->gyroY = gyroY;
-  this->gyroZ = gyroZ;
+  this->gyroX = gyroCal[0];
+  this->gyroY = gyroCal[1];
+  this->gyroZ = gyroCal[2];
 }
 
 void PuaraGestures::setMagnetometerValues(float magX, float magY, float magZ) {
-  orientation.setMagnetometerValues(magX, magY, magZ);
-  this->magX = magX;
-  this->magY = magY;
-  this->magZ = magZ;
+  // Calibrate magnetometer, sensor fusion code already assumes calibrate magnetometer, hence calibration occurs here
+  calibrateMagnetometer(magX, magY, magZ);
+
+  // Set magnetometer values for sensor fusion
+  orientation.setMagnetometerValues(magCal[0], magCal[1], magCal[2]);
+
+  // Save to puara gestures
+  this->magX = magCal[0];
+  this->magY = magCal[1];
+  this->magZ = magCal[2];
 }
+
+void PuaraGestures::calibrateMagnetometer(float magX, float magY, float magZ) {
+  // Calibrate magnetometer
+  magCal[0] = sx[0]*(magX-h[0]) + sx[1]*(magX-h[0]) + sx[2]*(magX-h[0]);
+  magCal[1] = sy[0]*(magY-h[1]) + sy[1]*(magY-h[1]) + sy[2]*(magY-h[1]);
+  magCal[2] = sz[0]*(magZ-h[2]) + sz[1]*(magZ-h[2]) + sz[2]*(magZ-h[2]);
+}
+
+void PuaraGestures::calibrateAccelerometer(float accelX, float accelY, float accelZ) {
+  // Calibrate accelerometer
+  accelCal[0] = accelX - accel_zerog[0];
+  accelCal[1] = accelY - accel_zerog[1];
+  accelCal[2] = accelZ - accel_zerog[2];
+}
+
+void PuaraGestures::calibrateGyroscope(float gyroX, float gyroY, float gyroZ) {
+  // Calibrate magnetometer
+  gyroCal[0] = gyroX - gyro_zerorate[0];
+  gyroCal[1] = gyroY - gyro_zerorate[1];
+  gyroCal[2] = gyroZ - gyro_zerorate[2];
+}
+
 
 // Simple leaky integrator implementation
 // Create a unsigned long global variable for time counter for each leak implementation (timer)
