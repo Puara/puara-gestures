@@ -59,6 +59,19 @@ int oscFunctions(){
         floatToBinaryPositionArray(dof, binaryArray);
         gestures.updateTouchArray(binaryArray,30);
     });
+    osc_server.add_method("/livepose/skeletons/0/0/keypoints/RIGHT_WRIST", "fff",
+    [&](lo_arg **argv, int) {
+        float dof = argv[0]->f;
+            //std::cout << "data: " << dof << std::endl;
+            floatToBinaryPositionArray(dof, binaryArray);
+            gestures.updateTouchArray(binaryArray,30);
+    });
+    // osc_server.add_method("/AMIwrist_001/raw/accl", "fff",
+    // [&](lo_arg **argv, int) {
+    //     float dof = argv[0]->f;
+    //     floatToBinaryPositionArray(dof, binaryArray);
+    //     gestures.updateTouchArray(binaryArray,30);
+    // });
     return 0;
 }
 
@@ -71,6 +84,12 @@ void killlHandler(int signum) {
 void updateSensorsThread() {
     while (keepRunning.load()) {
         gestures.updateInertialGestures();
+    }
+}
+
+void printBrushThread() {
+    while (keepRunning.load()) {
+        if (gestures.brush > 0.5) std::cout << "Swipe: " << gestures.brush << std::endl;
     }
 }
 
@@ -92,6 +111,7 @@ int main(int argc, char* argv[]) {
     gestures.setMagnetometerValues(0.0, 0.0, 0.0);
 
     threads.emplace_back(updateSensorsThread);
+    threads.emplace_back(printBrushThread);
 
     {
         std::unique_lock<std::mutex> lock(mtx);
