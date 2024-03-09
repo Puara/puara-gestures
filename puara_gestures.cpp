@@ -201,15 +201,13 @@ void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float acc
 }
 
 void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {   
-  static long then = esp_timer_get_time();
-  long now = esp_timer_get_time();
+  static long then = getCurrentTimeMicroseconds();
+  long now = getCurrentTimeMicroseconds();
   // Calibrate Gyroscope
   calibrateGyroscope(gyroX, gyroY, gyroZ);
 
   orientation.setGyroscopeDegreeValues(gyroCal[0], gyroCal[1], gyroCal[2], (now - then) * 0.000001);
-  static long then = getCurrentTimeMicroseconds();
-  long now = getCurrentTimeMicroseconds();
-  orientation.setGyroscopeDegreeValues(gyroX, gyroY, gyroZ, (now - then) * 0.000001);
+
   then = now;     
   gyroBuffers[0].push_back(gyroCal[0]);
   gyroBuffers[1].push_back(gyroCal[1]);
