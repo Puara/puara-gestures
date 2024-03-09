@@ -15,7 +15,10 @@
 #include <chrono>
 #include <vector>
 
+// External sensor fusion libraries
 #include "IMU_Sensor_Fusion/imu_orientation.h"
+
+// puara-gesture 
 
 namespace puara_gestures {
 
