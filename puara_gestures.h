@@ -12,9 +12,6 @@
 #include <deque>
 #include <cmath>
 #include <algorithm>
-
-// NEED TO CHECK ON CROSSPLATFORM ALTERNATIVE
-// #include "esp_timer.h"
 #include <chrono>
 
 #include "IMU_Sensor_Fusion/imu_orientation.h"
