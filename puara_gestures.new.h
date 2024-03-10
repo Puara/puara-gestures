@@ -48,7 +48,7 @@ namespace puara_gestures {
     struct DiscreteArray {
         std::vector<int> arr;
 
-    DynamicArray(int n) : arr(std::vector<int>(n)) {}
+    DiscreteArray(int n) : arr(std::vector<int>(n)) {}
 
     // No need for a destructor as std::vector handles memory management
 };
