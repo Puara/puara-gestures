@@ -1,5 +1,5 @@
 [submodule "IMU_Sensor_Fusion"]
-	path = IMU_Sensor_Fusion
+	path = descriptors/IMU_Sensor_Fusion
 	url = https://github.com/malloch/IMU_Sensor_Fusion
 [submodule "liblo"]
 	path = standalone/liblo
