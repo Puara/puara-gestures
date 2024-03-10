@@ -15,10 +15,8 @@
 #include <chrono>
 #include <vector>
 
-// External sensor fusion libraries
-#include "IMU_Sensor_Fusion/imu_orientation.h"
-
-// puara-gesture 
+// puara-gesture descriptors
+#include "descriptors/IMU_Sensor_Fusion/imu_orientation.h"
 
 namespace puara_gestures {
 
@@ -47,25 +45,8 @@ namespace puara_gestures {
 
     struct DiscreteArray {
         std::vector<int> arr;
-
-    DiscreteArray(int n) : arr(std::vector<int>(n)) {}
-
-    // No need for a destructor as std::vector handles memory management
-};
-
-    class SecondClass {
-        private:
-            const FirstClass& firstInstance;
-            const ThirdClass& thirdInstance;
-
-        public:
-            SecondClass(const FirstClass& first, const ThirdClass& third) : firstInstance(first), thirdInstance(third) {}
-
-            void printFirstValue() {
-                std::cout << "Value in FirstClass: " << firstInstance.value << std::endl;
-                std::cout << "Values in ThirdClass: " << thirdInstance.value1 << ", " << thirdInstance.value2 << std::endl;
-            }
-        };
+        DiscreteArray(int n) : arr(std::vector<int>(n)) {}
+    };
 
 }
 
