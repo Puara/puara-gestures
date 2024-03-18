@@ -24,8 +24,8 @@
 
 namespace puara_gestures {
 
-    struct Value {
-        double value;
+    struct Coord1D {
+        double X;
     };
 
     struct Coord2D {

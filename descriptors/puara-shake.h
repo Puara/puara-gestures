@@ -28,23 +28,33 @@ namespace puara_gestures {
      */
     class Shake {
         public:
-            Shake() : tied_value(nullptr) {}
-            Shake(int frequency = 10) : integrator(0, 0, 0.6, frequency, 0), tied_value(nullptr) {}
-            Shake(Value* tied) : tied_value(tied) {}
+            Shake() : tied_value(nullptr), integrator(0, 0, 0.6, 10, 0) {}
+            Shake(double* tied) : tied_value(tied), integrator(0, 0, 0.6, 10, 0) {}
+            Shake(Coord1D* tied) : tied_value(&(tied->X)), integrator(0, 0, 0.6, 10, 0) {}
             
             utils::LeakyIntegrator integrator;
             double fast_leak = 0.6;
             double slow_leak = 0.3;
             double update(double reading);
-            int  update(Value reading);
+            int  update(Coord1D reading);
             int  update();
             double frequency();
             double frequency(double freq);
             double current_value();
-            int tie(Value* new_tie);
+            int tie(Coord1D* new_tie);
         private:
             utils::CircularBuffer buffer;
-            Value* tied_value;
+            double* tied_value;
+    };
+
+    class Shake2D {
+        public:
+            Shake2D() {}
+            Shake2D(Coord2D* tied) : X(&(tied->X)), Y(&(tied->Y)) {}
+
+            Shake X;
+            Shake Y;
+            double frequency(double freq);
     };
 
 }
