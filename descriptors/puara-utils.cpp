@@ -10,18 +10,29 @@
 
 namespace puara_gestures::utils {
 
-
-    double LeakyIntegrator::integrate (double reading, double custom_leak) {
+    /**
+     * @brief Call integrator
+     * 
+     * @param reading new value to add into the integrator
+     * @param custom_leak between 0 and 1
+     * @param time in microseconds
+     * @return double 
+     */
+    double LeakyIntegrator::integrate (double reading, double custom_leak, long long time) {
         double leakValue = custom_leak;
         if (frequency <= 0) {
             current_value = reading + (old_value * leakValue);
-        } else if ((getCurrentTimeMicroseconds()/1000LL)  - (1000 / frequency) < timer) {  
+        } else if ((time/1000LL)  - (1000 / frequency) < timer) {  
             current_value = reading + old_value;
         } else {
             current_value = reading + (old_value * leakValue);
-            timer = (getCurrentTimeMicroseconds()/1000LL);
+            timer = (time/1000LL);
         }
         return current_value;
+    }
+
+    double LeakyIntegrator::integrate (double reading, double custom_leak) {
+        return LeakyIntegrator::integrate (reading, leak, getCurrentTimeMicroseconds());
     }
 
     double LeakyIntegrator::integrate (double reading) {
@@ -64,6 +75,21 @@ namespace puara_gestures::utils {
         return element;
     }
 
+    template <typename T>
+    puara_gestures::MinMax<T> RollingMinMax<T>::update(T value) {
+    min_max ret{.min = value, .max = value};
+    buf.push_back(value);
+    for(const T value : buf) {
+      if(value < ret.min) ret.min = value;
+      if(value > ret.max) ret.max = value;
+    }
+    current_value = ret;
+    return ret;
+  }
+
+    /**
+     *  Simple function to get the current elapsed time in microseconds
+     */ 
     long long getCurrentTimeMicroseconds() {
         auto currentTimePoint = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());

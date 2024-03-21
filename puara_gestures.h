@@ -62,6 +62,12 @@ namespace puara_gestures {
         DiscreteArray(int n) : arr(std::vector<int>(n)) {}
     };
 
+    template <typename T>
+    struct MinMax {
+        T min;
+        T max;
+    };
+
 }
 
 #endif

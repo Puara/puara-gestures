@@ -15,9 +15,7 @@ namespace puara_gestures {
             *tied_value = reading;
         }
 
-        buffer.add(reading);
-
-        double abs_reading = std::abs(buffer.buffer.front());
+        double abs_reading = std::abs(reading);
             
         if (abs_reading > 0.1) {
             integrator.integrate(abs_reading/10, fast_leak);

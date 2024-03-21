@@ -43,7 +43,6 @@ namespace puara_gestures {
             double current_value();
             int tie(Coord1D* new_tie);
         private:
-            utils::CircularBuffer buffer;
             double* tied_value;
     };
 

@@ -9,13 +9,16 @@
 #ifndef PUARA_UTILS_H
 #define PUARA_UTILS_H
 
+#include "../puara_gestures.h"
+
 #include <chrono>
+#include <boost/circular_buffer.hpp>
 #include <deque>
 
 namespace puara_gestures::utils {
 
     /**
-     *  Simple leaky integrator implementation
+     *  @brief Simple leaky integrator implementation.
      */ 
     class LeakyIntegrator {
         public:
@@ -36,11 +39,12 @@ namespace puara_gestures::utils {
 
             double integrate(double reading);
             double integrate(double reading, double leak);
+            double integrate(double reading, double leak, long long time);
     };
 
     /**
-     *  Simple class to renge values according to min and max (in and out)
-     *  established values
+     *  @brief Simple class to renge values according to min and max (in and out)
+     *  established values.
      */ 
     class MapRange {
         public:
@@ -55,7 +59,7 @@ namespace puara_gestures::utils {
     };
 
     /**
-     *  Simple circular buffer
+     *  Simple circular buffer. 
      *  This was created to ensure compatibility with older ESP SoCs
      */ 
     class CircularBuffer {
@@ -65,20 +69,35 @@ namespace puara_gestures::utils {
             double add(double element);
     };
 
+    template <typename T>
     /**
-     *  Simple function to get the current elapsed time in microseconds
+     * @brief Calculates the minimum and maximum values of the last N updates. 
+     * The default N value is 10, modifiable during initialization.
+     * Ported from https://github.com/celtera/avendish/blob/56b89e52e367c67213be0c313d2ed3b9fb1aac19/examples/Ports/Puara/Jab.hpp#L15
+     */
+    class RollingMinMax {
+        public:
+            RollingMinMax(size_t buffer_size=10) : buf(buffer_size) {}
+
+            puara_gestures::MinMax<T> current_value;
+            puara_gestures::MinMax<T> update(T value);
+        private:
+            boost::circular_buffer<T> buf;
+    };
+
+    /**
+     *  @brief Simple function to get the current elapsed time in microseconds.
      */ 
     long long getCurrentTimeMicroseconds();
 
     /**
-     * Function used to reduce feature arrays into single values
-     * 
+     * @brief Function used to reduce feature arrays into single values. 
      * E.g., brush uses it to reduce multiBrush instances
      */
     double arrayAverageZero (double * Array, int ArraySize);
 
     /**
-     * Legacy function used to calculate 1D blob detection in older 
+     * @brief Legacy function used to calculate 1D blob detection in older 
      * digital musical instruments
      */ 
     void bitShiftArrayL (int * origArray, int * shiftedArray, int arraySize, int shift);
