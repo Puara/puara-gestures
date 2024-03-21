@@ -14,8 +14,11 @@
 #include <chrono>
 #include <boost/circular_buffer.hpp>
 #include <deque>
+#include <math.h>
 
-namespace puara_gestures::utils {
+namespace puara_gestures {
+    
+namespace utils {
 
     /**
      *  @brief Simple leaky integrator implementation.
@@ -28,6 +31,14 @@ namespace puara_gestures::utils {
             int frequency; // leaking frequency (Hz)
             unsigned long long timer;
 
+            /**
+             * @brief Call integrator
+             * 
+             * @param reading new value to add into the integrator
+             * @param custom_leak between 0 and 1
+             * @param time in microseconds
+             * @return double 
+             */
             LeakyIntegrator(
                 double currentValue = 0, 
                 double oldValue = 0, 
@@ -101,6 +112,47 @@ namespace puara_gestures::utils {
      * digital musical instruments
      */ 
     void bitShiftArrayL (int * origArray, int * shiftedArray, int arraySize, int shift);
+}
+
+namespace convert {
+
+    /**
+     * @brief Convert g's to m/s^2
+     * 
+     */
+    double g_to_ms2(double reading);
+
+    /**
+     * @brief Convert m/s^2 to g's
+     * 
+     */
+    double ms2_to_g(double reading);
+
+    /**
+     * @brief Convert DPS to radians per second
+     * 
+     */
+    double dps_to_rads(double reading);
+
+    /**
+     * @brief Convert radians per second to DPS
+     * 
+     */
+    double rads_to_dps(double reading);
+
+    /**
+     * @brief Convert Gauss to uTesla
+     * 
+     */
+    double gauss_to_utesla(double reading);
+
+    /**
+     * @brief Convert uTesla to Gauss 
+     * 
+     */
+    double utesla_to_gauss(double reading);
+
+}
 }
 
 #endif

@@ -8,16 +8,10 @@
 
 #include "puara-utils.h"
 
-namespace puara_gestures::utils {
+namespace puara_gestures {
+    
+namespace utils {
 
-    /**
-     * @brief Call integrator
-     * 
-     * @param reading new value to add into the integrator
-     * @param custom_leak between 0 and 1
-     * @param time in microseconds
-     * @return double 
-     */
     double LeakyIntegrator::integrate (double reading, double custom_leak, long long time) {
         double leakValue = custom_leak;
         if (frequency <= 0) {
@@ -77,19 +71,16 @@ namespace puara_gestures::utils {
 
     template <typename T>
     puara_gestures::MinMax<T> RollingMinMax<T>::update(T value) {
-    min_max ret{.min = value, .max = value};
-    buf.push_back(value);
-    for(const T value : buf) {
-      if(value < ret.min) ret.min = value;
-      if(value > ret.max) ret.max = value;
+        puara_gestures::MinMax<T> ret{.min = value, .max = value};
+        buf.push_back(value);
+        for(const T value : buf) {
+            if(value < ret.min) ret.min = value;
+            if(value > ret.max) ret.max = value;
+        }
+        current_value = ret;
+        return ret;
     }
-    current_value = ret;
-    return ret;
-  }
 
-    /**
-     *  Simple function to get the current elapsed time in microseconds
-     */ 
     long long getCurrentTimeMicroseconds() {
         auto currentTimePoint = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
@@ -127,5 +118,34 @@ namespace puara_gestures::utils {
             }
         }
     }
+
+}
+
+namespace convert {
+
+    double g_to_ms2(double reading) {
+        return reading * 9.80665;
+    }
+
+    double ms2_to_g(double reading) {
+        return reading / 9.80665;
+    }
+
+    double dps_to_rads(double reading) {
+        return reading * M_PI / 180;
+    }
+
+    double rads_to_dps(double reading) {
+        return reading * 180 / M_PI;
+    }
+
+    double gauss_to_utesla(double reading) {
+        return reading / 10000;
+    }
+
+    double utesla_to_gauss(double reading) {
+        return reading * 10000;
+    }
+}
 
 }

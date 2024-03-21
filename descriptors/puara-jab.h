@@ -19,7 +19,7 @@ namespace puara_gestures {
 
     /**
      * @brief This class creates jab gestures using 1DoF info.
-     * It expects 1 axis of a accelerometer, but can be used
+     * It expects 1 axis of a accelerometer in m/s^2, but can be used
      * with any double or float.
      */
     class Jab {
@@ -44,7 +44,7 @@ namespace puara_gestures {
 
     /**
      * @brief This class creates jab gestures using 2DoF info.
-     * It expects 2 axis of a accelerometer, but can be used
+     * It expects 2 axis of a accelerometer in m/s^2, but can be used
      * with any double or float.
      */
     class Jab2D {
@@ -62,7 +62,7 @@ namespace puara_gestures {
 
     /**
      * @brief This class creates jab gestures using 3DoF info.
-     * It expects 3 axis of a accelerometer, but can be used
+     * It expects 3 axis of a accelerometer in m/s^2, but can be used
      * with any double or float.
      */
     class Jab3D {
