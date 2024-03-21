@@ -25,28 +25,38 @@
 namespace puara_gestures {
 
     struct Coord1D {
-        double X;
+        double x;
     };
 
     struct Coord2D {
-        double X, Y;
+        double x, y;
     };
 
     struct Coord3D {
-        double X, Y, Z;
+        double x, y, z;
+    };
+
+    struct Spherical {
+        double azimuth; 
+        double& phi = azimuth;
+        double elevation;
+        double& theta = elevation;
+        double distance;
+        double& r = distance;
+    };
+
+    struct Quaternion {
+        double w, x, y, z;
     };
 
     struct Imu6Axis {
-        struct accl {double X, Y, Z;};
-        struct gyro {double X, Y, Z;};
+        Coord3D accl, gyro;
     };
 
     struct Imu9Axis {
-        struct accl {double X, Y, Z;};
-        struct gyro {double X, Y, Z;};
-        struct magn {double X, Y, Z;};
+        Coord3D accl, gyro, magn;
     };
-
+    
     struct DiscreteArray {
         std::vector<int> arr;
         DiscreteArray(int n) : arr(std::vector<int>(n)) {}

@@ -31,7 +31,7 @@ namespace puara_gestures {
     }
 
     int Shake::update(Coord1D reading) {
-        Shake::update(reading.X);
+        Shake::update(reading.x);
         return 1;
     }
 
@@ -58,14 +58,74 @@ namespace puara_gestures {
     }
 
     int Shake::tie(Coord1D* new_tie) {
-        tied_value = &(new_tie->X);
+        tied_value = &(new_tie->x);
+        return 1;
+    }
+
+    int Shake2D::update(double readingX, double readingY) {
+        x.update(readingX);
+        y.update(readingY);
+        return 1;
+    }
+
+    int Shake2D::update(Coord2D reading) {
+        x.update(reading.x);
+        y.update(reading.y);
+        return 1;
+    }
+
+    int Shake2D::update() {
+        x.update();
+        y.update();
         return 1;
     }
 
     double Shake2D::frequency (double freq) {
-        X.frequency(freq);
-        Y.frequency(freq);
+        x.frequency(freq);
+        y.frequency(freq);
         return freq;
     }
 
+    Coord2D Shake2D::current_value() {
+        Coord2D answer;
+        answer.x = x.current_value();
+        answer.y = y.current_value();
+        return answer;
+    }
+
+    int Shake3D::update(double readingX, double readingY, double readingZ) {
+        x.update(readingX);
+        y.update(readingY);
+        z.update(readingZ);
+        return 1;
+    }
+
+    int Shake3D::update(Coord3D reading) {
+        x.update(reading.x);
+        y.update(reading.y);
+        z.update(reading.z);
+        return 1;
+    }
+
+    int Shake3D::update() {
+        x.update();
+        y.update();
+        z.update();
+        return 1;
+    }
+
+    double Shake3D::frequency (double freq) {
+        x.frequency(freq);
+        y.frequency(freq);
+        z.frequency(freq);
+        return freq;
+    }
+
+    Coord3D Shake3D::current_value() {
+        Coord3D answer;
+        answer.x = x.current_value();
+        answer.y = y.current_value();
+        answer.z = z.current_value();
+        return answer;
+    }
 }
