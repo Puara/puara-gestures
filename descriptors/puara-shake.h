@@ -1,15 +1,15 @@
-//****************************************************************************//
-// Puara Gestures - Jab (.h)                                                  //
-// Metalab - Société des Arts Technologiques (SAT)                            //
-// Input Devices and Music Interaction Laboratory (IDMIL), McGill University  //
-// Edu Meneses (2022-2024) - https://github.com/edumeneses                    //
-//****************************************************************************//
+//********************************************************************************//
+// Puara Gestures - Jab (.h)                                                      //
+// https://github.com/Puara/puara-gestures                                        //
+// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
+// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
+// Edu Meneses (2024) - https://www.edumeneses.com                                //
+//********************************************************************************//
 
 
 #ifndef PUARA_SHAKE_H
 #define PUARA_SHAKE_H
 
-#include "../puara_gestures.h"
 #include "puara-utils.h"
 
 #include <algorithm>

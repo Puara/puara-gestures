@@ -1,19 +1,43 @@
-cmake_minimum_required(VERSION 3.20)
-
-cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH CMAKE_PARENT_SOURCE_DIR)
-
-option(WITH_STATIC "Build LIBLO static library." ON)
-
-project(puara_gestures)
-
-add_subdirectory(liblo/cmake)
-
-add_executable(${PROJECT_NAME} ${CMAKE_PARENT_SOURCE_DIR}/IMU_Sensor_Fusion/imu_orientation.h ${CMAKE_PARENT_SOURCE_DIR}/IMU_Sensor_Fusion/imu_orientation.cpp ${CMAKE_PARENT_SOURCE_DIR}/puara_gestures.h ${CMAKE_PARENT_SOURCE_DIR}/puara_gestures.cpp main.cpp)
-
-target_include_directories(${PROJECT_NAME} PRIVATE 
-    ${CMAKE_CURRENT_SOURCE_DIR}/liblo/cmake 
-    ${CMAKE_PARENT_SOURCE_DIR}/liblo 
-    ${CMAKE_PARENT_SOURCE_DIR}/IMU_Sensor_Fusion 
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
+project(Puara-gestures-standalone
+  VERSION 0.1
+  DESCRIPTION "Puara-gestures over OSC"
+  LANGUAGES CXX
+  HOMEPAGE_URL "https://github.com/Puara/puara-gestures/standalone"
 )
 
-target_link_libraries(${PROJECT_NAME} liblo_static )
+# Configuration
+include(FetchContent)
+
+set(CMAKE_CXX_STANDARD 20)
+
+# Dependencies
+
+# Enable only what is needed for this project
+set(OSSIA_EDITOR 0)
+set(OSSIA_DATAFLOW 0)
+set(OSSIA_OVERRIDE_PROTOCOLS "OSC;OSCQuery")
+
+FetchContent_Declare(
+  libossia
+  GIT_REPOSITORY "https://github.com/OSSIA/libossia"
+  GIT_TAG master
+  GIT_PROGRESS true
+)
+FetchContent_MakeAvailable(libossia)
+
+# Project setup
+add_executable(puara-gestures-standalone)
+
+target_sources(puara-gestures-standalone 
+  PRIVATE 
+    main.cpp
+)
+target_link_libraries(puara-gestures-standalone
+  PRIVATE
+  ossia
+)
+target_include_directories(puara-gestures-standalone 
+  PRIVATE 
+  ${libossia_SOURCE_DIR}/ossia/include
+)

@@ -1,122 +1,59 @@
 
-//****************************************************************************//
-// Puara Gestures standalone - Receive OSC data to generate high-level        //
-//                             gestural descriptors                           //
-// https://github.com/Puara/puara-gestures                                    //
-// Metalab - Société des Arts Technologiques (SAT)                            //
-// Input Devices and Music Interaction Laboratory (IDMIL), McGill University  //
-// Edu Meneses (2023) - https://www.edumeneses.com                            //
-//****************************************************************************//
+//********************************************************************************//
+// Puara Gestures standalone - Receive OSC data to generate high-level            //
+//                             gestural descriptors                               //
+// https://github.com/Puara/puara-gestures                                        //
+// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
+// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
+// Edu Meneses (2024) - https://www.edumeneses.com                                //
+//********************************************************************************//
 
 #include "../puara_gestures.h"
+
+#include <ossia/network/generic/generic_device.hpp>
+#include <ossia/network/osc/osc.hpp>
+
+#include <ossia/network/base/parameter_data.hpp>
+// #include <ossia/network/common/debug.hpp>
+
 #include <iostream>
+
 #include <chrono>
 #include <thread>
-#include <atomic>
-#include <condition_variable>
-#include <csignal>
-#include <vector>
-#include "lo/lo.h"
-#include "lo/lo_cpp.h"
 
-int osc_server_port = 9000;
-int update_interval = 33; //milliseconds
+std::string client_ip = "127.0.0.1";
+int client_port = 9000;
+int local_port = 9001;
+std::string device_name = "Puara_Gestures";
 
-PuaraGestures gestures;
-
-std::atomic<bool> keepRunning(true);
-std::condition_variable cv;
-std::mutex mtx;
-
-std::vector<std::thread> threads;
-
-lo::ServerThread osc_server(osc_server_port);
-
-int binaryArray[30];
-
-void floatToBinaryPositionArray(float inputValue, int binaryArray[30]) {
-    if (inputValue < 0 || inputValue > 1) {
-        std::cerr << "Error: Input value must be between 0 and 1." << std::endl;
-        return;
-    }
-
-    // Convert position to array index
-    int arrayIndex = static_cast<int>(inputValue * 30);
-
-    // Ensure the index is within bounds
-    arrayIndex = std::min(std::max(arrayIndex, 0), 29);
-
-    // Set the corresponding position to 1
-    for (int i = 0; i < 30; ++i) {
-        binaryArray[i] = (i == arrayIndex) ? 1 : 0;
-    }
-}
-
-int oscFunctions(){
-    osc_server.add_method("/puaragestures/1DoF", "f",
-    [&](lo_arg **argv, int) {
-        float dof = argv[0]->f;
-        floatToBinaryPositionArray(dof, binaryArray);
-        gestures.updateTouchArray(binaryArray,30);
-    });
-    osc_server.add_method("/livepose/skeletons/0/0/keypoints/RIGHT_WRIST", "fff",
-    [&](lo_arg **argv, int) {
-        float dof = argv[0]->f;
-            //std::cout << "data: " << dof << std::endl;
-            floatToBinaryPositionArray(dof, binaryArray);
-            gestures.updateTouchArray(binaryArray,30);
-    });
-    // osc_server.add_method("/AMIwrist_001/raw/accl", "fff",
-    // [&](lo_arg **argv, int) {
-    //     float dof = argv[0]->f;
-    //     floatToBinaryPositionArray(dof, binaryArray);
-    //     gestures.updateTouchArray(binaryArray,30);
-    // });
-    return 0;
-}
-
-void killlHandler(int signum) {
-    std::cout << "\nClosing Puara Gestures..." << std::endl;
-    keepRunning.store(false);
-    cv.notify_all();
-}
-
-void updateSensorsThread() {
-    while (keepRunning.load()) {
-        gestures.updateInertialGestures();
-    }
-}
-
-void printBrushThread() {
-    while (keepRunning.load()) {
-        if (gestures.brush > 0.5) std::cout << "Swipe: " << gestures.brush << std::endl;
-    }
-}
+// Print unhandled incoming messages
+auto cb = [](ossia::string_view v, const ossia::value& val) {
+    std::cout << "Unhandled message: " << v << " => " << ossia::value_to_pretty_string(val) << std::endl;
+};
 
 int main(int argc, char* argv[]) {
 
-    oscFunctions();
+    int i = 0;
 
-    if (!osc_server.is_valid()) {
-        std::cerr << "Error, liblo OSC server did not initialized correctly."
-                << " This program cannot accept OSC messages" << std::endl;
-    } else {
-        osc_server.start();
-    }
+    ossia::net::generic_device device {
+        std::make_unique<ossia::net::osc_protocol>(
+            client_ip, client_port, local_port), device_name
+    };
 
-    std::signal(SIGINT, killlHandler);
-
-    gestures.setGyroscopeValues(0.0, 0.0, 0.0);
-    gestures.setAccelerometerValues(0.0, 0.0, 0.0);
-    gestures.setMagnetometerValues(0.0, 0.0, 0.0);
-
-    threads.emplace_back(updateSensorsThread);
-    threads.emplace_back(printBrushThread);
-
-    {
-        std::unique_lock<std::mutex> lock(mtx);
-        cv.wait(lock, []{ return !keepRunning; });
-    }
+    device.on_unhandled_message.connect(&cb);
     
-    return 0;
+    auto& node = find_or_create_node(device, "/foo/bar");
+    auto param = node.create_parameter(ossia::val_type::INT);
+
+    param->add_callback([&](const ossia::value& v) {
+        std::cout << "New value received: " << ossia::value_to_pretty_string(v) << std::endl;
+        i = ossia::convert<int>(v); 
+    });
+
+    while(true) {
+
+        param->push_value(i); i += 1;
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+  };
 }

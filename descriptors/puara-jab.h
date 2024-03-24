@@ -1,9 +1,10 @@
-//****************************************************************************//
-// Puara Gestures - Jab (.h)                                                  //
-// Metalab - Société des Arts Technologiques (SAT)                            //
-// Input Devices and Music Interaction Laboratory (IDMIL), McGill University  //
-// Edu Meneses (2022-2024) - https://github.com/edumeneses                    //
-//****************************************************************************//
+//********************************************************************************//
+// Puara Gestures - Jab (.h)                                                      //
+// https://github.com/Puara/puara-gestures                                        //
+// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
+// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
+// Edu Meneses (2024) - https://www.edumeneses.com                                //
+//********************************************************************************//
 
 
 #ifndef PUARA_JAB_H
@@ -24,12 +25,10 @@ namespace puara_gestures {
      */
     class Jab {
         public:
-            Jab() : tied_value(nullptr) {}
-            Jab(double* tied) : tied_value(tied) {}
-            Jab(Coord1D* tied) : tied_value(&(tied->x)) {}
-
-            Jab(int threshold = 5) : threshold(threshold) {}
-            Jab(int threshold = 5, int buffer_size = 10) : threshold(threshold), minmax(buffer_size) {}
+            Jab() : tied_value(nullptr), threshold(5), minmax(10) {}
+            Jab(double* tied) : tied_value(tied), threshold(5), minmax(10) {}
+            Jab(Coord1D* tied) : tied_value(&(tied->x)), threshold(5), minmax(10) {}
+            
             int threshold;
             double update(double reading);
             int update(Coord1D reading);
@@ -49,7 +48,7 @@ namespace puara_gestures {
      */
     class Jab2D {
         public:
-            Jab2D() {}
+            Jab2D() : x(), y() {}
             Jab2D(Coord2D* tied) : x(&(tied->x)), y(&(tied->y)) {}
 
             Jab x, y;
