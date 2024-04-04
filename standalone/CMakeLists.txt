@@ -31,13 +31,14 @@ add_executable(puara-gestures-standalone)
 
 target_sources(puara-gestures-standalone 
   PRIVATE 
-    main.cpp
+  main.cpp
 )
 target_link_libraries(puara-gestures-standalone
-  PRIVATE
+  PRIVATE 
   ossia
 )
 target_include_directories(puara-gestures-standalone 
   PRIVATE 
   ${libossia_SOURCE_DIR}/ossia/include
+  ${libossia_SOURCE_DIR}/ossia
 )
