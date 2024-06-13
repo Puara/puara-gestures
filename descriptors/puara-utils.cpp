@@ -43,15 +43,6 @@ namespace utils {
         }
     }
 
-    double MapRange::range (double in) {
-        current_in = in;
-        if (outMin != outMax) {
-            return (in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-        } else {
-            return in;
-        }
-    }
-
     float MapRange::range (float in) {
         double casted_in = static_cast<double>(in);
         return static_cast<float>(range(casted_in));
@@ -81,6 +72,9 @@ namespace utils {
         current_value = ret;
         return ret;
     }
+
+    template 
+    puara_gestures::MinMax<double> RollingMinMax<double>::update(double);
 
     long long getCurrentTimeMicroseconds() {
         auto currentTimePoint = std::chrono::high_resolution_clock::now();

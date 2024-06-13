@@ -60,9 +60,9 @@ int main(int argc, char* argv[]) {
     });
 
     while(true) {
-
-        //param->push_value(i); i += 1;
-
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        puara_gestures::Coord3D shakeout = shake.current_value();
+        puara_gestures::Coord3D jabout = jab.current_value(); 
+        std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
   };
 }

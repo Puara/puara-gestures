@@ -26,6 +26,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libossia)
 
+file(GLOB_RECURSE PUARA_SOURCE ../descriptors/*.cpp)
+add_library(puara-gestures ${PUARA_SOURCE})
+
 # Project setup
 add_executable(puara-gestures-standalone)
 
@@ -36,6 +39,7 @@ target_sources(puara-gestures-standalone
 target_link_libraries(puara-gestures-standalone
   PRIVATE 
   ossia
+  puara-gestures
 )
 target_include_directories(puara-gestures-standalone 
   PRIVATE 
