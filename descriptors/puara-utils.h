@@ -49,7 +49,7 @@ namespace utils {
                 ) : current_value(currentValue), old_value(oldValue), leak(leakValue), 
                     frequency(freq), timer(timerValue) {}
 
-            double integrate(double reading) {
+            double integrate(double reading, float custom_leak, unsigned long time) {
                 double leakValue = custom_leak;
                 if (frequency <= 0) {
                     current_value = reading + (old_value * leakValue);
@@ -225,7 +225,7 @@ namespace convert {
      * @brief Convert radians per second to DPS
      * 
      */
-    double rads_to_dps(double reading) {
+    double rads_to_dps(double reading) {
         return reading * 180 / M_PI;
     }
 
