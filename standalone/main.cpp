@@ -35,6 +35,7 @@ ossia::net::generic_device device {
 
 puara_gestures::Shake3D shake;
 puara_gestures::Jab3D jab;
+puara_gestures::utils::LeakyIntegrator leakyintegrator;
 
 auto cb = [](ossia::string_view unhandled_node, const ossia::value& unhandled_value) {
     std::cout 
@@ -57,12 +58,13 @@ int main(int argc, char* argv[]) {
         ossia::vec3f accelerometer = ossia::convert<ossia::vec3f>(v);
         shake.update(accelerometer[0], accelerometer[1], accelerometer[2]);
         jab.update(accelerometer[0], accelerometer[1], accelerometer[2]);
+        leakyintegrator.integrate(accelerometer[0]);
     });
 
     while(true) {
         puara_gestures::Coord3D shakeout = shake.current_value();
         puara_gestures::Coord3D jabout = jab.current_value(); 
-        std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << std::endl;
+        std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << ", Integrator: " << leakyintegrator.current_value << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
   };
 }

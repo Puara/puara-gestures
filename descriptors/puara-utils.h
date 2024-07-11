@@ -49,26 +49,34 @@ namespace utils {
                 ) : current_value(currentValue), old_value(oldValue), leak(leakValue), 
                     frequency(freq), timer(timerValue) {}
 
-            double integrate(double reading) {
-                double leakValue = custom_leak;
-                if (frequency <= 0) {
-                    current_value = reading + (old_value * leakValue);
-                } else if ((time/1000LL)  - (1000 / frequency) < timer) {  
+            double integrate(double reading, double custom_old_value, double custom_leak, int custom_frequency, unsigned long long& custom_timer){
+                auto currentTimePoint = std::chrono::high_resolution_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
+                unsigned long long current_time = duration.count();
+                if (custom_frequency <= 0) {
+                    current_value = reading + (custom_old_value * custom_leak);
+                } else if ((current_time/1000LL)  - (1000 / frequency) < custom_timer) {  
                     current_value = reading + old_value;
                 } else {
-                    current_value = reading + (old_value * leakValue);
-                    timer = (time/1000LL);
+                    current_value = reading + (old_value * custom_leak);
+                    custom_timer = (current_time/1000LL);
                 }
                 return current_value;
             }
 
-            double integrate(double reading, double leak) {
-                return LeakyIntegrator::integrate (reading, leak, getCurrentTimeMicroseconds());
+            double integrate(double reading, double leak, unsigned long long& time) {
+                return LeakyIntegrator::integrate(reading, old_value, leak, frequency, time);
             }
 
-            double integrate(double reading, double leak, long long time) {
-                return LeakyIntegrator::integrate (reading, leak);
+            double integrate(double reading, double custom_leak) {
+                return LeakyIntegrator::integrate(reading, old_value, custom_leak, frequency, timer);
             }
+
+            double integrate(double reading) {
+                return LeakyIntegrator::integrate(reading, old_value, leak, frequency, timer);
+            }
+
+
     };
 
     /**
@@ -148,7 +156,7 @@ namespace utils {
     /**
      *  @brief Simple function to get the current elapsed time in microseconds.
      */ 
-    long long getCurrentTimeMicroseconds() {
+    unsigned long long getCurrentTimeMicroseconds() {
         auto currentTimePoint = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
         return duration.count();
@@ -225,7 +233,7 @@ namespace convert {
      * @brief Convert radians per second to DPS
      * 
      */
-    double rads_to_dps(double reading) {
+    double rads_to_dps(double reading) {
         return reading * 180 / M_PI;
     }
 
