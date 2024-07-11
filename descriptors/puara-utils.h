@@ -49,7 +49,7 @@ namespace utils {
                 ) : current_value(currentValue), old_value(oldValue), leak(leakValue), 
                     frequency(freq), timer(timerValue) {}
 
-            double integrate(double reading, float custom_leak, unsigned long time) {
+            double integrate(double reading, float custom_leak, long long time) {
                 double leakValue = custom_leak;
                 if (frequency <= 0) {
                     current_value = reading + (old_value * leakValue);
