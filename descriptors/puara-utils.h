@@ -61,6 +61,7 @@ namespace utils {
                     current_value = reading + (custom_old_value * custom_leak);
                     custom_timer = (current_time/1000LL);
                 }
+                old_value = current_value;
                 return current_value;
             }
 
