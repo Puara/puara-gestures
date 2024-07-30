@@ -56,11 +56,12 @@ namespace utils {
                 if (custom_frequency <= 0) {
                     current_value = reading + (custom_old_value * custom_leak);
                 } else if ((current_time/1000LL)  - (1000 / frequency) < custom_timer) {  
-                    current_value = reading + old_value;
+                    current_value = reading + custom_old_value;
                 } else {
-                    current_value = reading + (old_value * custom_leak);
+                    current_value = reading + (custom_old_value * custom_leak);
                     custom_timer = (current_time/1000LL);
                 }
+                old_value = current_value;
                 return current_value;
             }
 
