@@ -20,6 +20,8 @@
 #include "descriptors/puara-utils.h"
 #include "descriptors/puara-jab.h"
 #include "descriptors/puara-shake.h"
+#include "descriptors/puara-roll.h"
 #include "descriptors/IMU_Sensor_Fusion/imu_orientation.h"
+#include "testing_roll.h"
 
 #endif

@@ -17,13 +17,57 @@
 #include <deque>
 #include <math.h>
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+#include <list>
+
 namespace puara_gestures {
-    
+
 namespace utils {
+
+    void changeRawFile(std::string filename) {
+        // get filepath
+        std::string filepath = "/Users/maggieneedham/Downloads/InternshipSAT/puara-gestures/standalone/build/roll_lateral test data/raw/"+filename;
+        std::ifstream inputFile(filepath);
+        std::string line;
+        // keep track of lines
+        int linecount = 0;
+        // start a new file
+        std::ofstream newfile;
+        newfile.open(filename);
+
+
+        while (std::getline(inputFile, line, 'n')) {
+            linecount += 1;
+            std::string toWrite = linecount == 1 ? line + "\n" : line.substr(1) + "\n";
+            newfile << toWrite;
+        }
+        newfile.close();
+        inputFile.close();
+    };
+
+    Coord3D readinRaw(std::string line) {
+        Coord3D cart;
+        // separate out by spaces into three numbers, turn into doubles
+        int first_space = line.find_first_of(" ");
+        int second_space = line.substr(first_space +1).find_first_of(" ") + first_space + 1;
+        double x = std::stod(line.substr(0, first_space));
+        double y = std::stod(line.substr(first_space + 1, second_space));
+        double z = std::stod(line.substr(second_space + 1, line.size()));
+        // add three doubles to a Coord3D
+        cart.x = x;
+        cart.y = y;
+        cart.z = z;
+        // return Coord3D
+        return cart;
+    };
+
 
     /**
      *  @brief Simple leaky integrator implementation.
-     */ 
+     */
     class LeakyIntegrator {
         public:
             double current_value;
@@ -34,35 +78,37 @@ namespace utils {
 
             /**
              * @brief Call integrator
-             * 
+             *
              * @param reading new value to add into the integrator
              * @param custom_leak between 0 and 1
              * @param time in microseconds
-             * @return double 
+             * @return double
              */
             LeakyIntegrator(
-                double currentValue = 0, 
-                double oldValue = 0, 
-                double leakValue = 0.5, 
-                int freq = 100, 
+                double currentValue = 0,
+                double oldValue = 0,
+                double leakValue = 0.5,
+                int freq = 100,
                 unsigned long long timerValue = 0
-                ) : current_value(currentValue), old_value(oldValue), leak(leakValue), 
+                ) : current_value(currentValue), old_value(oldValue), leak(leakValue),
                     frequency(freq), timer(timerValue) {}
 
             double integrate(double reading, double custom_old_value, double custom_leak, int custom_frequency, unsigned long long& custom_timer){
                 auto currentTimePoint = std::chrono::high_resolution_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
                 unsigned long long current_time = duration.count();
+
                 if (custom_frequency <= 0) {
                     current_value = reading + (custom_old_value * custom_leak);
-                } else if ((current_time/1000LL)  - (1000 / frequency) < custom_timer) {  
+                } else if ((current_time/1000LL)  - (1000 / frequency) < custom_timer) {
                     current_value = reading + old_value;
                 } else {
-                    current_value = reading + (old_value * custom_leak);
-                    custom_timer = (current_time/1000LL);
+                    current_value = reading + (custom_old_value * custom_leak);
+                    timer = (current_time/1000LL);
                 }
                 return current_value;
             }
+
 
             double integrate(double reading, double leak, unsigned long long& time) {
                 return LeakyIntegrator::integrate(reading, old_value, leak, frequency, time);
@@ -80,9 +126,151 @@ namespace utils {
     };
 
     /**
+     * @brief Undoes the modulating effects of a spherical angle representation
+     */
+    class Unwrap {
+        public:
+            double prev_angle;
+            double accum;
+            double min;
+            double max;
+            double range;
+
+            Unwrap(
+                double prevAngle = 0,
+                double accum = 0,
+                double min = 0,
+                double max = 3.141529
+                ) : prev_angle(prevAngle), accum(accum), min(min),
+                    max(max), range(max - min) {}
+
+            double unwrap(double reading) {
+                bool wrapped = false;
+                double diff = reading - prev_angle;
+
+                prev_angle = reading;
+                if (diff  > (range / 2)) {
+                    accum += 1;
+                    wrapped = true;
+                }
+                if (diff < (range * -1 / 2)) {
+                    accum -= 1;
+                    wrapped = true;
+                }
+                // std::cout << "accum = " << accum << ", ";
+                return wrapped ? reading + accum * range : reading;
+            }
+
+    };
+
+    /**
+     * @brief Undoes the modulating effects of a spherical angle representation
+     * Suitable for an angle measurement that, after reaching the maximum, decreases to the minimum
+     * instead of switching directly to the minimum (a "folding" measurement).
+     */
+    class Unfold {
+        public:
+            std::list<double> rolls;
+            double min;
+            double max;
+            double allowance;
+
+            Unfold(
+                double min = 0,
+                double max = 3.141592,
+                double allowance = 0.055
+                ) : min(min), max(max), allowance(allowance) {}
+
+            /**
+             * Evaluates the "unfolded" value -- takes the number of turns into account to generate non-modulated value
+             */
+            double unfold (double reading) {
+                double unfolded;
+
+                // if the list is empty (not passed over min or max), return value
+                if (rolls.size() == 0) {
+                    unfolded = reading;
+                }
+
+                // find if length of list is even in order to calculate new value
+                bool isEven = rolls.size() % 2 == 0;
+
+                // find the number of full rolls -- (0, 1) or (1, 0) pairs
+                double fullRolls = isEven ? rolls.size() / 2 : (rolls.size() - 1) / 2 ;
+
+                // if the first value is 0, the list just has (0, 1) pairs
+                // decreases value
+                if (rolls.front() == 0) {
+                    double sum = fullRolls * -2 * max;
+                    unfolded =  isEven ? sum + reading : sum - reading;
+                }
+                // if the first value is 1, the list just has (1, 0) pairs
+                // increases value
+                if (rolls.front() == 1) {
+                    double sum = isEven ? fullRolls * 2 * max : (fullRolls + 1) * 2 * max;
+                    unfolded = isEven ? sum + reading : sum - reading;
+                }
+
+                // update the list after finding value so that a value close to 0 or 1 just
+                // changes the status of the list but isn't evaluated according to new list
+                // if close to minimum
+                if (reading < (min + allowance)) {
+                    // add a 0 to indicate it passed min
+                    rolls.push_back(0);
+                }
+                // if close to maximum
+                if (reading > (max - allowance)) {
+                    //add a 1 to indicate it passed max
+                    rolls.push_back(1);
+                }
+                // if the device has passed over the min twice or the max twice,
+                // revert to the previous state by removing these values from the list
+                popPairs();
+
+                return unfolded;
+            }
+
+            /**
+             * If the device passes through the min/max twice in a row, erases from history to
+             * revert back to previous state
+             */
+            void popPairs() {
+                if (rolls.size() > 1) {
+                    // comparing last two values
+                    auto rit = rolls.rbegin();
+                    double last = *rit;
+                    ++rit;
+                    // if the last two are the same, remove from list
+                    if (last == *rit) {
+                        rolls.pop_back();
+                        rolls.pop_back();
+                    }
+                }
+            }
+
+            /**
+             * Clears list memory
+             */
+            void clear() {
+                rolls.clear();
+            }
+
+            /**
+             * Printing function for testing
+             */
+            void printList() {
+                std::cout << "list = ";
+                for (auto i : rolls) {
+                    std::cout << i << ", ";
+                }
+            }
+
+    };
+
+    /**
      *  @brief Simple class to renge values according to min and max (in and out)
      *  established values.
-     */ 
+     */
     class MapRange {
         public:
             double current_in = 0;
@@ -111,9 +299,9 @@ namespace utils {
     };
 
     /**
-     *  Simple circular buffer. 
+     *  Simple circular buffer.
      *  This was created to ensure compatibility with older ESP SoCs
-     */ 
+     */
     class CircularBuffer {
         public:
             int size = 10;
@@ -129,7 +317,7 @@ namespace utils {
 
     template <typename T>
     /**
-     * @brief Calculates the minimum and maximum values of the last N updates. 
+     * @brief Calculates the minimum and maximum values of the last N updates.
      * The default N value is 10, modifiable during initialization.
      * Ported from https://github.com/celtera/avendish/blob/56b89e52e367c67213be0c313d2ed3b9fb1aac19/examples/Ports/Puara/Jab.hpp#L15
      */
@@ -155,7 +343,7 @@ namespace utils {
 
     /**
      *  @brief Simple function to get the current elapsed time in microseconds.
-     */ 
+     */
     unsigned long long getCurrentTimeMicroseconds() {
         auto currentTimePoint = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
@@ -163,7 +351,7 @@ namespace utils {
     }
 
     /**
-     * @brief Function used to reduce feature arrays into single values. 
+     * @brief Function used to reduce feature arrays into single values.
      * E.g., brush uses it to reduce multiBrush instances
      */
     double arrayAverageZero (double * Array, int ArraySize) {
@@ -177,15 +365,15 @@ namespace utils {
             }
         }
         if (count > 0) {
-            output = sum / count; 
+            output = sum / count;
         }
         return output;
     }
 
     /**
-     * @brief Legacy function used to calculate 1D blob detection in older 
+     * @brief Legacy function used to calculate 1D blob detection in older
      * digital musical instruments
-     */ 
+     */
     void bitShiftArrayL (int * origArray, int * shiftedArray, int arraySize, int shift) {
         for (int i=0; i < arraySize; ++i) {
             shiftedArray[i] = origArray[i];
@@ -201,13 +389,22 @@ namespace utils {
             }
         }
     }
+
+    /**
+     * @brief Function used to obtain the azimuth of a Spherical coordinate from a Cartesian 3D coordinate
+     * This will generate a value from 0 to 3.14
+     */
+    double getAzimuth(Coord3D reading) {
+        return acos(reading.z / (sqrt(pow(reading.x, 2) + pow(reading.y, 2) + pow(reading.z, 2) )));
+    }
+
 }
 
 namespace convert {
 
     /**
      * @brief Convert g's to m/s^2
-     * 
+     *
      */
     double g_to_ms2(double reading) {
         return reading * 9.80665;
@@ -215,7 +412,7 @@ namespace convert {
 
     /**
      * @brief Convert m/s^2 to g's
-     * 
+     *
      */
     double ms2_to_g(double reading) {
         return reading / 9.80665;
@@ -223,7 +420,7 @@ namespace convert {
 
     /**
      * @brief Convert DPS to radians per second
-     * 
+     *
      */
     double dps_to_rads(double reading) {
         return reading * M_PI / 180;
@@ -231,7 +428,7 @@ namespace convert {
 
     /**
      * @brief Convert radians per second to DPS
-     * 
+     *
      */
     double rads_to_dps(double reading) {
         return reading * 180 / M_PI;
@@ -239,20 +436,58 @@ namespace convert {
 
     /**
      * @brief Convert Gauss to uTesla
-     * 
+     *
      */
     double gauss_to_utesla(double reading) {
         return reading / 10000;
     }
 
     /**
-     * @brief Convert uTesla to Gauss 
-     * 
+     * @brief Convert uTesla to Gauss
+     *
      */
     double utesla_to_gauss(double reading) {
         return reading * 10000;
     }
 
+    /**
+     *  @brief Convert Cartesian to Polar coordinates
+     */
+    Coord2D car_to_pol (Coord2D reading) {
+        Coord2D pol;
+        pol.x = sqrt (pow(reading.x, 2) + pow(reading.y, 2));
+        pol.y = atan(reading.y / reading.x );
+        return pol;
+    }
+
+    /**
+     *  @brief Convert Cartesian to Polar coordinates
+     */
+    Coord2D car_to_pol (double reading_x, double reading_y) {
+        Coord2D pol;
+        pol.x = sqrt (pow(reading_x, 2) + pow(reading_y, 2));
+        pol.y = atan(reading_y / reading_x );
+        return pol;
+    }
+
+
+    /**
+     *  @brief Convert Cartesian to Spherical coordinates as in Max Patch
+     */
+    Spherical car_to_sphere (Coord3D reading) {
+        Spherical sphere;
+        Coord2D pol = car_to_pol(reading.y, reading.z);
+
+        Coord2D pol2 = car_to_pol(pol.x, reading.x);
+
+        sphere.distance = pol2.x;
+
+        sphere.azimuth = pol.y;
+
+        sphere.elevation = pol2.y;
+
+        return sphere;
+    }
 }
 }
 
