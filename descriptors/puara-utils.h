@@ -27,17 +27,14 @@ namespace puara_gestures {
 
 namespace utils {
 
-    void changeRawFile(std::string filename) {
-        // get filepath
-        std::string filepath = "/Users/maggieneedham/Downloads/InternshipSAT/puara-gestures/standalone/build/roll_lateral test data/raw/"+filename;
+    void changeRawFile(std::string filepath, std::string s) {
         std::ifstream inputFile(filepath);
         std::string line;
         // keep track of lines
         int linecount = 0;
         // start a new file
         std::ofstream newfile;
-        newfile.open(filename);
-
+        newfile.open(s);
 
         while (std::getline(inputFile, line, 'n')) {
             linecount += 1;
@@ -137,28 +134,35 @@ namespace utils {
             double range;
 
             Unwrap(
-                double prevAngle = 0,
+                double prevAngle = std::nan("0"), // set to unattainable value to be able to determine if angle is first
                 double accum = 0,
-                double min = 0,
-                double max = 3.141529
+                double min = - M_PI,
+                double max = M_PI
                 ) : prev_angle(prevAngle), accum(accum), min(min),
                     max(max), range(max - min) {}
 
-            double unwrap(double reading) {
-                bool wrapped = false;
-                double diff = reading - prev_angle;
+            double update(double reading) {
+                if (isnan(prev_angle)) {
+                    // then we know this is the first angle sent to unwrapped
+                    prev_angle = reading;
+                }
 
+                double diff = reading - prev_angle;
                 prev_angle = reading;
+
                 if (diff  > (range / 2)) {
-                    accum += 1;
-                    wrapped = true;
+                    accum -= 1;
                 }
                 if (diff < (range * -1 / 2)) {
-                    accum -= 1;
-                    wrapped = true;
+                    accum += 1;
                 }
-                // std::cout << "accum = " << accum << ", ";
-                return wrapped ? reading + accum * range : reading;
+
+                return reading + accum * range;
+            }
+
+            void clear() {
+                accum = 0;
+                prev_angle = std::nan("0");
             }
 
     };
@@ -177,7 +181,7 @@ namespace utils {
 
             Unfold(
                 double min = 0,
-                double max = 3.141592,
+                double max = M_PI,
                 double allowance = 0.055
                 ) : min(min), max(max), allowance(allowance) {}
 
@@ -342,6 +346,29 @@ namespace utils {
     };
 
     /**
+     * Finds time difference between now and when function was last called
+     */
+    // class TimeDifference {
+    //     public:
+    //         static long then;
+    //         std::chrono::duration<double> elapsed;
+
+    //         TimeDifference (
+    //             std::chrono::time_point<std::chrono::steady_clock> Then =  std::chrono::steady_clock::now()
+    //             ) : then(Then), now(Now){}
+
+    //         // auto seconds = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+    //         double update() {
+    //             long = std::chrono::steady_clock::now();
+    //             elapsed = then - now;
+    //             then = now;
+    //             std::cout << "elapsed.count () = " << elapsed.count() << "\n";
+    //             return elapsed.count();
+    //         }
+    // };
+
+
+    /**
      *  @brief Simple function to get the current elapsed time in microseconds.
      */
     unsigned long long getCurrentTimeMicroseconds() {
@@ -389,6 +416,7 @@ namespace utils {
             }
         }
     }
+
 
     /**
      * @brief Function used to obtain the azimuth of a Spherical coordinate from a Cartesian 3D coordinate

@@ -9,6 +9,8 @@
 #define PUARA_ROLL_H
 
 #include "puara-utils.h"
+#include "puara-structs.h"
+#include "IMU_Sensor_Fusion/imu_orientation.h"
 
 #include <algorithm>
 #include <iostream>
@@ -26,33 +28,42 @@ namespace puara_gestures {
      */
     class Roll {
         public:
-            Roll(double smooth) : smoothsize(smooth) {}
+            Roll(){};
 
-            double smoothsize;
-            utils::Unwrap unwrapper;
+            utils::Unwrap uw;
+            IMU_Orientation orientation;
             std::list<double> smoother =  {};
 
-
             /**
-             * undo modulating effect of turning coordinates into spherical form
-             * useful for smoothing effect
+             * Takes in accelerometer, gyroscope, magnometer values
              */
+            double update(Coord3D accel, Coord3D gyro, Coord3D mag) {
+
+                orientation.setAccelerometerValues(accel.x, accel.y, accel.z);
+                orientation.setGyroscopeDegreeValues(gyro.x, gyro.y, gyro.z, 0);
+                orientation.setMagnetometerValues(mag.x, mag.y, mag.z);
+
+                orientation.update(0.01);
+
+                return  orientation.euler.roll;
+            }
+
             double unwrap(double reading) {
-                return unwrapper.unwrap(reading);
+                return uw.update(reading);
             }
 
             /**
-             * Sets the "accum" value of unwrapper back to 0
+             * Resets "accum" and "prev_angle"
              */
             void clear_unwrap() {
-                unwrapper.accum = 0;
+                uw.clear();
             }
 
             /**
              * takes the average of the last n inputs, where n is a size set in the constructor
              * optional, leads to smoother readings
              */
-            double smooth(double reading) {
+            double smooth(double reading, double smoothsize) {
                 // add current value to list
                 smoother.push_front(reading);
                 // keep list at desired size
@@ -70,38 +81,21 @@ namespace puara_gestures {
             /**
              * Clears list of all previous and current inputs
              */
-            void clear_smooth_list() {
+            void clear_smooth() {
                 smoother.clear();
             }
 
             /**
-             * "Fold" angle again
+             *
              */
-            double fold(double reading, double min, double max) {
-                if ( min <= reading && reading <= max ) {
+            double wrap(double reading, double min, double max) {
+                double d = max - min;
+                if (min <= reading && reading <= max) {
                     return reading;
-                } else {
-                    double remainder = std::fmod(reading, (max - min));
-                    return max - (min + std::fabs(remainder));
+                } else if (reading >= max ) {
+                    return min +  (reading - std::fmod(min, d));
                 }
-            }
-
-            /**
-             * Process the angle for midi format (?) -- from "unwrapped"
-             */
-            double wrap(double reading) {
-                double value = std::fmod(reading, 6.28);
-                if (value < 0 ) {
-                    value += 6.28;
-                }
-                return (value * 0.159171);
-            }
-
-            /**
-             * sets the previous angle for unwrapper
-             */
-            void set_prev_angle(double reading) {
-                unwrapper.prev_angle = reading;
+                return max - (min - std::fmod(reading, d));
             }
 
     };
