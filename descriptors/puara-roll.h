@@ -37,10 +37,10 @@ namespace puara_gestures {
             /**
              * Takes in accelerometer, gyroscope, magnometer values
              */
-            double update(Coord3D accel, Coord3D gyro, Coord3D mag) {
+            double update(Coord3D accel, Coord3D gyro, Coord3D mag, double period) {
 
                 orientation.setAccelerometerValues(accel.x, accel.y, accel.z);
-                orientation.setGyroscopeDegreeValues(gyro.x, gyro.y, gyro.z, 0);
+                orientation.setGyroscopeDegreeValues(gyro.x, gyro.y, gyro.z, period);
                 orientation.setMagnetometerValues(mag.x, mag.y, mag.z);
 
                 orientation.update(0.01);

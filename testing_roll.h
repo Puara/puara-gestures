@@ -40,6 +40,7 @@ class testing_roll {
         std::list<std::string> files = {"jab.txt", "lasso.txt", "roll_clock.txt", "roll_counter.txt", "stat_down.txt", "stat_left.txt", "stat_right.txt", "stat_up.txt", "tilt_back.txt", "tilt_down.txt", "tilt_front.txt", "tilt_roll_back.txt", "tilt_roll_front.txt", "tilt_up.txt", "yaw_clock.txt", "yaw_counter.txt"};
         std::list<std::string> selected = {"roll_clock.txt", "roll_counter.txt", "stat_down.txt", "stat_left.txt", "stat_right.txt", "stat_up.txt" };
         std::list<std::string> onefile = {"roll_clock.txt"};
+
         for (std::string s : onefile) {
 
             std::cout << "\n----------------------------------------------------------------------\n";
@@ -47,10 +48,11 @@ class testing_roll {
             std::cout << "----------------------------------------------------------------------\n";
 
             // set up common path
-            std::string common = "/Users/maggieneedham/Downloads/InternshipSAT/puara-gestures/standalone/build/roll_lateral_imu data/updated/";
+            std::string common = "../../test_files/";
 
             // read in accl data
             std::string accl_path = common + "accl/" + s;
+            std::cout << "accl_path = " << accl_path << "\n";
             std::ifstream accl_file(accl_path);
             std::string accl_line;
 
