@@ -95,10 +95,6 @@ class testing_roll {
                 // get mag coordinates
                 puara_gestures::Coord3D mag;
                 mag = utils::readinRaw(mag_line);
-                // divide by 10,000 (undoing processing in max)
-                mag.x = mag.x;
-                mag.y = mag.y;
-                mag.z = mag.z;
 
                 // calibrate magnetometer
 
