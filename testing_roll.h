@@ -60,6 +60,11 @@ class testing_roll {
             std::ifstream gyro_file(gyro_path);
             std::string gyro_line;
 
+            // read in timestamp data
+            std::string timestamp_path = common + "timestamp_raw.csv";
+            std::ifstream timestamp_file(timestamp_path);
+            std::string timestamp_line;
+
             // read in mag data
             std::string mag_path = common +  "mag_raw.csv";
             std::ifstream mag_file(mag_path);
@@ -71,8 +76,8 @@ class testing_roll {
             std::string roll_line;
 
             // utils::TimeDifference timeDiff;
-            while (std::getline(accl_file, accl_line, '\n') && std::getline(gyro_file, gyro_line, '\n') && std::getline(mag_file, mag_line, '\n') && std::getline(roll_file, roll_line, '\n')) {
-                if (accl_line.empty() || gyro_line.empty() || mag_line.empty() || roll_line.empty() ) {
+            while (std::getline(accl_file, accl_line, '\n') && std::getline(gyro_file, gyro_line, '\n') && std::getline(timestamp_file, timestamp_line, '\n') && std::getline(mag_file, mag_line, '\n') && std::getline(roll_file, roll_line, '\n')) {
+                if (accl_line.empty() || gyro_line.empty() || timestamp_line.empty() || mag_line.empty() || roll_line.empty() ) {
                     break;
                 }
 
@@ -91,6 +96,9 @@ class testing_roll {
                 // gyro.y =  gyro.y * 180 / M_PI;
                 // gyro.z =  gyro.z * 180 / M_PI;
 
+                // get timestamp value
+                double timestamp = utils::readinRawSingleValue(timestamp_line);
+
                 // get mag coordinates
                 puara_gestures::Coord3D mag;
                 mag = utils::readinRawCSV(mag_line);
@@ -108,12 +116,11 @@ class testing_roll {
                 // mag.z = sz[0]*(mag.z-h[2]) + sz[1]*(mag.z-h[2]) + sz[2]*(mag.z-h[2]);
 
                 // get roll
-                double roll;
-                roll = utils::readinRawRoll(roll_line);
+                double roll =  utils::readinRawSingleValue(roll_line);
 
-                long then = utils::getCurrentTimeMicroseconds();
-                long now = utils::getCurrentTimeMicroseconds();
-                std::cout << "Puara Function = " << test.update(accl, gyro, mag, ((then - now))* 0.000001) << "; ";
+                // get timestamp
+
+                std::cout << "Puara Function = " << test.update(accl, gyro, mag, timestamp) << "; ";
                 std::cout << "Roll value = " << roll << "\n";
                 // std::cout << "; unwrapped = " << test.unwrap(ypr.z);
                 // std::cout << "; wrapped = " << test.wrap(test.unwrap(ypr.z), 0, 6.28) << "\n";

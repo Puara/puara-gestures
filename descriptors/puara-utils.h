@@ -76,7 +76,7 @@ namespace utils {
         return cart;
     }
 
-    double readinRawRoll(std::string line) {
+    double readinRawSingleValue(std::string line) {
         return std::stod(line);
     }
 
