@@ -118,10 +118,11 @@ class testing_roll {
                 // get roll
                 double roll =  utils::readinRawSingleValue(roll_line);
 
-                // get timestamp
+                double puara_roll = test.update(accl, gyro, mag, timestamp);
 
-                std::cout << "Puara Function = " << test.update(accl, gyro, mag, timestamp) << "; ";
-                std::cout << "Roll value = " << roll << "\n";
+                std::cout << "Puara Function = " << puara_roll;
+                std::cout << "; Roll value = " << roll;
+                std::cout << "; Difference = " << std::fabs(puara_roll - roll) << "\n";
                 // std::cout << "; unwrapped = " << test.unwrap(ypr.z);
                 // std::cout << "; wrapped = " << test.wrap(test.unwrap(ypr.z), 0, 6.28) << "\n";
             }
