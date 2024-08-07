@@ -48,7 +48,7 @@ class testing_roll {
         //     std::cout << "----------------------------------------------------------------------\n";
 
             // set up common path
-            std::string common = "../../test_files/t-stick/";
+            std::string common = "../../test_files/t-stick/drifting_data/";
 
             // read in accl data
             std::string accl_path = common + "accel_raw.csv";
