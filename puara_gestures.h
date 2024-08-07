@@ -15,6 +15,10 @@
 #include <algorithm>
 #include <chrono>
 
+// puara basics
+#include "descriptors/puara-structs.h"
+#include "descriptors/puara-structs.h"
+
 // puara-gesture descriptors
 #include "descriptors/puara-jab.h"
 #include "descriptors/puara-shake.h"
