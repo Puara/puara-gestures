@@ -48,7 +48,7 @@ class testing_roll {
             std::cout << "----------------------------------------------------------------------\n";
 
             // set up common path
-            std::string common = "../../test_files/";
+            std::string common = "../../test_files/t-stick/";
 
             // read in accl data
             std::string accl_path = common + "accl/" + s;
@@ -81,16 +81,16 @@ class testing_roll {
                 // get accl coordinate
                 puara_gestures::Coord3D accl;
                 accl = utils::readinRaw(accl_line);
-                accl.x = accl.x / 9.80665;
-                accl.y = accl.y / 9.80665;
-                accl.z = accl.z / 9.80665;
+                // accl.x = accl.x / 9.80665;
+                // accl.y = accl.y / 9.80665;
+                // accl.z = accl.z / 9.80665;
 
                 // get gyro coordinates
                 puara_gestures::Coord3D gyro;
                 gyro = utils::readinRaw(gyro_line);
-                gyro.x =  gyro.x * 180 / M_PI;
-                gyro.y =  gyro.y * 180 / M_PI;
-                gyro.z =  gyro.z * 180 / M_PI;
+                // gyro.x =  gyro.x * 180 / M_PI;
+                // gyro.y =  gyro.y * 180 / M_PI;
+                // gyro.z =  gyro.z * 180 / M_PI;
 
                 // get mag coordinates
                 puara_gestures::Coord3D mag;
@@ -98,15 +98,15 @@ class testing_roll {
 
                 // calibrate magnetometer
 
-                float sx[3] = {0.333, 0.333, 0.333};
-                float sy[3] = {0.333, 0.333, 0.333};
-                float sz[3] = {0.333, 0.333, 0.333};
+                // float sx[3] = {0.333, 0.333, 0.333};
+                // float sy[3] = {0.333, 0.333, 0.333};
+                // float sz[3] = {0.333, 0.333, 0.333};
 
-                float h[3] = {0,0,0};
+                // float h[3] = {0,0,0};
 
-                mag.x = sx[0]*(mag.x-h[0]) + sx[1]*(mag.x-h[0]) + sx[2]*(mag.x-h[0]);
-                mag.y = sy[0]*(mag.y-h[1]) + sy[1]*(mag.y-h[1]) + sy[2]*(mag.y-h[1]);
-                mag.z = sz[0]*(mag.z-h[2]) + sz[1]*(mag.z-h[2]) + sz[2]*(mag.z-h[2]);
+                // mag.x = sx[0]*(mag.x-h[0]) + sx[1]*(mag.x-h[0]) + sx[2]*(mag.x-h[0]);
+                // mag.y = sy[0]*(mag.y-h[1]) + sy[1]*(mag.y-h[1]) + sy[2]*(mag.y-h[1]);
+                // mag.z = sz[0]*(mag.z-h[2]) + sz[1]*(mag.z-h[2]) + sz[2]*(mag.z-h[2]);
 
                 // get yaw, pitch, and roll
                 puara_gestures::Coord3D ypr;
