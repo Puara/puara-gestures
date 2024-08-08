@@ -35,18 +35,9 @@ namespace puara_gestures {
          * Side-to-side measurement of roll
          * Range: [- PI, PI]
          */
-        double roll_lateral(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
+        double roll(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
             update(accel, gyro, mag, period_sec);
             return orientation.euler.roll;
-        }
-
-        /**
-         * Tilt/pitch measurement
-         * Range: [- PI/2, PI/2]
-         */
-        double roll_tilt(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
-            update(accel, gyro, mag, period_sec);
-            return orientation.euler.tilt;
         }
 
         void update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
@@ -58,9 +49,19 @@ namespace puara_gestures {
 
         /**
          * @brief Option to "unwrap" value so that consecutive rolls register as increases or decreases,
-         * depending on direction, rather than "wrapping" around a [- PI, PI] range.
+         * depending on direction, rather than "wrapping" around a given range.
          */
-        double unwrap_lateral(double reading) {
+        double unwrap(double reading) {
+            return unwrapper.update(reading);
+        }
+        /**
+         * @brief Option to "unwrap" value so that consecutive rolls register as increases or decreases,
+         * depending on direction, rather than "wrapping" around a given range.
+         */
+        double unwrap(double reading, double min, double max) {
+            unwrapper.min = (M_PI / - 2);
+            unwrapper.max = (M_PI / 2);
+            unwrapper.range = std::fabs(max - min);
             return unwrapper.update(reading);
         }
         /**
@@ -73,6 +74,14 @@ namespace puara_gestures {
          * @brief Option to "wrap" values again to limit to a [- PI, PI] range.
          */
         double wrap(double reading) {
+            return wrapper.update(reading);
+        }
+        /**
+         * @brief Option to "wrap" values again to limit to a [- PI, PI] range.
+         */
+        double wrap(double reading, double min, double max) {
+            wrapper.min = max;
+            wrapper.max = max;
             return wrapper.update(reading);
         }
 

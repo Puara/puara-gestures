@@ -91,9 +91,8 @@ class testing_tilt {
 
             std::cout << "Puara Function = " << puara_tilt;
             std::cout << "; tilt value = " << tilt;
-            std::cout << "; Difference = " << std::fabs(puara_tilt - tilt) << "\n";
-            // std::cout << "; unwrapped = " << test.unwrap(ypr.z);
-            // std::cout << "; wrapped = " << test.wrap(test.unwrap(ypr.z), 0, 6.28) << "\n";
+            std::cout << "; Difference = " << std::fabs(puara_tilt - tilt);
+            std::cout << "; unwrapped = " << test.unwrap(tilt, 3.14 / -2, 3.14 /2) << "\n";
         }
         test.clear_unwrap();
         test.clear_smooth();
