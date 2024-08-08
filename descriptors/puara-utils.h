@@ -26,61 +26,6 @@
 namespace puara_gestures {
 
 namespace utils {
-
-    void changeRawFile(std::string filepath, std::string s) {
-        std::ifstream inputFile(filepath);
-        std::string line;
-        // keep track of lines
-        int linecount = 0;
-        // start a new file
-        std::ofstream newfile;
-        newfile.open(s);
-
-        while (std::getline(inputFile, line, 'n')) {
-            linecount += 1;
-            std::string toWrite = linecount == 1 ? line + "\n" : line.substr(1) + "\n";
-            newfile << toWrite;
-        }
-        newfile.close();
-        inputFile.close();
-    };
-
-    Coord3D readinRaw(std::string line) {
-        Coord3D cart;
-        // separate out by spaces into three numbers, turn into doubles
-        int first_space = line.find_first_of(" ");
-        int second_space = line.substr(first_space +1).find_first_of(" ") + first_space + 1;
-        double x = std::stod(line.substr(0, first_space));
-        double y = std::stod(line.substr(first_space + 1, second_space));
-        double z = std::stod(line.substr(second_space + 1, line.size()));
-        // add three doubles to a Coord3D
-        cart.x = x;
-        cart.y = y;
-        cart.z = z;
-        // return Coord3D
-        return cart;
-    };
-
-    Coord3D readinRawCSV(std::string line) {
-        Coord3D cart;
-        int first_space = line.find_first_of(",");
-        int second_space = line.substr(first_space +1).find_first_of(",") + first_space + 1;
-        double x = std::stod(line.substr(0, first_space));
-        double y = std::stod(line.substr(first_space + 1, second_space));
-        double z = std::stod(line.substr(second_space + 1, line.size()));
-        // add three doubles to a Coord3D
-        cart.x = x;
-        cart.y = y;
-        cart.z = z;
-        // return Coord3D
-        return cart;
-    }
-
-    double readinRawSingleValue(std::string line) {
-        return std::stod(line);
-    }
-
-
     /**
      *  @brief Simple leaky integrator implementation.
      */
@@ -92,14 +37,6 @@ namespace utils {
             int frequency; // leaking frequency (Hz)
             unsigned long long timer;
 
-            /**
-             * @brief Call integrator
-             *
-             * @param reading new value to add into the integrator
-             * @param custom_leak between 0 and 1
-             * @param time in microseconds
-             * @return double
-             */
             LeakyIntegrator(
                 double currentValue = 0,
                 double oldValue = 0,
@@ -109,6 +46,14 @@ namespace utils {
                 ) : current_value(currentValue), old_value(oldValue), leak(leakValue),
                     frequency(freq), timer(timerValue) {}
 
+            /**
+             * @brief Call integrator
+             *
+             * @param reading new value to add into the integrator
+             * @param custom_leak between 0 and 1
+             * @param time in microseconds
+             * @return double
+             */
             double integrate(double reading, double custom_old_value, double custom_leak, int custom_frequency, unsigned long long& custom_timer){
                 auto currentTimePoint = std::chrono::high_resolution_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
@@ -153,7 +98,7 @@ namespace utils {
             double range;
 
             Unwrap(
-                double prevAngle = std::nan("0"), // set to unattainable value to be able to determine if angle is first
+                double prevAngle = std::nan("0"),
                 double accum = 0,
                 double min = - M_PI,
                 double max = M_PI
@@ -161,133 +106,88 @@ namespace utils {
                     max(max), range(max - min) {}
 
             double update(double reading) {
+                // check if prev_angle is still at the initialized value;
+                // this indicates that the current is the first value to be sent to unwrap
                 if (isnan(prev_angle)) {
-                    // then we know this is the first angle sent to unwrapped
                     prev_angle = reading;
                 }
-
                 double diff = reading - prev_angle;
                 prev_angle = reading;
-
                 if (diff  > (range / 2)) {
                     accum -= 1;
                 }
                 if (diff < (range * -1 / 2)) {
                     accum += 1;
                 }
-
                 return reading + accum * range;
             }
 
+            /**
+             * @brief resets the unwrap object
+             */
             void clear() {
                 accum = 0;
                 prev_angle = std::nan("0");
             }
-
     };
 
     /**
-     * @brief Undoes the modulating effects of a spherical angle representation
-     * Suitable for an angle measurement that, after reaching the maximum, decreases to the minimum
-     * instead of switching directly to the minimum (a "folding" measurement).
+     * @brief Wraps a value around a given minimum and maximum.
+     * Algorithm from Jean-Michael Celerier. Authoring interactive media : a logical & temporal approach.
+     * Computation and Language [cs.CL]. Université de Bordeaux, 2018. English. ffNNT : 2018BORD0037ff. fftel-01947309
      */
-    class Unfold {
+    class Wrap {
         public:
-            std::list<double> rolls;
             double min;
             double max;
-            double allowance;
 
-            Unfold(
-                double min = 0,
-                double max = M_PI,
-                double allowance = 0.055
-                ) : min(min), max(max), allowance(allowance) {}
+            Wrap(
+                double Min = 0,
+                double Max = 2 * M_PI
+            ) : min(Min), max(Max) {}
 
-            /**
-             * Evaluates the "unfolded" value -- takes the number of turns into account to generate non-modulated value
-             */
-            double unfold (double reading) {
-                double unfolded;
-
-                // if the list is empty (not passed over min or max), return value
-                if (rolls.size() == 0) {
-                    unfolded = reading;
+            double update(double reading) {
+                double diff  = std::fabs(max - min);
+                if (min <= reading && reading <= max) {
+                    return reading;
                 }
-
-                // find if length of list is even in order to calculate new value
-                bool isEven = rolls.size() % 2 == 0;
-
-                // find the number of full rolls -- (0, 1) or (1, 0) pairs
-                double fullRolls = isEven ? rolls.size() / 2 : (rolls.size() - 1) / 2 ;
-
-                // if the first value is 0, the list just has (0, 1) pairs
-                // decreases value
-                if (rolls.front() == 0) {
-                    double sum = fullRolls * -2 * max;
-                    unfolded =  isEven ? sum + reading : sum - reading;
+                else if (reading >= max) {
+                    return min + (reading - std::fmod(min, diff));
                 }
-                // if the first value is 1, the list just has (1, 0) pairs
-                // increases value
-                if (rolls.front() == 1) {
-                    double sum = isEven ? fullRolls * 2 * max : (fullRolls + 1) * 2 * max;
-                    unfolded = isEven ? sum + reading : sum - reading;
-                }
+                return max - (min - std::fmod(reading, diff));
+            }
+    };
 
-                // update the list after finding value so that a value close to 0 or 1 just
-                // changes the status of the list but isn't evaluated according to new list
-                // if close to minimum
-                if (reading < (min + allowance)) {
-                    // add a 0 to indicate it passed min
-                    rolls.push_back(0);
-                }
-                // if close to maximum
-                if (reading > (max - allowance)) {
-                    //add a 1 to indicate it passed max
-                    rolls.push_back(1);
-                }
-                // if the device has passed over the min twice or the max twice,
-                // revert to the previous state by removing these values from the list
-                popPairs();
+    /**
+     * @brief "Smoothing" algorithm takes the average of a given number of previous inputs
+     */
+    class Smooth {
+        public:
+            std::list<double> list;
+            double size;
 
-                return unfolded;
+            Smooth(
+                std::list<double> List = {},
+                double Size = 50
+                ) : list(List), size(Size) {}
+
+            double update(double reading) {
+                list.push_front(reading);
+                // keep list at desired size
+                while (list.size() > size) {
+                    list.pop_back();
+                }
+                // find average of list
+                double total = 0;
+                for (double i : list){
+                    total += i;
+                }
+                return (total / size);
             }
 
-            /**
-             * If the device passes through the min/max twice in a row, erases from history to
-             * revert back to previous state
-             */
-            void popPairs() {
-                if (rolls.size() > 1) {
-                    // comparing last two values
-                    auto rit = rolls.rbegin();
-                    double last = *rit;
-                    ++rit;
-                    // if the last two are the same, remove from list
-                    if (last == *rit) {
-                        rolls.pop_back();
-                        rolls.pop_back();
-                    }
-                }
-            }
-
-            /**
-             * Clears list memory
-             */
             void clear() {
-                rolls.clear();
+                list.clear();
             }
-
-            /**
-             * Printing function for testing
-             */
-            void printList() {
-                std::cout << "list = ";
-                for (auto i : rolls) {
-                    std::cout << i << ", ";
-                }
-            }
-
     };
 
     /**

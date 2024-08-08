@@ -16,107 +16,67 @@
 #include <iostream>
 #include <list>
 
-namespace puara_gestures
-{
+namespace puara_gestures {
 
     /**
      * This class creates roll gestures using 3DoF info
-     *
-     * It expects 3 axis of a accelerometer in m/s^2, but can be used
-     * with any double or float
-     *
+     * Requires info from accelerometer, gyroscope, and magnetometer
      */
-    class Roll
-    {
+    class Roll {
     public:
         Roll() {};
 
-        utils::Unwrap uw;
         IMU_Orientation orientation;
-        std::list<double> smoother = {};
+        utils::Unwrap unwrapper;
+        utils::Smooth smoother;
+        utils::Wrap wrapper;
 
         /**
          * Takes in accelerometer, gyroscope, magnometer values
          */
-        double update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec)
-        {
-
+        double update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
             orientation.setAccelerometerValues(accel.x, accel.y, accel.z);
             orientation.setGyroscopeDegreeValues(gyro.x, gyro.y, gyro.z, period_sec);
             orientation.setMagnetometerValues(mag.x, mag.y, mag.z);
-            std::cout << "ORIENTATION VALUES PRE-UPDATE, POST-SET:\n";
-            printOrientationInfo();
 
             orientation.update(0.01);
 
             return orientation.euler.roll;
         }
 
-        void printOrientationInfo(){
-            orientation.printValues();
+        /**
+         * @brief Option to "unwrap" value so that consecutive rolls register as increases or decreases,
+         * depending on direction, rather than "wrapping" around a [- PI, PI] range.
+         */
+        double unwrap(double reading) {
+            return unwrapper.update(reading);
         }
-
-        double unwrap(double reading)
-        {
-            return uw.update(reading);
+        /**
+         * @brief Option to "smooth" value
+         */
+        double smooth(double reading) {
+            return smoother.update(reading);
+        }
+        /**
+         * @brief Option to "wrap" values again to limit to a [- PI, PI] range.
+         */
+        double wrap(double reading) {
+            return wrapper.update(reading);
         }
 
         /**
-         * Resets "accum" and "prev_angle"
+         * @brief Resets "accum" and "prev_angle"
          */
-        void clear_unwrap()
-        {
-            uw.clear();
+        void clear_unwrap() {
+            unwrapper.clear();
         }
-
         /**
-         * takes the average of the last n inputs, where n is a size set in the constructor
-         * optional, leads to smoother readings
+         * @brief Clears list of all previous and current inputs
          */
-        double smooth(double reading, double smoothsize)
-        {
-            // add current value to list
-            smoother.push_front(reading);
-            // keep list at desired size
-            while (smoother.size() > smoothsize)
-            {
-                smoother.pop_back();
-            }
-            // find average of list
-            double total = 0;
-            for (double i : smoother)
-            {
-                total += i;
-            }
-            return (total / smoother.size());
-        }
-
-        /**
-         * Clears list of all previous and current inputs
-         */
-        void clear_smooth()
-        {
+        void clear_smooth() {
             smoother.clear();
         }
-
-        /**
-         *
-         */
-        double wrap(double reading, double min, double max)
-        {
-            double d = max - min;
-            if (min <= reading && reading <= max)
-            {
-                return reading;
-            }
-            else if (reading >= max)
-            {
-                return min + (reading - std::fmod(min, d));
-            }
-            return max - (min - std::fmod(reading, d));
-        }
     };
-
 }
 
 #endif

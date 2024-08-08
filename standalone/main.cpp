@@ -65,12 +65,10 @@ int main(int argc, char* argv[]) {
         leakyintegrator.integrate(accelerometer[0]);
     });
 
-    rollTest.test();
-
-//     while(true) {
-//         puara_gestures::Coord3D shakeout = shake.current_value();
-//         puara_gestures::Coord3D jabout = jab.current_value();
-//         std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << ", Integrator: " << leakyintegrator.current_value << std::endl;
-//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//   };
+    while(true) {
+        puara_gestures::Coord3D shakeout = shake.current_value();
+        puara_gestures::Coord3D jabout = jab.current_value();
+        std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << ", Integrator: " << leakyintegrator.current_value << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  };
 }
