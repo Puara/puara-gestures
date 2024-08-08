@@ -22,6 +22,4 @@
 #include "descriptors/puara-tilt.h"
 #include "descriptors/IMU_Sensor_Fusion/imu_orientation.h"
 
-#include "testing_tilt.h"
-
 #endif

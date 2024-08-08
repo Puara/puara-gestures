@@ -26,26 +26,6 @@
 namespace puara_gestures {
 
 namespace utils {
-
-    Coord3D readinRawCSV(std::string line) {
-        Coord3D cart;
-        int first_space = line.find_first_of(",");
-        int second_space = line.substr(first_space +1).find_first_of(",") + first_space + 1;
-        double x = std::stod(line.substr(0, first_space));
-        double y = std::stod(line.substr(first_space + 1, second_space));
-        double z = std::stod(line.substr(second_space + 1, line.size()));
-        // add three doubles to a Coord3D
-        cart.x = x;
-        cart.y = y;
-        cart.z = z;
-        // return Coord3D
-        return cart;
-    }
-
-    double readinRawSingleValue(std::string line) {
-        return std::stod(line);
-    }
-
     /**
      *  @brief Simple leaky integrator implementation.
      */
