@@ -32,25 +32,39 @@ namespace puara_gestures {
         utils::Wrap wrapper;
 
         /**
-         * Takes in accelerometer, gyroscope, magnometer values
+         * Side-to-side measurement of roll
+         * Range: [- PI, PI]
          */
-        double update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
+        double roll_lateral(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
+            update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec);
+            return orientation.euler.roll;
+        }
+
+        /**
+         * Tilt/pitch measurement
+         * Range: [- PI/2, PI/2]
+         */
+        double roll_tilt(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
+            update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec);
+            return orientation.euler.tilt;
+        }
+
+        void update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
             orientation.setAccelerometerValues(accel.x, accel.y, accel.z);
             orientation.setGyroscopeDegreeValues(gyro.x, gyro.y, gyro.z, period_sec);
             orientation.setMagnetometerValues(mag.x, mag.y, mag.z);
-
             orientation.update(0.01);
-
-            return orientation.euler.roll;
         }
 
         /**
          * @brief Option to "unwrap" value so that consecutive rolls register as increases or decreases,
          * depending on direction, rather than "wrapping" around a [- PI, PI] range.
          */
-        double unwrap(double reading) {
+        double unwrap_lateral(double reading) {
             return unwrapper.update(reading);
         }
+
+        double unwrap_tilt(double reading) {}
         /**
          * @brief Option to "smooth" value
          */
