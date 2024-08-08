@@ -5,8 +5,8 @@
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
-#ifndef PUARA_ROLL_H
-#define PUARA_ROLL_H
+#ifndef PUARA_TILT_H
+#define PUARA_TILT_H
 
 #include "puara-utils.h"
 #include "puara-structs.h"
@@ -15,36 +15,33 @@
 #include <algorithm>
 #include <iostream>
 #include <list>
+#include <math.h>
 
 namespace puara_gestures {
 
     /**
-     * This class creates roll gestures using 3DoF info
+     * This class creates tilt gestures using 3DoF info
      * Requires info from accelerometer, gyroscope, and magnetometer
      */
-    class Roll {
+    class Tilt {
     public:
-        Roll() {};
+        Tilt() {};
 
         IMU_Orientation orientation;
         utils::Unwrap unwrapper;
+        // unwrapper.min = M_PI / - 2;
+        // unwrapper.max = M_PI / 2;
+        // unwrapper.range = M_PI;
         utils::Smooth smoother;
         utils::Wrap wrapper;
+        // wrapper.min = 0;
+        // wrapper.max = M_PI * 2;
 
         /**
-         * Side-to-side measurement of roll
-         * Range: [- PI, PI]
-         */
-        double roll_lateral(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
-            update(accel, gyro, mag, period_sec);
-            return orientation.euler.roll;
-        }
-
-        /**
-         * Tilt/pitch measurement
+         * Tilt/"pitch" measurement
          * Range: [- PI/2, PI/2]
          */
-        double roll_tilt(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
+        double tilt(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec) {
             update(accel, gyro, mag, period_sec);
             return orientation.euler.tilt;
         }
@@ -58,7 +55,7 @@ namespace puara_gestures {
 
         /**
          * @brief Option to "unwrap" value so that consecutive rolls register as increases or decreases,
-         * depending on direction, rather than "wrapping" around a [- PI, PI] range.
+         * depending on direction, rather than "wrapping" around a [- PI/2, PI/2] range.
          */
         double unwrap_lateral(double reading) {
             return unwrapper.update(reading);

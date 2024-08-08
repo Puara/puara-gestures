@@ -26,6 +26,26 @@
 namespace puara_gestures {
 
 namespace utils {
+
+    Coord3D readinRawCSV(std::string line) {
+        Coord3D cart;
+        int first_space = line.find_first_of(",");
+        int second_space = line.substr(first_space +1).find_first_of(",") + first_space + 1;
+        double x = std::stod(line.substr(0, first_space));
+        double y = std::stod(line.substr(first_space + 1, second_space));
+        double z = std::stod(line.substr(second_space + 1, line.size()));
+        // add three doubles to a Coord3D
+        cart.x = x;
+        cart.y = y;
+        cart.z = z;
+        // return Coord3D
+        return cart;
+    }
+
+    double readinRawSingleValue(std::string line) {
+        return std::stod(line);
+    }
+
     /**
      *  @brief Simple leaky integrator implementation.
      */
@@ -129,6 +149,12 @@ namespace utils {
                 accum = 0;
                 prev_angle = std::nan("0");
             }
+
+            void setMinMaxRange(double m, double ma, double r) {
+                min = m;
+                max = ma;
+                range = r;
+            }
     };
 
     /**
@@ -155,6 +181,11 @@ namespace utils {
                     return min + (reading - std::fmod(min, diff));
                 }
                 return max - (min - std::fmod(reading, diff));
+            }
+
+            void setMinMax(double m, double ma) {
+                min = m;
+                max = ma;
             }
     };
 
@@ -395,45 +426,6 @@ namespace convert {
      */
     double utesla_to_gauss(double reading) {
         return reading * 10000;
-    }
-
-    /**
-     *  @brief Convert Cartesian to Polar coordinates
-     */
-    Coord2D car_to_pol (Coord2D reading) {
-        Coord2D pol;
-        pol.x = sqrt (pow(reading.x, 2) + pow(reading.y, 2));
-        pol.y = atan(reading.y / reading.x );
-        return pol;
-    }
-
-    /**
-     *  @brief Convert Cartesian to Polar coordinates
-     */
-    Coord2D car_to_pol (double reading_x, double reading_y) {
-        Coord2D pol;
-        pol.x = sqrt (pow(reading_x, 2) + pow(reading_y, 2));
-        pol.y = atan(reading_y / reading_x );
-        return pol;
-    }
-
-
-    /**
-     *  @brief Convert Cartesian to Spherical coordinates as in Max Patch
-     */
-    Spherical car_to_sphere (Coord3D reading) {
-        Spherical sphere;
-        Coord2D pol = car_to_pol(reading.y, reading.z);
-
-        Coord2D pol2 = car_to_pol(pol.x, reading.x);
-
-        sphere.distance = pol2.x;
-
-        sphere.azimuth = pol.y;
-
-        sphere.elevation = pol2.y;
-
-        return sphere;
     }
 }
 }

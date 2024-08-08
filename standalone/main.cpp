@@ -38,7 +38,7 @@ ossia::net::generic_device device {
 puara_gestures::Shake3D shake;
 puara_gestures::Jab3D jab;
 puara_gestures::utils::LeakyIntegrator leakyintegrator;
-puara_gestures::testing_roll rollTest;
+puara_gestures::testing_tilt tiltTest;
 IMU_Orientation orientation;
 
 auto cb = [](ossia::string_view unhandled_node, const ossia::value& unhandled_value) {
@@ -65,10 +65,12 @@ int main(int argc, char* argv[]) {
         leakyintegrator.integrate(accelerometer[0]);
     });
 
-    while(true) {
-        puara_gestures::Coord3D shakeout = shake.current_value();
-        puara_gestures::Coord3D jabout = jab.current_value();
-        std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << ", Integrator: " << leakyintegrator.current_value << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-  };
+    tiltTest.test();
+
+//     while(true) {
+//         puara_gestures::Coord3D shakeout = shake.current_value();
+//         puara_gestures::Coord3D jabout = jab.current_value();
+//         std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << ", Integrator: " << leakyintegrator.current_value << std::endl;
+//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+//   };
 }
