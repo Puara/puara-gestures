@@ -48,7 +48,7 @@ class testing_roll {
         //     std::cout << "----------------------------------------------------------------------\n";
 
             // set up common path
-            std::string common = "../../test_files/t-stick/drifting_data/";
+            std::string common = "../../test_files/t-stick/";
 
             // read in accl data
             std::string accl_path = common + "accel_raw.csv";
@@ -85,16 +85,18 @@ class testing_roll {
                 // get accl coordinate
                 puara_gestures::Coord3D accl;
                 accl = utils::readinRawCSV(accl_line);
-                // accl.x = accl.x / 9.80665;
-                // accl.y = accl.y / 9.80665;
-                // accl.z = accl.z / 9.80665;
+                std::cout << "READ IN FROM SPARKFUN: \naccl.x = " << accl.x << ", accl.y = " << accl.y << ", accl.z = " << accl.z << "\n";
+                // accl.x = 1;
+                // accl.y = 1;
+                // accl.z = 1;
 
                 // get gyro coordinates
                 puara_gestures::Coord3D gyro;
                 gyro = utils::readinRawCSV(gyro_line);
-                // gyro.x =  gyro.x * 180 / M_PI;
-                // gyro.y =  gyro.y * 180 / M_PI;
-                // gyro.z =  gyro.z * 180 / M_PI;
+                std::cout << "gyro.x = " << gyro.x << ", gyro.y = " << gyro.y << ", gyro.z = " << gyro.z << "\n";
+                // gyro.x =  1;
+                // gyro.y =  1;
+                // gyro.z =  1;
 
                 // get timestamp value
                 double timestamp = utils::readinRawSingleValue(timestamp_line);
@@ -102,24 +104,21 @@ class testing_roll {
                 // get mag coordinates
                 puara_gestures::Coord3D mag;
                 mag = utils::readinRawCSV(mag_line);
-
-                // calibrate magnetometer
-
-                // float sx[3] = {0.333, 0.333, 0.333};
-                // float sy[3] = {0.333, 0.333, 0.333};
-                // float sz[3] = {0.333, 0.333, 0.333};
-
-                // float h[3] = {0,0,0};
-
-                // mag.x = sx[0]*(mag.x-h[0]) + sx[1]*(mag.x-h[0]) + sx[2]*(mag.x-h[0]);
-                // mag.y = sy[0]*(mag.y-h[1]) + sy[1]*(mag.y-h[1]) + sy[2]*(mag.y-h[1]);
-                // mag.z = sz[0]*(mag.z-h[2]) + sz[1]*(mag.z-h[2]) + sz[2]*(mag.z-h[2]);
+                std::cout << "mag.x = " << mag.x << ", mag.y = " << mag.y << ", mag.z = " << mag.z << "\n";
+                // mag.x = 1;
+                // mag.y = 1;
+                // mag.z = 1;
 
                 // get roll
                 double roll =  utils::readinRawSingleValue(roll_line);
 
                 double puara_roll = test.update(accl, gyro, mag, timestamp);
 
+                std::cout << "ORIENTATION VALUES POST-UPDATE:\n";
+                test.printOrientationInfo();
+
+
+                std::cout << "RESULTS:\n";
                 std::cout << "Puara Function = " << puara_roll;
                 std::cout << "; Roll value = " << roll;
                 std::cout << "; Difference = " << std::fabs(puara_roll - roll) << "\n";

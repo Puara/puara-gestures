@@ -16,8 +16,8 @@
 #include <iostream>
 #include <list>
 
-
-namespace puara_gestures {
+namespace puara_gestures
+{
 
     /**
      * This class creates roll gestures using 3DoF info
@@ -26,78 +26,95 @@ namespace puara_gestures {
      * with any double or float
      *
      */
-    class Roll {
-        public:
-            Roll(){};
+    class Roll
+    {
+    public:
+        Roll() {};
 
-            utils::Unwrap uw;
-            IMU_Orientation orientation;
-            std::list<double> smoother =  {};
+        utils::Unwrap uw;
+        IMU_Orientation orientation;
+        std::list<double> smoother = {};
 
-            /**
-             * Takes in accelerometer, gyroscope, magnometer values
-             */
-            double update(Coord3D accel, Coord3D gyro, Coord3D mag, double period) {
+        /**
+         * Takes in accelerometer, gyroscope, magnometer values
+         */
+        double update(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec)
+        {
 
-                orientation.setAccelerometerValues(accel.x, accel.y, accel.z);
-                orientation.setGyroscopeDegreeValues(gyro.x, gyro.y, gyro.z, period);
-                orientation.setMagnetometerValues(mag.x, mag.y, mag.z);
+            orientation.setAccelerometerValues(accel.x, accel.y, accel.z);
+            orientation.setGyroscopeDegreeValues(gyro.x, gyro.y, gyro.z, period_sec);
+            orientation.setMagnetometerValues(mag.x, mag.y, mag.z);
+            std::cout << "ORIENTATION VALUES PRE-UPDATE, POST-SET:\n";
+            printOrientationInfo();
 
-                orientation.update(0.01);
+            orientation.update(0.01);
 
-                return  orientation.euler.roll;
+            return orientation.euler.roll;
+        }
+
+        void printOrientationInfo(){
+            orientation.printValues();
+        }
+
+        double unwrap(double reading)
+        {
+            return uw.update(reading);
+        }
+
+        /**
+         * Resets "accum" and "prev_angle"
+         */
+        void clear_unwrap()
+        {
+            uw.clear();
+        }
+
+        /**
+         * takes the average of the last n inputs, where n is a size set in the constructor
+         * optional, leads to smoother readings
+         */
+        double smooth(double reading, double smoothsize)
+        {
+            // add current value to list
+            smoother.push_front(reading);
+            // keep list at desired size
+            while (smoother.size() > smoothsize)
+            {
+                smoother.pop_back();
             }
-
-            double unwrap(double reading) {
-                return uw.update(reading);
+            // find average of list
+            double total = 0;
+            for (double i : smoother)
+            {
+                total += i;
             }
+            return (total / smoother.size());
+        }
 
-            /**
-             * Resets "accum" and "prev_angle"
-             */
-            void clear_unwrap() {
-                uw.clear();
+        /**
+         * Clears list of all previous and current inputs
+         */
+        void clear_smooth()
+        {
+            smoother.clear();
+        }
+
+        /**
+         *
+         */
+        double wrap(double reading, double min, double max)
+        {
+            double d = max - min;
+            if (min <= reading && reading <= max)
+            {
+                return reading;
             }
-
-            /**
-             * takes the average of the last n inputs, where n is a size set in the constructor
-             * optional, leads to smoother readings
-             */
-            double smooth(double reading, double smoothsize) {
-                // add current value to list
-                smoother.push_front(reading);
-                // keep list at desired size
-                while(smoother.size() > smoothsize) {
-                    smoother.pop_back();
-                }
-                // find average of list
-                double total = 0;
-                for (double i : smoother) {
-                    total += i;
-                }
-                return (total / smoother.size());
+            else if (reading >= max)
+            {
+                return min + (reading - std::fmod(min, d));
             }
-
-            /**
-             * Clears list of all previous and current inputs
-             */
-            void clear_smooth() {
-                smoother.clear();
-            }
-
-            /**
-             *
-             */
-            double wrap(double reading, double min, double max) {
-                double d = max - min;
-                if (min <= reading && reading <= max) {
-                    return reading;
-                } else if (reading >= max ) {
-                    return min +  (reading - std::fmod(min, d));
-                }
-                return max - (min - std::fmod(reading, d));
-            }
-
+            return max - (min - std::fmod(reading, d));
+        }
     };
 
 }
