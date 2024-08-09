@@ -47,6 +47,7 @@ namespace puara_gestures {
             orientation.update(0.01);
         }
 
+
         /**
          * @brief Option to "unwrap" value so that consecutive rolls register as increases or decreases,
          * depending on direction, rather than "wrapping" around a given range.
@@ -57,6 +58,8 @@ namespace puara_gestures {
         /**
          * @brief Option to "unwrap" value so that consecutive rolls register as increases or decreases,
          * depending on direction, rather than "wrapping" around a given range.
+         * @param min minimum value of the inputs to unwrap function
+         * @param max maximum value of the inputs to unwrap function
          */
         double unwrap(double reading, double min, double max) {
             unwrapper.min = (M_PI / - 2);
@@ -78,13 +81,14 @@ namespace puara_gestures {
         }
         /**
          * @brief Option to "wrap" values again to limit to a [- PI, PI] range.
+         * @param min minimum value of desired range
+         * @param max maximum value of desired range
          */
         double wrap(double reading, double min, double max) {
             wrapper.min = max;
             wrapper.max = max;
             return wrapper.update(reading);
         }
-
         /**
          * @brief Resets "accum" and "prev_angle"
          */
