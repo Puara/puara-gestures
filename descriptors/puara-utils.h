@@ -17,10 +17,8 @@
 #include <deque>
 #include <math.h>
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <cmath>
+#include <numeric>
 #include <list>
 
 namespace puara_gestures {
@@ -96,22 +94,24 @@ namespace utils {
             double min;
             double max;
             double range;
+            bool empty;
 
             Unwrap(
-                double prevAngle = std::nan("0"),
-                double accum = 0,
-                double min = - M_PI,
-                double max = M_PI
-                ) : prev_angle(prevAngle), accum(accum), min(min),
-                    max(max), range(max - min) {}
+                double Accum = 0,
+                double Min = - M_PI,
+                double Max = M_PI,
+                bool Empty = true
+                ) : accum(Accum), min(Min), max(Max), range(Max - Min), empty(Empty) {}
 
             double update(double reading) {
-                // check if prev_angle is still at the initialized value;
-                // this indicates that the current is the first value to be sent to unwrap
-                if (isnan(prev_angle)) {
-                    prev_angle = reading;
+                double diff;
+                // check if update hasn't been called before or the unwrap class has been cleared
+                if (empty) {
+                    diff = 0;
+                    empty = false;
+                } else {
+                    diff = reading - prev_angle;
                 }
-                double diff = reading - prev_angle;
                 prev_angle = reading;
                 if (diff  > (range / 2)) {
                     accum -= 1;
@@ -127,13 +127,13 @@ namespace utils {
              */
             void clear() {
                 accum = 0;
-                prev_angle = std::nan("0");
+                empty = true;
             }
 
-            void setMinMaxRange(double m, double ma, double r) {
-                min = m;
-                max = ma;
-                range = r;
+            void setMinMaxRange(double setMin, double setMax, double setRange) {
+                min = setMin;
+                max = setMax;
+                range = setRange;
             }
     };
 
@@ -163,9 +163,9 @@ namespace utils {
                 return max - (min - std::fmod(reading, diff));
             }
 
-            void setMinMax(double m, double ma) {
-                min = m;
-                max = ma;
+            void setMinMax(double setMin, double setMax) {
+                min = setMin;
+                max = setMax;
             }
     };
 
@@ -176,24 +176,24 @@ namespace utils {
         public:
             std::list<double> list;
             double size;
+            double current_size;
 
             Smooth(
                 std::list<double> List = {},
-                double Size = 50
-                ) : list(List), size(Size) {}
+                double Size = 50,
+                double currentSize = 0
+                ) : list(List), size(Size), current_size(currentSize){}
 
             double update(double reading) {
                 list.push_front(reading);
+                current_size = list.size();
                 // keep list at desired size
-                while (list.size() > size) {
+                while (current_size > size) {
                     list.pop_back();
                 }
                 // find average of list
-                double total = 0;
-                for (double i : list){
-                    total += i;
-                }
-                return (total / size);
+                double total = std::accumulate(list.begin(), list.end(), 0.0);
+                return (total / current_size);
             }
 
             void clear() {
