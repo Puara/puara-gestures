@@ -66,8 +66,8 @@ int main(int argc, char* argv[]) {
         leakyintegrator.integrate(accelerometer[0]);
     });
 
-    rollTest.test();
-    // tiltTest.test();
+    //rollTest.test();
+    tiltTest.test();
 
 //     while(true) {
 //         puara_gestures::Coord3D shakeout = shake.current_value();

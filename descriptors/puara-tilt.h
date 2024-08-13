@@ -41,7 +41,7 @@ namespace puara_gestures {
          *
          * @param smoothValue number of previous values that "smoother" object averages
          */
-        Tilt(double smoothValue) : smoother(smoothValue) {}
+        explicit Tilt(double smoothValue) : smoother(smoothValue) {}
 
         /**
          * @brief Calculates tilt (aka "pitch") measurement
