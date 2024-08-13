@@ -351,7 +351,7 @@ namespace utils {
     /**
      *  @brief Simple function to get the current elapsed time in microseconds.
      */
-    unsigned long long getCurrentTimeMicroseconds() {
+    inline unsigned long long getCurrentTimeMicroseconds() {
         auto currentTimePoint = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
         return duration.count();
@@ -361,7 +361,7 @@ namespace utils {
      * @brief Function used to reduce feature arrays into single values.
      * E.g., brush uses it to reduce multiBrush instances
      */
-    double arrayAverageZero (double * Array, int ArraySize) {
+    inline double arrayAverageZero (double * Array, int ArraySize) {
         double sum = 0;
         int count = 0;
         double output = 0;
@@ -381,7 +381,7 @@ namespace utils {
      * @brief Legacy function used to calculate 1D blob detection in older
      * digital musical instruments
      */
-    void bitShiftArrayL (int * origArray, int * shiftedArray, int arraySize, int shift) {
+    inline void bitShiftArrayL (int * origArray, int * shiftedArray, int arraySize, int shift) {
         for (int i=0; i < arraySize; ++i) {
             shiftedArray[i] = origArray[i];
         }
@@ -405,7 +405,7 @@ namespace convert {
      * @brief Convert g's to m/s^2
      *
      */
-    double g_to_ms2(double reading) {
+    inline double g_to_ms2(double reading) {
         return reading * 9.80665;
     }
 
@@ -413,7 +413,7 @@ namespace convert {
      * @brief Convert m/s^2 to g's
      *
      */
-    double ms2_to_g(double reading) {
+    inline double ms2_to_g(double reading) {
         return reading / 9.80665;
     }
 
@@ -421,7 +421,7 @@ namespace convert {
      * @brief Convert DPS to radians per second
      *
      */
-    double dps_to_rads(double reading) {
+    inline double dps_to_rads(double reading) {
         return reading * M_PI / 180;
     }
 
@@ -429,7 +429,7 @@ namespace convert {
      * @brief Convert radians per second to DPS
      *
      */
-    double rads_to_dps(double reading) {
+    inline double rads_to_dps(double reading) {
         return reading * 180 / M_PI;
     }
 
@@ -437,7 +437,7 @@ namespace convert {
      * @brief Convert Gauss to uTesla
      *
      */
-    double gauss_to_utesla(double reading) {
+    inline double gauss_to_utesla(double reading) {
         return reading / 10000;
     }
 
@@ -445,7 +445,7 @@ namespace convert {
      * @brief Convert uTesla to Gauss
      *
      */
-    double utesla_to_gauss(double reading) {
+    inline double utesla_to_gauss(double reading) {
         return reading * 10000;
     }
 }
