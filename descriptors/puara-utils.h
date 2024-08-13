@@ -16,6 +16,7 @@
 #include <boost/circular_buffer.hpp>
 #include <deque>
 #include <math.h>
+#include <iostream>
 
 #include <cmath>
 #include <numeric>
@@ -52,6 +53,7 @@ namespace utils {
              * @param time in microseconds
              * @return double
              */
+
             double integrate(double reading, double custom_old_value, double custom_leak, int custom_frequency, unsigned long long& custom_timer){
                 auto currentTimePoint = std::chrono::high_resolution_clock::now();
                 auto duration = std::chrono::duration_cast<std::chrono::microseconds>(currentTimePoint.time_since_epoch());
@@ -85,27 +87,39 @@ namespace utils {
     };
 
     /**
-     * @brief Undoes the modulating effects of a spherical angle representation
+     * @brief Wrapper class undoes modular effects of angle measurements
+     * Ensures that instead of "wrapping" (e.g. moving from - PI to PI),
+     * measurements continue to decrease or increase
      */
     class Unwrap {
         public:
             double prev_angle;
             double accum;
-            double min;
-            double max;
             double range;
             bool empty;
 
-            Unwrap(
-                double Accum = 0,
-                double Min = - M_PI,
-                double Max = M_PI,
-                bool Empty = true
-                ) : accum(Accum), min(Min), max(Max), range(Max - Min), empty(Empty) {}
+            /**
+             * @brief Constructor for Unwrap class
+             *
+             * Initaliazes accumulated at 0 to indicate the data has not "wrapped" yet
+             * Initalizes empty at True
+             * @param Min minimum input value
+             * @param Max maximum input value
+             */
+            Unwrap (
+                double Min,
+                double Max
+            ) : accum(0), range(Max - Min), empty(true) {}
 
-            double update(double reading) {
+            /**
+             * @brief Calculates whether angle has "wrapped" based on previous angle
+             * and updates accordingly
+             */
+            double unwrap(double reading) {
                 double diff;
-                // check if update hasn't been called before or the unwrap class has been cleared
+
+                // check if update hasn't been called before or the unwrap class
+                // has been cleared
                 if (empty) {
                     diff = 0;
                     empty = false;
@@ -129,30 +143,31 @@ namespace utils {
                 accum = 0;
                 empty = true;
             }
-
-            void setMinMaxRange(double setMin, double setMax, double setRange) {
-                min = setMin;
-                max = setMax;
-                range = setRange;
-            }
     };
 
     /**
      * @brief Wraps a value around a given minimum and maximum.
-     * Algorithm from Jean-Michael Celerier. Authoring interactive media : a logical & temporal approach.
-     * Computation and Language [cs.CL]. Université de Bordeaux, 2018. English. ffNNT : 2018BORD0037ff. fftel-01947309
+     * Algorithm from Jean-Michael Celerier. "Authoring interactive media : a logical
+     * & temporal approach." Computation and Language [cs.CL]. Université de Bordeaux,
+     * 2018. English. ffNNT : 2018BORD0037ff. fftel-01947309
      */
     class Wrap {
         public:
             double min;
             double max;
 
-            Wrap(
-                double Min = 0,
-                double Max = 2 * M_PI
-            ) : min(Min), max(Max) {}
+            /**
+             *  @brief Constructor for Wrap class
+             *
+             * @param Min minimum value of desired range for "wrapper" object
+             * @param Max maximum value of desired range for "wrapper" object
+             */
+            Wrap (
+                double Min,
+                double Max
+            ) : min (Min), max (Max) {}
 
-            double update(double reading) {
+            double wrap(double reading) {
                 double diff  = std::fabs(max - min);
                 if (min <= reading && reading <= max) {
                     return reading;
@@ -162,40 +177,49 @@ namespace utils {
                 }
                 return max - (min - std::fmod(reading, diff));
             }
-
-            void setMinMax(double setMin, double setMax) {
-                min = setMin;
-                max = setMax;
-            }
     };
 
     /**
-     * @brief "Smoothing" algorithm takes the average of a given number of previous inputs
+     * @brief "Smoothing" algorithm takes the average of a given number of previous
+     * inputs. Can stabilize an erratic input stream.
      */
     class Smooth {
         public:
             std::list<double> list;
             double size;
-            double current_size;
 
+            /**
+             * @brief Constructor for Smooth class
+             *
+             * @param Size number of previous values that "smoother" object averages
+             */
             Smooth(
-                std::list<double> List = {},
-                double Size = 50,
-                double currentSize = 0
-                ) : list(List), size(Size), current_size(currentSize){}
+                double Size
+                ) : list(), size(Size){}
 
-            double update(double reading) {
-                list.push_front(reading);
-                current_size = list.size();
-                // keep list at desired size
-                while (current_size > size) {
-                    list.pop_back();
-                }
-                // find average of list
-                double total = std::accumulate(list.begin(), list.end(), 0.0);
-                return (total / current_size);
+            /**
+             * @brief Calls updateList then finds average of previous inputs
+             */
+            double smooth(double reading) {
+                updateList(reading);
+                double sumList = std::accumulate(list.begin(), list.end(), 0.0);
+                return (sumList / list.size());
             }
 
+            /**
+             * @brief Updates list of previous inputs with current input
+             */
+            void updateList(double reading) {
+                list.push_front(reading);
+                // ensure list stays at desired size
+                while (list.size() > size) {
+                    list.pop_back();
+                }
+            }
+
+            /**
+             * @brief Clears list of all previous inputs
+             */
             void clear() {
                 list.clear();
             }
@@ -246,6 +270,32 @@ namespace utils {
                     buffer.pop_back();
                 }
                 return element;
+            }
+    };
+
+    /**
+     * Simple Threshold class to ensure a value doesn't exceed settable max and min values.
+     */
+    class Threshold {
+        public:
+            double min;
+            double max;
+            double current;
+
+            Threshold(
+                double Min = - 10.0,
+                double Max = 10.0
+                ) : min(Min), max(Max) {}
+
+            double update(double reading) {
+                current = reading;
+                if (reading < min) {
+                    return min;
+                }
+                if (reading > max) {
+                    return max;
+                }
+                return reading;
             }
     };
 
@@ -345,15 +395,6 @@ namespace utils {
                 }
             }
         }
-    }
-
-
-    /**
-     * @brief Function used to obtain the azimuth of a Spherical coordinate from a Cartesian 3D coordinate
-     * This will generate a value from 0 to 3.14
-     */
-    double getAzimuth(Coord3D reading) {
-        return acos(reading.z / (sqrt(pow(reading.x, 2) + pow(reading.y, 2) + pow(reading.z, 2) )));
     }
 
 }

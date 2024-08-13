@@ -79,7 +79,9 @@
 			"variant": "cpp",
 			"vector": "cpp",
 			"algorithm": "cpp",
-			"thread": "cpp"
+			"thread": "cpp",
+			"*.ipp": "cpp",
+			"csetjmp": "cpp"
 		}
 	}
 }
