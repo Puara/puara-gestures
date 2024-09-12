@@ -10,12 +10,18 @@
 #ifndef PUARA_UTILS_H
 #define PUARA_UTILS_H
 
+#include <cmath>
+#include <eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Core>
+
 #include "puara-structs.h"
 
 #include <chrono>
 #include <boost/circular_buffer.hpp>
 #include <deque>
 #include <math.h>
+#include <iostream>
+
 
 namespace puara_gestures {
     
@@ -155,6 +161,154 @@ namespace utils {
     };
 
     /**
+     *  Calibrates the raw magnetometer values 
+     */ 
+    class Calibration {
+        public:
+            Imu9Axis myCalIMU;
+            std::vector<Coord3D> rawMagData;
+            Eigen::MatrixXd softIronMatrix;
+            Eigen::VectorXd hardIronBias;
+
+            Calibration() : softIronMatrix(3,3), hardIronBias(3) {
+            softIronMatrix << 1,  1,  1, 
+            1, 1,  1;
+            
+            hardIronBias << 0,0,0; 
+            
+            }
+
+            int mField = 234; // 1000 by default
+
+            void setSoftIronMatrix(const Eigen::MatrixXd& newSoftIronMatrix) {
+                softIronMatrix = newSoftIronMatrix;
+            }
+
+            void setHardIronBias(const Eigen::VectorXd& newHardIronBias) {
+                hardIronBias = newHardIronBias;
+            }
+
+            void setMField(int newMField) {
+                mField = newMField;
+            }
+
+            void applyMagnetometerCalibration(const Imu9Axis& myRawIMU) {
+                myCalIMU.magn.x = softIronMatrix(0, 0) * (myRawIMU.magn.x - hardIronBias(0)) +
+                                softIronMatrix(0, 1) * (myRawIMU.magn.y - hardIronBias(1)) +
+                                softIronMatrix(0, 2) * (myRawIMU.magn.z - hardIronBias(2));
+
+                myCalIMU.magn.y = softIronMatrix(1, 0) * (myRawIMU.magn.x - hardIronBias(0)) +
+                                softIronMatrix(1, 1) * (myRawIMU.magn.y - hardIronBias(1)) +
+                                softIronMatrix(1, 2) * (myRawIMU.magn.z - hardIronBias(2));
+
+                myCalIMU.magn.z = softIronMatrix(2, 0) * (myRawIMU.magn.x - hardIronBias(0)) +
+                                softIronMatrix(2, 1) * (myRawIMU.magn.y - hardIronBias(1)) +
+                                softIronMatrix(2, 2) * (myRawIMU.magn.z - hardIronBias(2));
+            }
+
+
+            /**
+            *  
+            */ 
+            int recordRawMagData(const Coord3D& magData) { // The user needs to call this a minimum amount of time (suggest a min size of dataset)
+                rawMagData.push_back(magData);
+
+                return rawMagData.size(); 
+            }
+            
+            std::tuple<Eigen::MatrixXd, Eigen::VectorXd, float> ellipsoid_fit(const Eigen::MatrixXd& s) {
+                Eigen::MatrixXd D(s.cols(), 10);
+
+                for (size_t i = 0; i < s.cols(); ++i) {
+                    D(i, 0) = std::pow(s(0, i), 2);
+                    D(i, 1) = std::pow(s(1, i), 2);
+                    D(i, 2) = std::pow(s(2, i), 2);
+                    D(i, 3) = 2.0 * s(1, i) * s(2, i);
+                    D(i, 4) = 2.0 * s(0, i) * s(2, i);
+                    D(i, 5) = 2.0 * s(0, i) * s(1, i);
+                    D(i, 6) = 2.0 * s(0, i);
+                    D(i, 7) = 2.0 * s(1, i);
+                    D(i, 8) = 2.0 * s(2, i);
+                    D(i, 9) = 1.0;
+                }
+
+                Eigen::MatrixXd S = D * D.transpose();
+
+                Eigen::MatrixXd S_11 = S.block(0, 0, 6, 6);
+                Eigen::MatrixXd S_12 = S.block(0, 6, 6, 4);
+                Eigen::MatrixXd S_21 = S.block(6, 0, 4, 6);
+                Eigen::MatrixXd S_22 = S.block(6, 6, 4, 4);
+
+                Eigen::MatrixXd C(6, 6);
+
+                C << -1,  1,  1,  0,  0,  0,
+                1, -1,  1,  0,  0,  0,
+                1,  1, -1,  0,  0,  0,
+                0,  0,  0, -4,  0,  0,
+                0,  0,  0,  0, -4,  0,
+                0,  0,  0,  0,  0, -4;
+                
+                Eigen::MatrixXd C_inv = C.inverse();
+                
+                Eigen::MatrixXd E =  C_inv * (S_11 - (S_12 * (S_22.inverse() * S_21)));
+
+                Eigen::EigenSolver<Eigen::MatrixXd> solver(E);
+                Eigen::VectorXd E_w = solver.eigenvalues().real();
+                Eigen::MatrixXd E_v = solver.eigenvectors().real();
+
+                int maxIndex = 0;
+                E_w.maxCoeff(&maxIndex);
+                Eigen::VectorXd v_1 = E_v.col(maxIndex);
+
+                if (v_1(0) < 0) v_1 = -v_1;
+
+                Eigen::VectorXd v_2 = (- S_22.inverse() * S_21) * v_1;
+                
+                Eigen::MatrixXd M(3,3);
+                Eigen::VectorXd n(3);
+                float d = v_2[3];
+
+                M << v_1(0), v_1(5), v_1(4),
+                v_1(5), v_1(1), v_1(3),
+                v_1(4), v_1(3), v_1(2);
+
+                n << v_2(0), v_2(1), v_2(2);
+
+                return std::make_tuple(M, n, d);
+            }
+
+            void generateMagnetometerMatrices() {
+                
+                // Mfield instructions?? or just in the doc ?? and say "We are using mfield..."
+                // User instructions for calculating 
+
+                // Record imu data and store it in rawMagData
+
+                // Either record for x seconds or until user presses a key
+                
+                Eigen::MatrixXd s(rawMagData.size(),3);
+
+                for (int i = 0; i < rawMagData.size(); ++i) {
+                    s(i, 0) = rawMagData[i].x;
+                    s(i, 1) = rawMagData[i].y;
+                    s(i, 2) = rawMagData[i].z;
+                }
+
+                Eigen::MatrixXd M;
+                Eigen::VectorXd n;
+                float d;
+
+                std::tie(M,n,d) = ellipsoid_fit(s.transpose());
+
+                Eigen::MatrixXd M_1 = M.inverse();
+                hardIronBias = - (M_1 * n);
+
+                softIronMatrix = (mField / std::sqrt((n.transpose() * (M_1 * n) -d)) * M.array().sqrt());
+
+            }
+    };
+
+    /**
      *  @brief Simple function to get the current elapsed time in microseconds.
      */ 
     unsigned long long getCurrentTimeMicroseconds() {
@@ -253,6 +407,8 @@ namespace convert {
     double utesla_to_gauss(double reading) {
         return reading * 10000;
     }
+
+    //TODO cartesian to polar and vice versa
 
 }
 }
