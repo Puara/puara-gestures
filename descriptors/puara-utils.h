@@ -13,6 +13,7 @@
 #include <cmath>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/Core>
+#include <eigen3/unsupported/Eigen/MatrixFunctions>
 
 #include "puara-structs.h"
 
@@ -20,6 +21,7 @@
 #include <boost/circular_buffer.hpp>
 #include <deque>
 #include <math.h>
+#include <iomanip>
 #include <iostream>
 
 
@@ -172,6 +174,7 @@ namespace utils {
 
             Calibration() : softIronMatrix(3,3), hardIronBias(3) {
             softIronMatrix << 1,  1,  1, 
+            1, 1,  1,
             1, 1,  1;
             
             hardIronBias << 0,0,0; 
@@ -206,7 +209,6 @@ namespace utils {
                                 softIronMatrix(2, 2) * (myRawIMU.magn.z - hardIronBias(2));
             }
 
-
             /**
             *  
             */ 
@@ -216,29 +218,38 @@ namespace utils {
                 return rawMagData.size(); 
             }
             
-            std::tuple<Eigen::MatrixXd, Eigen::VectorXd, float> ellipsoid_fit(const Eigen::MatrixXd& s) {
-                Eigen::MatrixXd D(s.cols(), 10);
+            std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ellipsoid_fit(const Eigen::MatrixXd& s) {
+                
+                // std::cout << "s " << std::endl << s << std::endl;
 
-                for (size_t i = 0; i < s.cols(); ++i) {
-                    D(i, 0) = std::pow(s(0, i), 2);
-                    D(i, 1) = std::pow(s(1, i), 2);
-                    D(i, 2) = std::pow(s(2, i), 2);
-                    D(i, 3) = 2.0 * s(1, i) * s(2, i);
-                    D(i, 4) = 2.0 * s(0, i) * s(2, i);
-                    D(i, 5) = 2.0 * s(0, i) * s(1, i);
-                    D(i, 6) = 2.0 * s(0, i);
-                    D(i, 7) = 2.0 * s(1, i);
-                    D(i, 8) = 2.0 * s(2, i);
-                    D(i, 9) = 1.0;
-                }
+                Eigen::MatrixXd D(10,s.cols());
+
+                D.row(0) = s.row(0).array().square();
+                D.row(1) = s.row(1).array().square();
+                D.row(2) = s.row(2).array().square();
+                D.row(3) = 2.0 * s.row(1).array() * s.row(2).array();
+                D.row(4) = 2.0 * s.row(0).array() * s.row(2).array();
+                D.row(5) = 2.0 * s.row(0).array() * s.row(1).array();
+                D.row(6) = 2.0 * s.row(0).array();
+                D.row(7) = 2.0 * s.row(1).array();
+                D.row(8) = 2.0 * s.row(2).array();
+                D.row(9) = Eigen::MatrixXd::Ones(1, 105);
+
+                // std::cout << std::fixed << std::setprecision(30);
+    
+                // std::cout << std::scientific << std::setprecision(8) << "D " << std::endl << D << std::endl;
+
+
 
                 Eigen::MatrixXd S = D * D.transpose();
 
                 Eigen::MatrixXd S_11 = S.block(0, 0, 6, 6);
-                Eigen::MatrixXd S_12 = S.block(0, 6, 6, 4);
-                Eigen::MatrixXd S_21 = S.block(6, 0, 4, 6);
-                Eigen::MatrixXd S_22 = S.block(6, 6, 4, 4);
+                Eigen::MatrixXd S_12 = S.block(0, 6, 6, S.cols() - 6);
+                Eigen::MatrixXd S_21 = S.block(6, 0, S.rows() - 6, 6);
+                Eigen::MatrixXd S_22 = S.block(6, 6, S.rows() - 6, S.cols() - 6);
 
+                // std::cout << "S " << std::endl << S << std::endl;
+                                
                 Eigen::MatrixXd C(6, 6);
 
                 C << -1,  1,  1,  0,  0,  0,
@@ -259,14 +270,14 @@ namespace utils {
                 int maxIndex = 0;
                 E_w.maxCoeff(&maxIndex);
                 Eigen::VectorXd v_1 = E_v.col(maxIndex);
-
+                
                 if (v_1(0) < 0) v_1 = -v_1;
 
                 Eigen::VectorXd v_2 = (- S_22.inverse() * S_21) * v_1;
                 
                 Eigen::MatrixXd M(3,3);
                 Eigen::VectorXd n(3);
-                float d = v_2[3];
+                double d = v_2[3];
 
                 M << v_1(0), v_1(5), v_1(4),
                 v_1(5), v_1(1), v_1(3),
@@ -296,14 +307,17 @@ namespace utils {
 
                 Eigen::MatrixXd M;
                 Eigen::VectorXd n;
-                float d;
-
+                double d;
+                
                 std::tie(M,n,d) = ellipsoid_fit(s.transpose());
 
                 Eigen::MatrixXd M_1 = M.inverse();
                 hardIronBias = - (M_1 * n);
 
-                softIronMatrix = (mField / std::sqrt((n.transpose() * (M_1 * n) -d)) * M.array().sqrt());
+                softIronMatrix = (mField / std::sqrt((n.transpose() * (M_1 * n) -d)) * M.sqrt());
+
+                std::cout << "hardIronBias " << std::endl << hardIronBias << std::endl;
+                std::cout << "softIronMatrix " << std::endl << softIronMatrix << std::endl;
 
             }
     };
