@@ -181,19 +181,21 @@ namespace utils {
             
             }
 
-            int mField = 234; // 1000 by default
-
-            void setSoftIronMatrix(const Eigen::MatrixXd& newSoftIronMatrix) {
-                softIronMatrix = newSoftIronMatrix;
-            }
-
-            void setHardIronBias(const Eigen::VectorXd& newHardIronBias) {
-                hardIronBias = newHardIronBias;
-            }
-
-            void setMField(int newMField) {
-                mField = newMField;
-            }
+            /**
+            *  The gravitation field is used to calculate the soft iron matrices and should be modified according to the follownig formula:
+            *       1- Get the Total Field for your location from: 
+            *          https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
+            *       2- Convert the Total Field value to Gauss (1nT = 10E-5G)
+            *       3- Convert Total Field to Raw value Total Field, which is the
+            *          Raw Gravitation Field we are searching for
+            *          Read your magnetometer datasheet and find your gain value,
+            *          Which should be the same of the collected raw points
+            *
+            *  Reference: https://github.com/nliaudat/magnetometer_calibration/blob/main/calibrate.py
+            *  
+            *
+            */ 
+            int gravitationField = 234; // should be 1000 by default, this was calculated for the LSM9DS1 in Montreal
 
             void applyMagnetometerCalibration(const Imu9Axis& myRawIMU) {
                 myCalIMU.magn.x = softIronMatrix(0, 0) * (myRawIMU.magn.x - hardIronBias(0)) +
@@ -210,14 +212,19 @@ namespace utils {
             }
 
             /**
-            *  
-            */ 
-            int recordRawMagData(const Coord3D& magData) { // The user needs to call this a minimum amount of time (suggest a min size of dataset)
+            * Records the raw magnetometer data and saves it in a vector.
+            * The user needs to call this a minimum amount of time (suggest a min size of dataset)
+            */  
+            int recordRawMagData(const Coord3D& magData) { 
                 rawMagData.push_back(magData);
 
                 return rawMagData.size(); 
-            }
+            } 
             
+            /**
+            * Fits an ellipsoid to 3D points by creating matrices from the input, solving for eigenvalues, 
+            * and returning the ellipsoid's shape matrix M, center vector n, and scalar offset d
+            */
             std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double> ellipsoid_fit(const Eigen::MatrixXd& s) {
                 
                 // std::cout << "s " << std::endl << s << std::endl;
@@ -288,21 +295,22 @@ namespace utils {
                 return std::make_tuple(M, n, d);
             }
 
-            void generateMagnetometerMatrices() {
-                
-                // Mfield instructions?? or just in the doc ?? and say "We are using mfield..."
-                // User instructions for calculating 
+            /**
+            * Generates magnetometer calibration matrices based on saved raw dataset by fitting an ellipsoid to a set of 3D coordinates, 
+            * deriving the hard-iron bias and soft-iron matrix based on  the pre-defined gravitational field.
+            */                                                                                                                                 
+            void generateMagnetometerMatrices(std::vector<Coord3D> customRawMagData) {
+                            
+                if (customRawMagData.empty()) {
+                    return 0;
+                }
 
-                // Record imu data and store it in rawMagData
+                Eigen::MatrixXd s(customRawMagData.size(),3);
 
-                // Either record for x seconds or until user presses a key
-                
-                Eigen::MatrixXd s(rawMagData.size(),3);
-
-                for (int i = 0; i < rawMagData.size(); ++i) {
-                    s(i, 0) = rawMagData[i].x;
-                    s(i, 1) = rawMagData[i].y;
-                    s(i, 2) = rawMagData[i].z;
+                for (int i = 0; i < customRawMagData.size(); ++i) {
+                    s(i, 0) = customRawMagData[i].x;
+                    s(i, 1) = customRawMagData[i].y;
+                    s(i, 2) = customRawMagData[i].z;
                 }
 
                 Eigen::MatrixXd M;
@@ -314,11 +322,13 @@ namespace utils {
                 Eigen::MatrixXd M_1 = M.inverse();
                 hardIronBias = - (M_1 * n);
 
-                softIronMatrix = (mField / std::sqrt((n.transpose() * (M_1 * n) -d)) * M.sqrt());
+                softIronMatrix = (gravitationField / std::sqrt((n.transpose() * (M_1 * n) -d)) * M.sqrt());
 
-                std::cout << "hardIronBias " << std::endl << hardIronBias << std::endl;
-                std::cout << "softIronMatrix " << std::endl << softIronMatrix << std::endl;
+                return 1;
+            }
 
+            void generateMagnetometerMatrices() {
+                generateMagnetometerMatrices(rawMagData);
             }
     };
 
