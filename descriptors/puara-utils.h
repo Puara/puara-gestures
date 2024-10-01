@@ -213,7 +213,7 @@ namespace utils {
 
             /**
             * Records the raw magnetometer data and saves it in a vector.
-            * The user needs to call this a minimum amount of time (suggest a min size of dataset)
+            * The user needs to call this a minimum amount of time in order to generate at least 1500 data points
             */  
             int recordRawMagData(const Coord3D& magData) { 
                 rawMagData.push_back(magData);
