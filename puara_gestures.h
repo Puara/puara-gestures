@@ -16,10 +16,13 @@
 #include <chrono>
 
 // puara-gesture descriptors
-#include "descriptors/puara-structs.h"
-#include "descriptors/puara-utils.h"
 #include "descriptors/puara-jab.h"
 #include "descriptors/puara-shake.h"
+#include "descriptors/puara-roll.h"
+#include "descriptors/puara-tilt.h"
 #include "descriptors/IMU_Sensor_Fusion/imu_orientation.h"
+
+#include "testing_roll.h"
+#include "testing_tilt.h"
 
 #endif

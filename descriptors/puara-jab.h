@@ -11,6 +11,7 @@
 #define PUARA_JAB_H
 
 #include "puara-utils.h"
+#include "puara-structs.h"
 
 #include <deque>
 #include <algorithm>
@@ -28,7 +29,7 @@ namespace puara_gestures {
             Jab() : tied_value(nullptr), threshold(5), minmax(10) {}
             Jab(double* tied) : tied_value(tied), threshold(5), minmax(10) {}
             Jab(Coord1D* tied) : tied_value(&(tied->x)), threshold(5), minmax(10) {}
-            
+
             int threshold;
             double update(double reading) {
                 minmax.update(reading);
