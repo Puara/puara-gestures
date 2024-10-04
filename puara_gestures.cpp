@@ -38,7 +38,7 @@ void PuaraGestures::updateInertialGestures() {
 //   float gyroAbsX = std::abs(gyroBuffers[0].back());
 //   float gyroAbsY = std::abs(gyroBuffers[1].back());
 //   float gyroAbsZ = std::abs(gyroBuffers[2].back());
-    
+
 //   // Instrument shake
 //   if (gyroAbsX > 0.1) {
 //     PuaraGestures::shakeX = leakyIntegrator(gyroAbsX/10, PuaraGestures::shakeX, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
@@ -105,7 +105,7 @@ void PuaraGestures::updateInertialGestures() {
 //   float acclAbsX = std::abs(acclBuffers[0].back());
 //   float acclAbsY = std::abs(acclBuffers[1].back());
 //   float acclAbsZ = std::abs(acclBuffers[2].back());
-    
+
 //   // Instrument shake
 //   if (acclAbsX > 0.1) {
 //     PuaraGestures::shakeX = leakyIntegrator(acclAbsX/10, PuaraGestures::shakeX, 0.6, PuaraGestures::leakyShakeFreq, PuaraGestures::leakyShakeTimerX);
@@ -201,7 +201,7 @@ void PuaraGestures::setAccelerometerValues(float accelX, float accelY, float acc
   }
 }
 
-void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {   
+void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {
   static long then = getCurrentTimeMicroseconds();
   long now = getCurrentTimeMicroseconds();
   // Calibrate Gyroscope
@@ -209,7 +209,7 @@ void PuaraGestures::setGyroscopeValues(float gyroX, float gyroY, float gyroZ) {
 
   orientation.setGyroscopeDegreeValues(gyroCal[0], gyroCal[1], gyroCal[2], (now - then) * 0.000001);
 
-  then = now;     
+  then = now;
   gyroBuffers[0].push_back(gyroCal[0]);
   gyroBuffers[1].push_back(gyroCal[1]);
   gyroBuffers[2].push_back(gyroCal[2]);
@@ -261,11 +261,11 @@ void PuaraGestures::calibrateGyroscope(float gyroX, float gyroY, float gyroZ) {
 // Simple leaky integrator implementation
 // Create a unsigned long global variable for time counter for each leak implementation (timer)
 // float PuaraGestures::leakyIntegrator (float reading, float old_value, float leak, int frequency, unsigned long& timer) {
-  
+
 //   float new_value;
 //   if (frequency <= 0) {
 //     new_value = reading + (old_value * leak);
-//   } else if ((getCurrentTimeMicroseconds()/1000LL)  - (1000 / frequency) < timer) {  
+//   } else if ((getCurrentTimeMicroseconds()/1000LL)  - (1000 / frequency) < timer) {
 //     new_value = reading + old_value;
 //   } else {
 //     new_value = reading + (old_value * leak);
@@ -356,9 +356,9 @@ IMU_Orientation::Euler PuaraGestures::getOrientationEuler() {
 
 /* Expects an array of discrete touch values (int, 0 or 1) and
  * the size of the array
- */ 
+ */
 void PuaraGestures::updateTouchArray(int *discrete_touch, int touchSize) { // raw_touch
-    
+
     // touchAll: get the "amount of touch" for the entire touch sensor
     // normalized between 0 and 1
     touchAll = touchAverage(discrete_touch, 0, touchSize);
@@ -386,8 +386,8 @@ void PuaraGestures::updateTouchArray(int *discrete_touch, int touchSize) { // ra
     // brush: direction and intensity of capsense brush motion
     // rub: intensity of rub motion
     // in ~cm/s (distance between stripes = ~1.5cm)
-    for (int i=0; i < (sizeof(blobPos)/sizeof(blobPos[0])); ++i) { 
-        float movement = blobPos[i] - lastState_blobPos[i]; 
+    for (int i=0; i < (sizeof(blobPos)/sizeof(blobPos[0])); ++i) {
+        float movement = blobPos[i] - lastState_blobPos[i];
         if ( blobPos[i] == -1 ) {
             multiBrush[i] = 0;
             multiRub[i] = 0;
@@ -419,7 +419,7 @@ float PuaraGestures::touchAverage (float * touchArrayStrips, int firstStrip, int
     int sum = 0;
     for (int i = firstStrip; i < lastStrip-1; ++i)
       sum += touchArrayStrips[i];
-      
+
     return  ((float) sum) / (lastStrip - firstStrip);
 }
 
@@ -427,7 +427,7 @@ float PuaraGestures::touchAverage (int * touchArrayStrips, int firstStrip, int l
     int sum = 0;
     for (int i = firstStrip; i < lastStrip; i++)
       sum += (float)touchArrayStrips[i];
-      
+
     return  ((float) sum) / (lastStrip - firstStrip);
 }
 
@@ -500,7 +500,7 @@ void PuaraGestures::blobDetection1D (int *discrete_touch, int touchSize) {
 //     }
 //     for (int i=0; i < sizeof(temp_blobPos)/sizeof(temp_blobPos[0]); ++i) {
 //       if (temp_blobPos[i] != -1) {
-//         //bitWrite(temp_blobArray[temp_blobPos[i]/8], (7-(temp_blobPos[i]%8)), 1);        
+//         //bitWrite(temp_blobArray[temp_blobPos[i]/8], (7-(temp_blobPos[i]%8)), 1);
 //       }
 //       else {
 //         break;
@@ -527,9 +527,9 @@ void PuaraGestures::blobDetection1D (int *discrete_touch, int touchSize) {
 //       }
 //     }
 //     if (count > 0) {
-//     output = sum / count; 
+//     output = sum / count;
 //     }
-      
+
 //     return output;
 // }
 
@@ -583,7 +583,7 @@ void PuaraGestures::updateButton(int buttonValue) {
                 PuaraGestures::buttonDtap = 0;
                 PuaraGestures::buttonTtap = 0;
                 break;
-            case 1: 
+            case 1:
                 PuaraGestures::buttonTap = 1;
                 PuaraGestures::buttonDtap = 0;
                 PuaraGestures::buttonTtap = 0;
@@ -635,7 +635,7 @@ void PuaraGestures::updateTrigButton(int buttonValue) {
                 PuaraGestures::buttonDtap = 0;
                 PuaraGestures::buttonTtap = 0;
                 break;
-            case 1: 
+            case 1:
                 PuaraGestures::buttonTap = 1;
                 PuaraGestures::buttonDtap = 0;
                 PuaraGestures::buttonTtap = 0;
