@@ -11,6 +11,7 @@
 #define PUARA_SHAKE_H
 
 #include "puara-utils.h"
+#include "puara-structs.h"
 
 #include <algorithm>
 
@@ -19,11 +20,11 @@ namespace puara_gestures {
 
     /**
      * This class creates jab gestures using 1DoF info
-     * 
+     *
      * It expects 1 axis of a accelerometer in m/s^2, but can be used
      * with any double or float
-     * 
-     * The frequency for the leaky integrator can be changed through 
+     *
+     * The frequency for the leaky integrator can be changed through
      * integrator.frequency
      */
     class Shake {
@@ -31,7 +32,7 @@ namespace puara_gestures {
             Shake() : tied_value(nullptr), integrator(0, 0, 0.6, 10, 0) {}
             Shake(double* tied) : tied_value(tied), integrator(0, 0, 0.6, 10, 0) {}
             Shake(Coord1D* tied) : tied_value(&(tied->x)), integrator(0, 0, 0.6, 10, 0) {}
-            
+
             utils::LeakyIntegrator integrator;
             double fast_leak = 0.6;
             double slow_leak = 0.3;
@@ -41,7 +42,7 @@ namespace puara_gestures {
                 }
 
                 double abs_reading = std::abs(reading);
-                
+
                 if (abs_reading > 0.1) {
                     integrator.integrate(abs_reading/10, fast_leak);
                 } else {
@@ -91,12 +92,12 @@ namespace puara_gestures {
 
     /**
      * This class creates jab gestures using 2DoF info
-     * 
+     *
      * It expects 2 axis of a accelerometer in m/s^2, but can be used
      * with any double or float
-     * 
-     * The frequency for the leaky integrator can be changed through 
-     * integrator.frequency individually or for all axes with 
+     *
+     * The frequency for the leaky integrator can be changed through
+     * integrator.frequency individually or for all axes with
      * frequency(double freq)
      */
     class Shake2D {
@@ -140,12 +141,12 @@ namespace puara_gestures {
 
     /**
      * This class creates jab gestures using 3DoF info
-     * 
+     *
      * It expects 3 axis of a accelerometer in m/s^2, but can be used
      * with any double or float
-     * 
-     * The frequency for the leaky integrator can be changed through 
-     * integrator.frequency individually or for all axes with 
+     *
+     * The frequency for the leaky integrator can be changed through
+     * integrator.frequency individually or for all axes with
      * frequency(double freq)
      */
     class Shake3D {

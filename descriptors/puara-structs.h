@@ -18,7 +18,7 @@ namespace puara_gestures {
     };
 
     struct Spherical {
-        double azimuth; 
+        double azimuth;
         double& phi = azimuth;
         double& yaw = azimuth;
         double elevation;
@@ -40,7 +40,7 @@ namespace puara_gestures {
     struct Imu9Axis {
         Coord3D accl, gyro, magn;
     };
-    
+
     struct DiscreteArray {
         std::vector<int> arr;
         DiscreteArray(int n) : arr(std::vector<int>(n)) {}
