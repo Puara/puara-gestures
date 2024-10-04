@@ -20,10 +20,13 @@ namespace puara_gestures {
     struct Spherical {
         double azimuth;
         double& phi = azimuth;
+        double& yaw = azimuth;
         double elevation;
         double& theta = elevation;
+        double& pitch = elevation;
         double distance;
         double& r = distance;
+        double roll;
     };
 
     struct Quaternion {

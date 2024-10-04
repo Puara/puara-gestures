@@ -27,6 +27,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(libossia)
 
 file(GLOB_RECURSE PUARA_SOURCE ../descriptors/*.cpp)
+
 add_library(puara-gestures ${PUARA_SOURCE})
 
 # Project setup

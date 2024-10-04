@@ -42,6 +42,12 @@ IMU_Orientation orientation;
 puara_gestures::testing_roll rollTest;
 puara_gestures::testing_tilt tiltTest;
 
+#include <vector>
+
+struct Coord3D {
+    double x, y, z;
+};
+
 auto cb = [](ossia::string_view unhandled_node, const ossia::value& unhandled_value) {
     std::cout
         << "Received unhandled message ("
