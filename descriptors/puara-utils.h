@@ -11,9 +11,10 @@
 #define PUARA_UTILS_H
 
 #include <cmath>
-#include <eigen3/Eigen/Dense>
-#include <eigen3/Eigen/Core>
-#include <eigen3/unsupported/Eigen/MatrixFunctions>
+
+#include <Eigen/Dense>
+#include <Eigen/Core>
+#include <unsupported/Eigen/MatrixFunctions>
 
 #include "puara-structs.h"
 
@@ -68,7 +69,6 @@ namespace utils {
 
                 if (custom_frequency <= 0) {
                     current_value = reading + (custom_old_value * custom_leak);
-            testing-roll
                 } else if ((current_time/1000LL)  - (1000 / frequency) < custom_timer) {
                     current_value = reading + old_value;
                 } else {
@@ -471,7 +471,7 @@ namespace utils {
             * Generates magnetometer calibration matrices based on saved raw dataset by fitting an ellipsoid to a set of 3D coordinates, 
             * deriving the hard-iron bias and soft-iron matrix based on  the pre-defined gravitational field.
             */                                                                                                                                 
-            void generateMagnetometerMatrices(std::vector<Coord3D> customRawMagData) {
+            int generateMagnetometerMatrices(std::vector<Coord3D> customRawMagData) {
                             
                 if (customRawMagData.empty()) {
                     return 0;
@@ -616,7 +616,7 @@ namespace convert {
         cartesianCoords.y = polarCoords.r * cos(polarCoords.theta) * sin(polarCoords.phi);
         cartesianCoords.z = polarCoords.r * sin(polarCoords.theta);
 
-        return cartesianCoords
+        return cartesianCoords;
     }
 
     /**

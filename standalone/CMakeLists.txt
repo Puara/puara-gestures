@@ -26,9 +26,22 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libossia)
 
-file(GLOB_RECURSE PUARA_SOURCE ../descriptors/*.cpp)
+FetchContent_Declare(
+  Eigen
+  GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+  GIT_TAG        master
+)
 
-add_library(puara-gestures ${PUARA_SOURCE})
+set(BUILD_TESTING OFF)
+set(EIGEN_BUILD_TESTING OFF)
+set(EIGEN_MPL2_ONLY ON)
+set(EIGEN_BUILD_PKGCONFIG OFF)
+set(EIGEN_BUILD_DOC OFF)
+FetchContent_MakeAvailable(Eigen)
+
+file(GLOB_RECURSE PUARA_SOURCE ../descriptors/*.cpp ../descriptors/*.h)
+
+add_library(puara-gestures STATIC ${PUARA_SOURCE})
 
 # Project setup
 add_executable(puara-gestures-standalone)
@@ -41,6 +54,7 @@ target_link_libraries(puara-gestures-standalone
   PRIVATE 
   ossia
   puara-gestures
+  Eigen3::Eigen
 )
 target_include_directories(puara-gestures-standalone 
   PRIVATE 
