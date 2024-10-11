@@ -8,6 +8,9 @@
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 
+
+// clang-format -i *.h
+
 #include "../puara_gestures.h"
 
 #include <ossia/network/generic/generic_device.hpp>
