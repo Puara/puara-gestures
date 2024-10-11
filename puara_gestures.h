@@ -6,23 +6,20 @@
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 
+#pragma once
 
-#ifndef PUARA_GESTURES_H
-#define PUARA_GESTURES_H
-
-#include <deque>
 #include <cmath>
+
 #include <algorithm>
 #include <chrono>
+#include <deque>
 
 // puara-gesture descriptors
-#include "descriptors/puara-jab.h"
-#include "descriptors/puara-shake.h"
-#include "descriptors/puara-roll.h"
-#include "descriptors/puara-tilt.h"
 #include "descriptors/IMU_Sensor_Fusion/imu_orientation.h"
-
+#include "descriptors/puara-button.h"
+#include "descriptors/puara-jab.h"
+#include "descriptors/puara-roll.h"
+#include "descriptors/puara-shake.h"
+#include "descriptors/puara-tilt.h"
 #include "testing_roll.h"
 #include "testing_tilt.h"
-
-#endif

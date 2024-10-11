@@ -6,8 +6,7 @@
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 
-#ifndef PUARA_SHAKE_H
-#define PUARA_SHAKE_H
+#pragma once
 
 #include "puara-structs.h"
 #include "puara-utils.h"
@@ -235,4 +234,3 @@ public:
 
 }
 
-#endif

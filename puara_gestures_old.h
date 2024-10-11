@@ -34,9 +34,9 @@ struct calibrationParameters {
 class PuaraGestures {
     
     private:
-
+/* copied
         long long getCurrentTimeMicroseconds();
-
+*/
         // Intertial measurements
         const int BUFFER_SIZE = 5;
         float accelX;
@@ -87,8 +87,10 @@ class PuaraGestures {
         float arrayAverageZero (float * Array, int ArraySize);
         void bitShiftArrayL (int * origArray, int * shiftedArray, int arraySize, int shift);
     
+/*****  copied to puara-button.h  ******  
+
         // button
-        unsigned int buttonCount;
+        unsigned int buttonCount; 
         unsigned int buttonCountInterval = 200;
         int buttonValue;
         bool buttonPress = false;
@@ -101,6 +103,8 @@ class PuaraGestures {
         long buttonTimer;
         unsigned long buttonPressTime;
         unsigned int buttonThreshold = 1;
+
+******* copied to puara-button.h ******* */
 
     public:
 
@@ -189,6 +193,7 @@ class PuaraGestures {
         float rub;              // f, 0--? (~cm/s)
         float multiRub[4];      // ffff, 0--? (~cm/s)
 
+/******************************************** copied to puara-button.h
         // button
         void updateButton(int buttonValue);
         void updateTrigButton(int buttonValue);
@@ -204,6 +209,9 @@ class PuaraGestures {
         unsigned int setButtonHoldInterval(int value);
         unsigned int getButtonThreshold();
         unsigned int setButtonThreshold(int value);
+
+
+   ********************************  copied to puara-button.h     ********** */
 };
 
 #endif
