@@ -45,7 +45,7 @@ public:
     {
       buttonHold = false;
       buttonPress = false;
-      buttonCount = -1;
+      buttonCount = 0;
     }
     else
     {
@@ -61,28 +61,28 @@ public:
     {
       switch(buttonCount)
       {
-        case(unsigned)-1:
-          buttonTap = -1;
-          buttonDtap = -1;
-          buttonTtap = -1;
-          break;
         case 0:
           buttonTap = 0;
-          buttonDtap = -1;
-          buttonTtap = -1;
-          break;
-        case 1:
-          buttonTap = -1;
           buttonDtap = 0;
-          buttonTtap = -1;
-          break;
-        case 2:
-          buttonTap = -1;
-          buttonDtap = -1;
           buttonTtap = 0;
           break;
+        case 1:
+          buttonTap = 1;
+          buttonDtap = 0;
+          buttonTtap = 0;
+          break;
+        case 2:
+          buttonTap = 0;
+          buttonDtap = 1;
+          buttonTtap = 0;
+          break;
+        case 3:
+          buttonTap = 0;
+          buttonDtap = 0;
+          buttonTtap = 1;
+          break;
       }
-      buttonCount = -1;
+      buttonCount = 0;
     }
   }
 
@@ -122,28 +122,28 @@ public:
     {
       switch(buttonCount)
       {
-        case(unsigned)-1:
-          buttonTap = -1;
-          buttonDtap = -1;
-          buttonTtap = -1;
-          break;
         case 0:
           buttonTap = 0;
-          buttonDtap = -1;
-          buttonTtap = -1;
-          break;
-        case 1:
-          buttonTap = -1;
           buttonDtap = 0;
-          buttonTtap = -1;
-          break;
-        case 2:
-          buttonTap = -1;
-          buttonDtap = -1;
           buttonTtap = 0;
           break;
+        case 1:
+          buttonTap = 1;
+          buttonDtap = 0;
+          buttonTtap = 0;
+          break;
+        case 2:
+          buttonTap = 0;
+          buttonDtap = 1;
+          buttonTtap = 0;
+          break;
+        case 3:
+          buttonTap = 0;
+          buttonDtap = 0;
+          buttonTtap = 1;
+          break;
       }
-      buttonCount = -1;
+      buttonCount = 0;
     }
   }
 

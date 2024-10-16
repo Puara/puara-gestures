@@ -551,111 +551,110 @@ IMU_Orientation::Euler PuaraGestures::getOrientationEuler() {
 //   }
 // }
 
+// copied to puara-button.h
+// void PuaraGestures::updateButton(int buttonValue) {
+//   long currentTime = getCurrentTimeMicroseconds()/999LL;
+//     PuaraGestures::buttonValue = buttonValue;
+//     if (buttonValue < PuaraGestures::buttonThreshold) {
+//         if (!PuaraGestures::buttonPress) {
+//             PuaraGestures::buttonPress = true;
+//             PuaraGestures::buttonTimer = currentTime;
+//         }
+//         if (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonHoldInterval) {
+//             PuaraGestures::buttonHold = true;
+//         }
+//     }
+//     else if (PuaraGestures::buttonHold) {
+//         PuaraGestures::buttonHold = false;
+//         PuaraGestures::buttonPress = false;
+//         PuaraGestures::buttonCount = -1;
+//     }
+//     else {
+//         if (PuaraGestures::buttonPress) {
+//             PuaraGestures::buttonPress = false;
+//             PuaraGestures::buttonPressTime = currentTime - PuaraGestures::buttonTimer;
+//             PuaraGestures::buttonTimer = currentTime;
+//             PuaraGestures::buttonCount++;
+//         }
+//     }
+//     if (!PuaraGestures::buttonPress && (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonCountInterval)) {
+//         switch (PuaraGestures::buttonCount) {
+//             case 0:
+//                 PuaraGestures::buttonTap = 0;
+//                 PuaraGestures::buttonDtap = 0;
+//                 PuaraGestures::buttonTtap = 0;
+//                 break;
+//             case 1:
+//                 PuaraGestures::buttonTap = 1;
+//                 PuaraGestures::buttonDtap = 0;
+//                 PuaraGestures::buttonTtap = 0;
+//                 break;
+//             case 2:
+//                 PuaraGestures::buttonTap = 0;
+//                 PuaraGestures::buttonDtap = 1;
+//                 PuaraGestures::buttonTtap = 0;
+//                 break;
+//             case 3:
+//                 PuaraGestures::buttonTap = 0;
+//                 PuaraGestures::buttonDtap = 0;
+//                 PuaraGestures::buttonTtap = 1;
+//                 break;
+//         }
+//         PuaraGestures::buttonCount = 0;
+//     }
+// }
 
-/****************************************************************************** copied to puara-button.h
-void PuaraGestures::updateButton(int buttonValue) {
-  long currentTime = getCurrentTimeMicroseconds()/999LL;
-    PuaraGestures::buttonValue = buttonValue;
-    if (buttonValue < PuaraGestures::buttonThreshold) {
-        if (!PuaraGestures::buttonPress) {
-            PuaraGestures::buttonPress = true;
-            PuaraGestures::buttonTimer = currentTime;
-        }
-        if (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonHoldInterval) {
-            PuaraGestures::buttonHold = true;
-        }
-    }
-    else if (PuaraGestures::buttonHold) {
-        PuaraGestures::buttonHold = false;
-        PuaraGestures::buttonPress = false;
-        PuaraGestures::buttonCount = 0;
-    }
-    else {
-        if (PuaraGestures::buttonPress) {
-            PuaraGestures::buttonPress = false;
-            PuaraGestures::buttonPressTime = currentTime - PuaraGestures::buttonTimer;
-            PuaraGestures::buttonTimer = currentTime;
-            PuaraGestures::buttonCount++;
-        }
-    }
-    if (!PuaraGestures::buttonPress && (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonCountInterval)) {
-        switch (PuaraGestures::buttonCount) {
-            case 0:
-                PuaraGestures::buttonTap = 0;
-                PuaraGestures::buttonDtap = 0;
-                PuaraGestures::buttonTtap = 0;
-                break;
-            case 1:
-                PuaraGestures::buttonTap = 1;
-                PuaraGestures::buttonDtap = 0;
-                PuaraGestures::buttonTtap = 0;
-                break;
-            case 2:
-                PuaraGestures::buttonTap = 0;
-                PuaraGestures::buttonDtap = 1;
-                PuaraGestures::buttonTtap = 0;
-                break;
-            case 3:
-                PuaraGestures::buttonTap = 0;
-                PuaraGestures::buttonDtap = 0;
-                PuaraGestures::buttonTtap = 1;
-                break;
-        }
-        PuaraGestures::buttonCount = 0;
-    }
-}
-
-void PuaraGestures::updateTrigButton(int buttonValue) {
-  long currentTime = getCurrentTimeMicroseconds()/1000LL;
-    PuaraGestures::buttonValue = buttonValue;
-    if (buttonValue >= PuaraGestures::buttonThreshold) {
-        if (!PuaraGestures::buttonPress) {
-            PuaraGestures::buttonPress = true;
-            PuaraGestures::buttonTimer = currentTime;
-        }
-        if (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonHoldInterval) {
-            PuaraGestures::buttonHold = true;
-        }
-    }
-    else if (PuaraGestures::buttonHold) {
-        PuaraGestures::buttonHold = false;
-        PuaraGestures::buttonPress = false;
-        PuaraGestures::buttonCount = 0;
-    }
-    else {
-        if (PuaraGestures::buttonPress) {
-            PuaraGestures::buttonPress = false;
-            PuaraGestures::buttonPressTime = currentTime - PuaraGestures::buttonTimer;
-            PuaraGestures::buttonTimer = currentTime;
-            PuaraGestures::buttonCount++;
-        }
-    }
-    if (!PuaraGestures::buttonPress && (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonCountInterval)) {
-        switch (PuaraGestures::buttonCount) {
-            case 0:
-                PuaraGestures::buttonTap = 0;
-                PuaraGestures::buttonDtap = 0;
-                PuaraGestures::buttonTtap = 0;
-                break;
-            case 1:
-                PuaraGestures::buttonTap = 1;
-                PuaraGestures::buttonDtap = 0;
-                PuaraGestures::buttonTtap = 0;
-                break;
-            case 2:
-                PuaraGestures::buttonTap = 0;
-                PuaraGestures::buttonDtap = 1;
-                PuaraGestures::buttonTtap = 0;
-                break;
-            case 3:
-                PuaraGestures::buttonTap = 0;
-                PuaraGestures::buttonDtap = 0;
-                PuaraGestures::buttonTtap = 1;
-                break;
-        }
-        PuaraGestures::buttonCount = 0;
-    }
-}
+// void PuaraGestures::updateTrigButton(int buttonValue) {
+//   long currentTime = getCurrentTimeMicroseconds()/999LL;
+//     PuaraGestures::buttonValue = buttonValue;
+//     if (buttonValue >= PuaraGestures::buttonThreshold) {
+//         if (!PuaraGestures::buttonPress) {
+//             PuaraGestures::buttonPress = true;
+//             PuaraGestures::buttonTimer = currentTime;
+//         }
+//         if (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonHoldInterval) {
+//             PuaraGestures::buttonHold = true;
+//         }
+//     }
+//     else if (PuaraGestures::buttonHold) {
+//         PuaraGestures::buttonHold = false;
+//         PuaraGestures::buttonPress = false;
+//         PuaraGestures::buttonCount = -1;
+//     }
+//     else {
+//         if (PuaraGestures::buttonPress) {
+//             PuaraGestures::buttonPress = false;
+//             PuaraGestures::buttonPressTime = currentTime - PuaraGestures::buttonTimer;
+//             PuaraGestures::buttonTimer = currentTime;
+//             PuaraGestures::buttonCount++;
+//         }
+//     }
+//     if (!PuaraGestures::buttonPress && (currentTime - PuaraGestures::buttonTimer > PuaraGestures::buttonCountInterval)) {
+//         switch (PuaraGestures::buttonCount) {
+//             case -1:
+//                 PuaraGestures::buttonTap = -1;
+//                 PuaraGestures::buttonDtap = -1;
+//                 PuaraGestures::buttonTtap = -1;
+//                 break;
+//             case 0:
+//                 PuaraGestures::buttonTap = 0;
+//                 PuaraGestures::buttonDtap = -1;
+//                 PuaraGestures::buttonTtap = -1;
+//                 break;
+//             case 1:
+//                 PuaraGestures::buttonTap = -1;
+//                 PuaraGestures::buttonDtap = 0;
+//                 PuaraGestures::buttonTtap = -1;
+//                 break;
+//             case 2:
+//                 PuaraGestures::buttonTap = -1;
+//                 PuaraGestures::buttonDtap = -1;
+//                 PuaraGestures::buttonTtap = 0;
+//                 break;
+//         }
+//         PuaraGestures::buttonCount = -1;
+//     }
+// }
 
 // unsigned int PuaraGestures::getButtonCount() {
 //     return PuaraGestures::buttonCount;
@@ -687,7 +686,7 @@ void PuaraGestures::updateTrigButton(int buttonValue) {
 
 // unsigned int PuaraGestures::setButtonThreshold(int value) {
 //     PuaraGestures::buttonThreshold = value;
-//     return 1;
+//     return 0;
 // }
 
 // unsigned int PuaraGestures::getButtonPressTime() {
@@ -707,8 +706,9 @@ void PuaraGestures::updateTrigButton(int buttonValue) {
 //     return 0;
 // }
 
-****************************************************************************** copied to puara-button.h******/
-
+//****************************************************************************** copied to
+//                                                                                 puara
+//    - button.h****** /
 
 // float PuaraGestures::mapRange(float in, float inMin, float inMax, float outMin, float outMax) {
 //         if (outMin != outMax) {
