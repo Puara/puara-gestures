@@ -32,6 +32,8 @@ FetchContent_Declare(
   GIT_TAG        master
 )
 
+find_package(Boost REQUIRED)
+
 set(BUILD_TESTING OFF)
 set(EIGEN_BUILD_TESTING OFF)
 set(EIGEN_MPL2_ONLY ON)
@@ -42,22 +44,25 @@ FetchContent_MakeAvailable(Eigen)
 file(GLOB_RECURSE PUARA_SOURCE ../descriptors/*.cpp ../descriptors/*.h)
 
 add_library(puara-gestures STATIC ${PUARA_SOURCE})
+target_link_libraries(puara-gestures PUBLIC
+    Eigen3::Eigen
+    Boost::boost
+)
 
 # Project setup
 add_executable(puara-gestures-standalone)
 
-target_sources(puara-gestures-standalone 
-  PRIVATE 
+target_sources(puara-gestures-standalone
+  PRIVATE
   main.cpp
 )
 target_link_libraries(puara-gestures-standalone
-  PRIVATE 
-  ossia
-  puara-gestures
-  Eigen3::Eigen
+  PRIVATE
+    ossia
+    puara-gestures
 )
-target_include_directories(puara-gestures-standalone 
-  PRIVATE 
+target_include_directories(puara-gestures-standalone
+  PRIVATE
   ${libossia_SOURCE_DIR}/ossia/include
   ${libossia_SOURCE_DIR}/ossia
 )

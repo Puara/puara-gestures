@@ -9,18 +9,18 @@ namespace puara_gestures
 class button
 {
 private:
-  unsigned int buttonCount;
+  unsigned int buttonCount = 0;
   unsigned int buttonCountInterval = 200;
-  int buttonValue;
+  int buttonValue = 0;
   bool buttonPress = false;
-  unsigned int buttonTap;
-  unsigned int buttonDtap;
-  unsigned int buttonTtap;
-  bool buttonHold;
+  unsigned int buttonTap = 0;
+  unsigned int buttonDtap = 0;
+  unsigned int buttonTtap = 0;
+  bool buttonHold = false;
   unsigned int buttonHoldInterval = 5000;
   unsigned int buttonFilterPeriod = 10;
-  long buttonTimer;
-  unsigned long buttonPressTime;
+  long buttonTimer = 0;
+  unsigned long buttonPressTime = 0;
   unsigned int buttonThreshold = 1;
   long long getCurrentTimeMicroseconds();
 

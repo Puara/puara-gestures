@@ -17,14 +17,14 @@ namespace puara_gestures
 {
 
 /**
-     * This class creates jab gestures using 1DoF info
-     *
-     * It expects 1 axis of a accelerometer in m/s^2, but can be used
-     * with any double or float
-     *
-     * The frequency for the leaky integrator can be changed through
-     * integrator.frequency
-     */
+ * @brief This class creates jab gestures using 1DoF info
+ *
+ * It expects 1 axis of a accelerometer in m/s^2, but can be used
+ * with any double or float
+ *
+ * The frequency for the leaky integrator can be changed through
+ * integrator.frequency
+ */
 class Shake
 {
 public:
@@ -111,15 +111,15 @@ private:
 };
 
 /**
-     * This class creates jab gestures using 2DoF info
-     *
-     * It expects 2 axis of a accelerometer in m/s^2, but can be used
-     * with any double or float
-     *
-     * The frequency for the leaky integrator can be changed through
-     * integrator.frequency individually or for all axes with
-     * frequency(double freq)
-     */
+ * @brief This class creates jab gestures using 2DoF info
+ *
+ * It expects 2 axis of a accelerometer in m/s^2, but can be used
+ * with any double or float
+ *
+ * The frequency for the leaky integrator can be changed through
+ * integrator.frequency individually or for all axes with
+ * frequency(double freq)
+ */
 class Shake2D
 {
 public:
@@ -170,15 +170,15 @@ public:
 };
 
 /**
-     * This class creates jab gestures using 3DoF info
-     *
-     * It expects 3 axis of a accelerometer in m/s^2, but can be used
-     * with any double or float
-     *
-     * The frequency for the leaky integrator can be changed through
-     * integrator.frequency individually or for all axes with
-     * frequency(double freq)
-     */
+ * @brief This class creates jab gestures using 3DoF info
+ *
+ * It expects 3 axis of a accelerometer in m/s^2, but can be used
+ * with any double or float
+ *
+ * The frequency for the leaky integrator can be changed through
+ * integrator.frequency individually or for all axes with
+ * frequency(double freq)
+ */
 class Shake3D
 {
 public:
@@ -233,4 +233,3 @@ public:
 };
 
 }
-

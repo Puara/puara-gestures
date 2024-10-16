@@ -7,15 +7,15 @@
 namespace puara_gestures
 {
 
-class touch
+class Touch
 {
 public:
   void updateTouchArray(int* discrete_touch, int touchSize);
-  float touchAll;      // f, 0--1
-  float touchTop;      // f, 0--1
-  float touchMiddle;   // f, 0--1
-  float touchBottom;   // f, 0--1
-  float brush;         // f, 0--? (~cm/s)
+  float touchAll = 0;    // f, 0--1
+  float touchTop = 0;    // f, 0--1
+  float touchMiddle = 0; // f, 0--1
+  float touchBottom = 0; // f, 0--1
+  float brush = 0;       // f, 0--? (~cm/s)
   float multiBrush[4]; // ffff, 0--? (~cm/s)
   float rub;           // f, 0--? (~cm/s)
   float multiRub[4];   // ffff, 0--? (~cm/s)
@@ -44,8 +44,8 @@ public:
       float reading, float old_value, float leak, int frequency, unsigned long& timer);
 
   /* Expects an array of discrete touch values (int, 0 or 1) and
- * the size of the array
- */
+   * the size of the array
+   */
   void updateTouchArray(int* discrete_touch, int touchSize)
   { // raw_touch
 

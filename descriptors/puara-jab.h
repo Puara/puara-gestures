@@ -17,10 +17,11 @@ namespace puara_gestures
 {
 
 /**
-     * @brief This class creates jab gestures using 1DoF info.
-     * It expects 1 axis of a accelerometer in m/s^2, but can be used
-     * with any double or float.
-     */
+ * @brief This class creates jab gestures using 1DoF info.
+ * 
+ * It expects 1 axis of a accelerometer in m/s^2, but can be used
+ * with any double or float.
+ */
 class Jab
 {
 public:
@@ -36,7 +37,7 @@ public:
       , minmax(10)
   {
   }
-  Jab(puara_gestures::Coord1D* tied)
+  Jab(Coord1D* tied)
       : tied_value(&(tied->x))
       , threshold(5)
       , minmax(10)
@@ -68,7 +69,7 @@ public:
     return value;
   }
 
-  int update(puara_gestures::Coord1D reading)
+  int update(Coord1D reading)
   {
     Jab::update(reading.x);
     return 1;
@@ -89,23 +90,24 @@ public:
 
   double current_value() { return value; }
 
-  int tie(puara_gestures::Coord1D* new_tie)
+  int tie(Coord1D* new_tie)
   {
     tied_value = &(new_tie->x);
     return 1;
   }
 
 private:
-  double value;
+  double value = 0;
   puara_gestures::utils::RollingMinMax<double> minmax;
   double* tied_value;
 };
 
 /**
-     * @brief This class creates jab gestures using 2DoF info.
-     * It expects 2 axis of a accelerometer in m/s^2, but can be used
-     * with any double or float.
-     */
+ * @brief This class creates jab gestures using 2DoF info.
+ * 
+ * It expects 2 axis of a accelerometer in m/s^2, but can be used
+ * with any double or float.
+ */
 class Jab2D
 {
 public:
@@ -114,7 +116,7 @@ public:
       , y()
   {
   }
-  Jab2D(puara_gestures::Coord2D* tied)
+  Jab2D(Coord2D* tied)
       : x(&(tied->x))
       , y(&(tied->y))
   {
@@ -128,7 +130,7 @@ public:
     return 1;
   }
 
-  int update(puara_gestures::Coord2D reading)
+  int update(Coord2D reading)
   {
     x.update(reading.x);
     y.update(reading.y);
@@ -156,14 +158,14 @@ class Jab3D
 {
 public:
   Jab3D() { }
-  Jab3D(puara_gestures::Coord3D* tied)
+  Jab3D(Coord3D* tied)
       : x(&(tied->x))
       , y(&(tied->y))
       , z(&(tied->z))
   {
   }
 
-  puara_gestures::Jab x, y, z;
+  Jab x, y, z;
   int update(double readingX, double readingY, double readingZ)
   {
     x.update(readingX);
@@ -172,7 +174,7 @@ public:
     return 1;
   }
 
-  int update(puara_gestures::Coord3D reading)
+  int update(Coord3D reading)
   {
     x.update(reading.x);
     y.update(reading.y);
@@ -189,9 +191,9 @@ public:
   }
 
   double frequency(double freq);
-  puara_gestures::Coord3D current_value()
+  Coord3D current_value()
   {
-    puara_gestures::Coord3D answer;
+    Coord3D answer;
     answer.x = x.current_value();
     answer.y = y.current_value();
     answer.z = z.current_value();

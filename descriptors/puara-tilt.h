@@ -7,15 +7,13 @@
 // Maggie Needham (2024)                                                          //
 //********************************************************************************//
 
-#ifndef PUARA_TILT_H
-#define PUARA_TILT_H
+#pragma once
 
 #include "IMU_Sensor_Fusion/imu_orientation.h"
 #include "puara-structs.h"
 #include "puara-utils.h"
 
 #include <cmath>
-
 #include <algorithm>
 #include <list>
 
@@ -23,9 +21,9 @@ namespace puara_gestures
 {
 
 /**
-     * @brief This class measures tilt gestures using 3DoF info from an accelerometer,
-     * gyroscope, and magnetometer
-     */
+ * @brief This class measures tilt gestures using 3DoF info from an accelerometer,
+ * gyroscope, and magnetometer
+ */
 class Tilt
 {
 public:
@@ -33,35 +31,35 @@ public:
   utils::Smooth smoother;
 
   /**
-         * @brief Default constructor for Tilt
-         *
-         * @return Sets "smoother" object to average the previous 50 objects
-         */
+   * @brief Default constructor for Tilt
+   *
+   * @return Sets "smoother" object to average the previous 50 objects
+   */
   Tilt()
       : smoother(50)
   {
   }
 
   /**
-         * @brief Constructor for Tilt
-         *
-         * @param smoothValue number of previous values that "smoother" object averages
-         */
+   * @brief Constructor for Tilt
+   *
+   * @param smoothValue number of previous values that "smoother" object averages
+   */
   explicit Tilt(double smoothValue)
       : smoother(smoothValue)
   {
   }
 
   /**
-         * @brief Calculates tilt (aka "pitch") measurement
-         *
-         * @param accel Measured in G's
-         * @param gyro Measured in degrees/sec
-         * @param mag Measured in Gauss
-         * @param period_sec Measured in seconds
-         *
-         * @return Output range of [- PI /2, PI /2]
-         */
+   * @brief Calculates tilt (aka "pitch") measurement
+   *
+   * @param accel Measured in G's
+   * @param gyro Measured in degrees/sec
+   * @param mag Measured in Gauss
+   * @param period_sec Measured in seconds
+   *
+   * @return Output range of [- PI /2, PI /2]
+   */
   double tilt(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec)
   {
     orientation.setAccelerometerValues(accel.x, accel.y, accel.z);
@@ -72,17 +70,15 @@ public:
   }
 
   /**
-         * @brief Option to "smooth" value stream by taking the average of a given
-         * number of previous values
-         * Set to 50 in default Tilt constructor
-         */
+   * @brief Option to "smooth" value stream by taking the average of a given
+   * number of previous values
+   * Set to 50 in default Tilt constructor
+   */
   double smooth(double reading) { return smoother.smooth(reading); }
 
   /**
-         * @brief Clears list of all previous inputs
-         */
+   * @brief Clears list of all previous inputs
+   */
   void clear_smooth() { smoother.clear(); }
 };
 }
-
-#endif

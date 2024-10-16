@@ -6,8 +6,7 @@
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 
-#ifndef PUARA_UTILS_H
-#define PUARA_UTILS_H
+#pragma once
 
 #include "puara-structs.h"
 
@@ -18,8 +17,6 @@
 
 #include <chrono>
 #include <deque>
-#include <iomanip>
-#include <iostream>
 #include <list>
 #include <numeric>
 
@@ -32,9 +29,10 @@ namespace puara_gestures
 
 namespace utils
 {
+
 /**
-     *  @brief Simple leaky integrator implementation.
-     */
+ *  @brief Simple leaky integrator implementation.
+ */
 class LeakyIntegrator
 {
 public:
@@ -56,13 +54,13 @@ public:
   }
 
   /**
-             * @brief Call integrator
-             *
-             * @param reading new value to add into the integrator
-             * @param custom_leak between 0 and 1
-             * @param time in microseconds
-             * @return double
-             */
+   * @brief Call integrator
+   *
+   * @param reading new value to add into the integrator
+   * @param custom_leak between 0 and 1
+   * @param time in microseconds
+   * @return double
+   */
 
   double integrate(
       double reading, double custom_old_value, double custom_leak, int custom_frequency,
@@ -107,10 +105,10 @@ public:
 };
 
 /**
-     * @brief Wrapper class undoes modular effects of angle measurements
-     * Ensures that instead of "wrapping" (e.g. moving from - PI to PI),
-     * measurements continue to decrease or increase
-     */
+ * @brief Wrapper class undoes modular effects of angle measurements
+ * Ensures that instead of "wrapping" (e.g. moving from - PI to PI),
+ * measurements continue to decrease or increase
+ */
 class Unwrap
 {
 public:
@@ -120,13 +118,13 @@ public:
   bool empty;
 
   /**
-             * @brief Constructor for Unwrap class
-             *
-             * Initaliazes accumulated at 0 to indicate the data has not "wrapped" yet
-             * Initalizes empty at True
-             * @param Min minimum input value
-             * @param Max maximum input value
-             */
+   * @brief Constructor for Unwrap class
+   *
+   * Initaliazes accumulated at 0 to indicate the data has not "wrapped" yet
+   * Initalizes empty at True
+   * @param Min minimum input value
+   * @param Max maximum input value
+   */
   Unwrap(double Min, double Max)
       : accum(0)
       , range(Max - Min)
@@ -135,9 +133,9 @@ public:
   }
 
   /**
-             * @brief Calculates whether angle has "wrapped" based on previous angle
-             * and updates accordingly
-             */
+   * @brief Calculates whether angle has "wrapped" based on previous angle
+   * and updates accordingly
+   */
   double unwrap(double reading)
   {
     double diff;
@@ -166,8 +164,8 @@ public:
   }
 
   /**
-             * @brief resets the unwrap object
-             */
+   * @brief resets the unwrap object
+   */
   void clear()
   {
     accum = 0;
@@ -176,11 +174,11 @@ public:
 };
 
 /**
-     * @brief Wraps a value around a given minimum and maximum.
-     * Algorithm from Jean-Michael Celerier. "Authoring interactive media : a logical
-     * & temporal approach." Computation and Language [cs.CL]. Université de Bordeaux,
-     * 2018. English. ffNNT : 2018BORD0037ff. fftel-01947309
-     */
+ * @brief Wraps a value around a given minimum and maximum.
+ * Algorithm from Jean-Michael Celerier. "Authoring interactive media : a logical
+ * & temporal approach." Computation and Language [cs.CL]. Université de Bordeaux,
+ * 2018. English. ffNNT : 2018BORD0037ff. fftel-01947309
+ */
 class Wrap
 {
 public:
@@ -188,11 +186,11 @@ public:
   double max;
 
   /**
-             *  @brief Constructor for Wrap class
-             *
-             * @param Min minimum value of desired range for "wrapper" object
-             * @param Max maximum value of desired range for "wrapper" object
-             */
+   * @brief Constructor for Wrap class
+   *
+   * @param Min minimum value of desired range for "wrapper" object
+   * @param Max maximum value of desired range for "wrapper" object
+   */
   Wrap(double Min, double Max)
       : min(Min)
       , max(Max)
@@ -215,9 +213,9 @@ public:
 };
 
 /**
-     * @brief "Smoothing" algorithm takes the average of a given number of previous
-     * inputs. Can stabilize an erratic input stream.
-     */
+  * @brief "Smoothing" algorithm takes the average of a given number of previous
+  * inputs. Can stabilize an erratic input stream.
+  */
 class Smooth
 {
 public:
@@ -225,10 +223,10 @@ public:
   double size;
 
   /**
-             * @brief Constructor for Smooth class
-             *
-             * @param Size number of previous values that "smoother" object averages
-             */
+   * @brief Constructor for Smooth class
+   *
+   * @param Size number of previous values that "smoother" object averages
+   */
   Smooth(double Size)
       : list()
       , size(Size)
@@ -236,8 +234,8 @@ public:
   }
 
   /**
-             * @brief Calls updateList then finds average of previous inputs
-             */
+   * @brief Calls updateList then finds average of previous inputs
+   */
   double smooth(double reading)
   {
     updateList(reading);
@@ -246,8 +244,8 @@ public:
   }
 
   /**
-             * @brief Updates list of previous inputs with current input
-             */
+  * @brief Updates list of previous inputs with current input
+  */
   void updateList(double reading)
   {
     list.push_front(reading);
@@ -259,15 +257,15 @@ public:
   }
 
   /**
-             * @brief Clears list of all previous inputs
-             */
+   * @brief Clears list of all previous inputs
+   */
   void clear() { list.clear(); }
 };
 
 /**
-     *  @brief Simple class to renge values according to min and max (in and out)
-     *  established values.
-     */
+ *  @brief Simple class to renge values according to min and max (in and out)
+ *  established values.
+ */
 class MapRange
 {
 public:
@@ -303,9 +301,9 @@ public:
 };
 
 /**
-     *  Simple circular buffer.
-     *  This was created to ensure compatibility with older ESP SoCs
-     */
+ *  Simple circular buffer.
+ *  This was created to ensure compatibility with older ESP SoCs
+ */
 class CircularBuffer
 {
 public:
@@ -323,8 +321,8 @@ public:
 };
 
 /**
-     * Simple Threshold class to ensure a value doesn't exceed settable max and min values.
-     */
+ * Simple Threshold class to ensure a value doesn't exceed settable max and min values.
+ */
 class Threshold
 {
 public:
@@ -355,10 +353,10 @@ public:
 
 template <typename T>
 /**
-     * @brief Calculates the minimum and maximum values of the last N updates.
-     * The default N value is 10, modifiable during initialization.
-     * Ported from https://github.com/celtera/avendish/blob/56b89e52e367c67213be0c313d2ed3b9fb1aac19/examples/Ports/Puara/Jab.hpp#L15
-     */
+ * @brief Calculates the minimum and maximum values of the last N updates.
+ * The default N value is 10, modifiable during initialization.
+ * Ported from https://github.com/celtera/avendish/blob/56b89e52e367c67213be0c313d2ed3b9fb1aac19/examples/Ports/Puara/Jab.hpp#L15
+ */
 class RollingMinMax
 {
 public:
@@ -388,8 +386,8 @@ private:
 };
 
 /**
-     *  Calibrates the raw magnetometer values 
-     */
+ *  Calibrates the raw magnetometer values 
+ */
 class Calibration
 {
 public:
@@ -408,19 +406,19 @@ public:
   }
 
   /**
-            *  The gravitation field is used to calculate the soft iron matrices and should be modified according to the follownig formula:
-            *       1- Get the Total Field for your location from: 
-            *          https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
-            *       2- Convert the Total Field value to Gauss (1nT = 10E-5G)
-            *       3- Convert Total Field to Raw value Total Field, which is the
-            *          Raw Gravitation Field we are searching for
-            *          Read your magnetometer datasheet and find your gain value,
-            *          Which should be the same of the collected raw points
-            *
-            *  Reference: https://github.com/nliaudat/magnetometer_calibration/blob/main/calibrate.py
-            *  
-            *
-            */
+   *  The gravitation field is used to calculate the soft iron matrices and should be modified according to the follownig formula:
+   *       1- Get the Total Field for your location from: 
+   *          https://www.ngdc.noaa.gov/geomag/calculators/magcalc.shtml#igrfwmm
+   *       2- Convert the Total Field value to Gauss (1nT = 10E-5G)
+   *       3- Convert Total Field to Raw value Total Field, which is the
+   *          Raw Gravitation Field we are searching for
+   *          Read your magnetometer datasheet and find your gain value,
+   *          Which should be the same of the collected raw points
+   *
+   *  Reference: https://github.com/nliaudat/magnetometer_calibration/blob/main/calibrate.py
+   *  
+   *
+   */
   int gravitationField
       = 234; // should be 1000 by default, this was calculated for the LSM9DS1 in Montreal
 
@@ -440,9 +438,9 @@ public:
   }
 
   /**
-            * Records the raw magnetometer data and saves it in a vector.
-            * The user needs to call this a minimum amount of time in order to generate at least 1500 data points
-            */
+   * Records the raw magnetometer data and saves it in a vector.
+   * The user needs to call this a minimum amount of time in order to generate at least 1500 data points
+   */
   int recordRawMagData(const Coord3D& magData)
   {
     rawMagData.push_back(magData);
@@ -451,9 +449,9 @@ public:
   }
 
   /**
-            * Fits an ellipsoid to 3D points by creating matrices from the input, solving for eigenvalues, 
-            * and returning the ellipsoid's shape matrix M, center vector n, and scalar offset d
-            */
+   * Fits an ellipsoid to 3D points by creating matrices from the input, solving for eigenvalues, 
+   * and returning the ellipsoid's shape matrix M, center vector n, and scalar offset d
+   */
   std::tuple<Eigen::MatrixXd, Eigen::VectorXd, double>
   ellipsoid_fit(const Eigen::MatrixXd& s)
   {
@@ -520,9 +518,9 @@ public:
   }
 
   /**
-            * Generates magnetometer calibration matrices based on saved raw dataset by fitting an ellipsoid to a set of 3D coordinates, 
-            * deriving the hard-iron bias and soft-iron matrix based on  the pre-defined gravitational field.
-            */
+   * Generates magnetometer calibration matrices based on saved raw dataset by fitting an ellipsoid to a set of 3D coordinates, 
+   * deriving the hard-iron bias and soft-iron matrix based on  the pre-defined gravitational field.
+   */
   int generateMagnetometerMatrices(std::vector<Coord3D> customRawMagData)
   {
 
@@ -559,8 +557,8 @@ public:
 };
 
 /**
-     *  @brief Simple function to get the current elapsed time in microseconds.
-     */
+ *  @brief Simple function to get the current elapsed time in microseconds.
+ */
 inline unsigned long long getCurrentTimeMicroseconds()
 {
   auto currentTimePoint = std::chrono::high_resolution_clock::now();
@@ -570,9 +568,9 @@ inline unsigned long long getCurrentTimeMicroseconds()
 }
 
 /**
-     * @brief Function used to reduce feature arrays into single values.
-     * E.g., brush uses it to reduce multiBrush instances
-     */
+ * @brief Function used to reduce feature arrays into single values.
+ * E.g., brush uses it to reduce multiBrush instances
+ */
 inline double arrayAverageZero(double* Array, int ArraySize)
 {
   double sum = 0;
@@ -594,9 +592,9 @@ inline double arrayAverageZero(double* Array, int ArraySize)
 }
 
 /**
-     * @brief Legacy function used to calculate 1D blob detection in older
-     * digital musical instruments
-     */
+ * @brief Legacy function used to calculate 1D blob detection in older
+ * digital musical instruments
+ */
 inline void bitShiftArrayL(int* origArray, int* shiftedArray, int arraySize, int shift)
 {
   for(int i = 0; i < arraySize; ++i)
@@ -625,63 +623,63 @@ namespace convert
 {
 
 /**
-     * @brief Convert g's to m/s^2
-     *
-     */
+ * @brief Convert g's to m/s^2
+ *
+ */
 inline double g_to_ms2(double reading)
 {
   return reading * 9.80665;
 }
 
 /**
-     * @brief Convert m/s^2 to g's
-     *
-     */
+ * @brief Convert m/s^2 to g's
+ *
+ */
 inline double ms2_to_g(double reading)
 {
   return reading / 9.80665;
 }
 
 /**
-     * @brief Convert DPS to radians per second
-     *
-     */
+ * @brief Convert DPS to radians per second
+ *
+ */
 inline double dps_to_rads(double reading)
 {
   return reading * M_PI / 180;
 }
 
 /**
-     * @brief Convert radians per second to DPS
-     *
-     */
+ * @brief Convert radians per second to DPS
+ *
+ */
 inline double rads_to_dps(double reading)
 {
   return reading * 180 / M_PI;
 }
 
 /**
-     * @brief Convert Gauss to uTesla
-     *
-     */
+ * @brief Convert Gauss to uTesla
+ *
+ */
 inline double gauss_to_utesla(double reading)
 {
   return reading / 10000;
 }
 
 /**
-     * @brief Convert uTesla to Gauss
-     *
-     */
+ * @brief Convert uTesla to Gauss
+ *
+ */
 inline double utesla_to_gauss(double reading)
 {
   return reading * 10000;
 }
 
 /**
-     * @brief Convert polar coordinates to cartesian
-     * 
-    */
+ * @brief Convert polar coordinates to cartesian
+ * 
+ */
 Coord3D polar_to_cartesian(Spherical polarCoords)
 {
   Coord3D cartesianCoords;
@@ -694,9 +692,9 @@ Coord3D polar_to_cartesian(Spherical polarCoords)
 }
 
 /**
-     * @brief Convert cartesian coordinates to polar
-     * 
-    */
+ * @brief Convert cartesian coordinates to polar
+ * 
+ */
 Spherical cartesian_to_polar(Coord3D cartesianCoords)
 {
   Spherical polarCoords;
@@ -717,5 +715,3 @@ Spherical cartesian_to_polar(Coord3D cartesianCoords)
 
 }
 }
-
-#endif

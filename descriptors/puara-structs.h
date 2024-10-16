@@ -1,5 +1,4 @@
-#ifndef PUARA_STRUCTS_H
-#define PUARA_STRUCTS_H
+#pragma once
 
 #include <vector>
 
@@ -66,5 +65,3 @@ struct MinMax
 };
 
 }
-
-#endif
