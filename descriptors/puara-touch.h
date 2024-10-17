@@ -10,7 +10,6 @@ namespace puara_gestures
 class Touch
 {
 public:
-  void updateTouchArray(int* discrete_touch, int touchSize);
   float touchAll = 0;    // f, 0--1
   float touchTop = 0;    // f, 0--1
   float touchMiddle = 0; // f, 0--1
