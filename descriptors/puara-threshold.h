@@ -19,15 +19,9 @@ namespace puara_gestures::utils
 class Threshold
 {
 public:
-  double min;
-  double max;
-  double current;
-
-  Threshold(double Min = -10.0, double Max = 10.0)
-      : min(Min)
-      , max(Max)
-  {
-  }
+  double min{-10.0};
+  double max{10.0};
+  double current{};
 
   double update(double reading)
   {

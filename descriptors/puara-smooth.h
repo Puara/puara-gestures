@@ -27,9 +27,8 @@ public:
    *
    * @param Size number of previous values that "smoother" object averages
    */
-  Smooth(double Size)
-      : list()
-      , size(Size)
+  explicit Smooth(double Size = 50.)
+      : size(Size)
   {
   }
 

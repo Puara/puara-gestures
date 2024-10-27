@@ -16,13 +16,13 @@ namespace puara_gestures::utils
 class LeakyIntegrator
 {
 public:
-  double current_value;
-  double old_value;
-  double leak;
-  int frequency; // leaking frequency (Hz)
-  unsigned long long timer;
+  double current_value{};
+  double old_value{};
+  double leak{};
+  int frequency{}; // leaking frequency (Hz)
+  unsigned long long timer{};
 
-  LeakyIntegrator(
+  explicit LeakyIntegrator(
       double currentValue = 0, double oldValue = 0, double leakValue = 0.5,
       int freq = 100, unsigned long long timerValue = 0)
       : current_value(currentValue)
@@ -70,17 +70,17 @@ public:
 
   double integrate(double reading, double leak, unsigned long long& time)
   {
-    return LeakyIntegrator::integrate(reading, old_value, leak, frequency, time);
+    return this->integrate(reading, old_value, leak, frequency, time);
   }
 
   double integrate(double reading, double custom_leak)
   {
-    return LeakyIntegrator::integrate(reading, old_value, custom_leak, frequency, timer);
+    return this->integrate(reading, old_value, custom_leak, frequency, timer);
   }
 
   double integrate(double reading)
   {
-    return LeakyIntegrator::integrate(reading, old_value, leak, frequency, timer);
+    return this->integrate(reading, old_value, leak, frequency, timer);
   }
 };
 

@@ -21,8 +21,9 @@ namespace puara_gestures::utils
 class CircularBuffer
 {
 public:
-  int size = 10;
+  std::size_t size = 10;
   std::deque<double> buffer;
+
   double add(double element)
   {
     buffer.push_front(element);

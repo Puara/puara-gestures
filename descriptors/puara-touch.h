@@ -15,30 +15,27 @@ public:
   float touchMiddle = 0; // f, 0--1
   float touchBottom = 0; // f, 0--1
   float brush = 0;       // f, 0--? (~cm/s)
-  float multiBrush[4];   // ffff, 0--? (~cm/s)
-  float rub;             // f, 0--? (~cm/s)
-  float multiRub[4];     // ffff, 0--? (~cm/s)
+  float multiBrush[4]{}; // ffff, 0--? (~cm/s)
+  float rub{};           // f, 0--? (~cm/s)
+  float multiRub[4]{};   // ffff, 0--? (~cm/s)
 
   // touch array
   int touchSizeEdge
       = 4; // amount of touch stripes for top and bottom portions (arbitrary)
-  float touchAverage(float* touchArrayStrips, int firstStrip, int lastStrip);
-  float touchAverage(int* touchArrayStrips, int firstStrip, int lastStrip);
-  int lastState_blobPos[4];
+  int lastState_blobPos[4]{};
   int maxBlobs = 4;  // max amount of blobs to be detected
-  int blobAmount;    // amount of detected blobs
-  int blobCenter[4]; // shows the "center" (index) of each blob (former blobArray)
-  int blobPos[4];    // starting position (index) of each blob
-  float blobSize[4]; // "size" (amount of stripes) of each blob
-  void blobDetection1D(int* discrete_touch, int touchSize);
+  int blobAmount{};  // amount of detected blobs
+  int blobCenter[4]{}; // shows the "center" (index) of each blob (former blobArray)
+  int blobPos[4]{};    // starting position (index) of each blob
+  float blobSize[4]{}; // "size" (amount of stripes) of each blob
   const int leakyBrushFreq = 100; // leaking frequency (Hz)
   unsigned long leakyBrushTimer = 0;
   const int leakyRubFreq = 100;
   unsigned long leakyRubTimer = 0;
-  int brushCounter[4];
-  float arrayAverageZero(float* Array, int ArraySize);
-  void bitShiftArrayL(int* origArray, int* shiftedArray, int arraySize, int shift);
+  int brushCounter[4]{};
 
+  // FIXME those are missing !!!
+  float arrayAverageZero(float* Array, int ArraySize);
   float leakyIntegrator(
       float reading, float old_value, float leak, int frequency, unsigned long& timer);
 

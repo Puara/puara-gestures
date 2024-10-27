@@ -18,10 +18,10 @@ namespace puara_gestures::utils
 class Unwrap
 {
 public:
-  double prev_angle;
-  double accum;
-  double range;
-  bool empty;
+  double prev_angle{};
+  double accum{};
+  double range{};
+  bool empty{};
 
   /**
    * @brief Constructor for Unwrap class
@@ -88,20 +88,8 @@ public:
 class Wrap
 {
 public:
-  double min;
-  double max;
-
-  /**
-   * @brief Constructor for Wrap class
-   *
-   * @param Min minimum value of desired range for "wrapper" object
-   * @param Max maximum value of desired range for "wrapper" object
-   */
-  Wrap(double Min, double Max)
-      : min(Min)
-      , max(Max)
-  {
-  }
+  double min{};
+  double max{};
 
   double wrap(double reading)
   {

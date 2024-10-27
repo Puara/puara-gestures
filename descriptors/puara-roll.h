@@ -53,7 +53,7 @@ public:
    *
    * @param smoothValue number of previous values that "smoother" object averages
    */
-  Roll(double smoothValue)
+  explicit Roll(double smoothValue)
       : unwrapper(-M_PI, M_PI)
       , smoother(smoothValue)
       , wrapper(0, 2 * M_PI)

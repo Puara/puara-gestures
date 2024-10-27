@@ -25,6 +25,7 @@ public:
   double inMax = 0;
   double outMin = 0;
   double outMax = 0;
+
   double range(double in)
   {
     current_in = in;
