@@ -9,6 +9,12 @@ project(
 ### Library options ###
 option(PUARA_GESTURES_ENABLE_TESTING "Enable building and running Puara gestures tests" ON)
 
+### Dependencies ###
+if(POLICY CMP0167)
+  cmake_policy(SET CMP0167 OLD)
+endif()
+find_package(Boost REQUIRED)
+
 ### Main library ###
 add_library(puara_gestures
   3rdparty/IMU_Sensor_Fusion/imu_orientation.h
@@ -37,7 +43,10 @@ add_library(puara_gestures
   src/puara_gestures.cpp
 )
 
+target_compile_definitions(puara_gestures PUBLIC $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>)
 target_include_directories(puara_gestures PUBLIC include 3rdparty)
+target_compile_features(puara_gestures PUBLIC cxx_std_20)
+target_link_libraries(puara_gestures PUBLIC Boost::headers)
 
 ### Tests ###
 if(PUARA_GESTURES_ENABLE_TESTING)
