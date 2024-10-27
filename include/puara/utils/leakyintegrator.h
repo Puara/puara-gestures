@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <chrono>
+
 namespace puara_gestures::utils
 {
 /**

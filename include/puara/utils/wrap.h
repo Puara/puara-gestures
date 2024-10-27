@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <cmath>
+
 namespace puara_gestures::utils
 {
 /**

@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "puara-structs.h"
+#include <puara/structs.h>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>

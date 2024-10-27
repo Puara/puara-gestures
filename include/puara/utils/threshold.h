@@ -8,47 +8,33 @@
 
 #pragma once
 
-#include "puara-structs.h"
+#include <puara/structs.h>
 
 namespace puara_gestures::utils
 {
 
 /**
- *  @brief Simple class to renge values according to min and max (in and out)
- *  established values.
+ * Simple Threshold class to ensure a value doesn't exceed settable max and min values.
  */
-class MapRange
+class Threshold
 {
 public:
-  double current_in = 0;
-  double inMin = 0;
-  double inMax = 0;
-  double outMin = 0;
-  double outMax = 0;
+  double min{-10.0};
+  double max{10.0};
+  double current{};
 
-  double range(double in)
+  double update(double reading)
   {
-    current_in = in;
-    if(outMin != outMax)
+    current = reading;
+    if(reading < min)
     {
-      return (in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+      return min;
     }
-    else
+    if(reading > max)
     {
-      return in;
+      return max;
     }
-  }
-
-  float range(float in)
-  {
-    double casted_in = static_cast<double>(in);
-    return static_cast<float>(range(casted_in));
-  }
-
-  int range(int in)
-  {
-    double casted_in = static_cast<double>(in);
-    return static_cast<int>(range(casted_in));
+    return reading;
   }
 };
 

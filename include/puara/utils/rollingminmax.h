@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "puara-structs.h"
+#include <puara/structs.h>
 
 #include <boost/circular_buffer.hpp>
+
 namespace puara_gestures::utils
 {
 

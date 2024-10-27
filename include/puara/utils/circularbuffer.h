@@ -1,5 +1,5 @@
 //********************************************************************************//
-// Puara Gestures - Sensor fusion and gestural descriptors algorithms             //
+// Puara Gestures - Utilities (.h)                                                //
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
@@ -8,18 +8,31 @@
 
 #pragma once
 
-#include <cmath>
+#include <puara/structs.h>
 
-#include <algorithm>
-#include <chrono>
 #include <deque>
 
-// puara-gesture descriptors
-#include "descriptors/IMU_Sensor_Fusion/imu_orientation.h"
-#include "descriptors/puara-button.h"
-#include "descriptors/puara-jab.h"
-#include "descriptors/puara-roll.h"
-#include "descriptors/puara-shake.h"
-#include "descriptors/puara-tilt.h"
-#include "testing_roll.h"
-#include "testing_tilt.h"
+namespace puara_gestures::utils
+{
+/**
+ *  Simple circular buffer.
+ *  This was created to ensure compatibility with older ESP SoCs
+ */
+class CircularBuffer
+{
+public:
+  std::size_t size = 10;
+  std::deque<double> buffer;
+
+  double add(double element)
+  {
+    buffer.push_front(element);
+    if(buffer.size() > size)
+    {
+      buffer.pop_back();
+    }
+    return element;
+  }
+};
+
+}

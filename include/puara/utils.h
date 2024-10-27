@@ -8,13 +8,14 @@
 
 #pragma once
 
-#include "puara-circularbuffer.h"
-#include "puara-leakyintegrator.h"
-#include "puara-maprange.h"
-#include "puara-rollingminmax.h"
-#include "puara-smooth.h"
-#include "puara-structs.h"
-#include "puara-wrap.h"
+#include <puara/structs.h>
+#include <puara/utils/circularbuffer.h>
+#include <puara/utils/leakyintegrator.h>
+#include <puara/utils/maprange.h>
+#include <puara/utils/rollingminmax.h>
+#include <puara/utils/smooth.h>
+#include <puara/utils/threshold.h>
+#include <puara/utils/wrap.h>
 
 #include <cmath>
 

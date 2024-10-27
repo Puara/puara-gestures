@@ -10,13 +10,10 @@
 #pragma once
 
 #include "IMU_Sensor_Fusion/imu_orientation.h"
-#include "puara-structs.h"
-#include "puara-utils.h"
+#include <puara/structs.h>
+#include <puara/utils.h>
 
 #include <cmath>
-
-#include <algorithm>
-#include <list>
 
 namespace puara_gestures
 {

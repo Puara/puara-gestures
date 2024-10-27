@@ -8,7 +8,10 @@
 
 #pragma once
 
-#include "puara-structs.h"
+#include <puara/structs.h>
+
+#include <list>
+#include <numeric>
 
 namespace puara_gestures::utils
 {

@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "puara-utils.h"
+#include <puara/utils.h>
 
 namespace puara_gestures
 {

@@ -2,8 +2,6 @@
 
 #include <cmath>
 
-#include <algorithm>
-
 namespace puara_gestures
 {
 

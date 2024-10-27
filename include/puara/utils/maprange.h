@@ -8,30 +8,47 @@
 
 #pragma once
 
-#include "puara-structs.h"
-
-#include <deque>
+#include <puara/structs.h>
 
 namespace puara_gestures::utils
 {
+
 /**
- *  Simple circular buffer.
- *  This was created to ensure compatibility with older ESP SoCs
+ *  @brief Simple class to renge values according to min and max (in and out)
+ *  established values.
  */
-class CircularBuffer
+class MapRange
 {
 public:
-  std::size_t size = 10;
-  std::deque<double> buffer;
+  double current_in = 0;
+  double inMin = 0;
+  double inMax = 0;
+  double outMin = 0;
+  double outMax = 0;
 
-  double add(double element)
+  double range(double in)
   {
-    buffer.push_front(element);
-    if(buffer.size() > size)
+    current_in = in;
+    if(outMin != outMax)
     {
-      buffer.pop_back();
+      return (in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
-    return element;
+    else
+    {
+      return in;
+    }
+  }
+
+  float range(float in)
+  {
+    double casted_in = static_cast<double>(in);
+    return static_cast<float>(range(casted_in));
+  }
+
+  int range(int in)
+  {
+    double casted_in = static_cast<double>(in);
+    return static_cast<int>(range(casted_in));
   }
 };
 
