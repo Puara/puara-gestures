@@ -25,26 +25,27 @@ namespace puara_gestures
 class Jab
 {
 public:
+  int threshold{};
+
   Jab()
-      : tied_value(nullptr)
-      , threshold(5)
+      : threshold(5)
+      , tied_value(nullptr)
       , minmax(10)
   {
   }
-  Jab(double* tied)
-      : tied_value(tied)
-      , threshold(5)
+  explicit Jab(double* tied)
+      : threshold(5)
+      , tied_value(tied)
       , minmax(10)
   {
   }
-  Jab(Coord1D* tied)
-      : tied_value(&(tied->x))
-      , threshold(5)
+  explicit Jab(Coord1D* tied)
+      : threshold(5)
+      , tied_value(&(tied->x))
       , minmax(10)
   {
   }
 
-  int threshold;
   double update(double reading)
   {
     minmax.update(reading);
@@ -97,9 +98,9 @@ public:
   }
 
 private:
+  double* tied_value{};
   double value = 0;
   puara_gestures::utils::RollingMinMax<double> minmax;
-  double* tied_value;
 };
 
 /**

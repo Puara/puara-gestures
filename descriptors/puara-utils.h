@@ -680,7 +680,7 @@ inline double utesla_to_gauss(double reading)
  * @brief Convert polar coordinates to cartesian
  * 
  */
-Coord3D polar_to_cartesian(Spherical polarCoords)
+inline Coord3D polar_to_cartesian(Spherical polarCoords)
 {
   Coord3D cartesianCoords;
 
@@ -695,7 +695,7 @@ Coord3D polar_to_cartesian(Spherical polarCoords)
  * @brief Convert cartesian coordinates to polar
  * 
  */
-Spherical cartesian_to_polar(Coord3D cartesianCoords)
+inline Spherical cartesian_to_polar(Coord3D cartesianCoords)
 {
   Spherical polarCoords;
 
