@@ -20,9 +20,10 @@ set(OSSIA_OVERRIDE_PROTOCOLS "OSC;OSCQuery")
 
 FetchContent_Declare(
   libossia
-  GIT_REPOSITORY "https://github.com/OSSIA/libossia"
+  GIT_REPOSITORY "https://github.com/ossia/libossia"
   GIT_TAG master
   GIT_PROGRESS true
+  GIT_SHALLOW 1
 )
 FetchContent_MakeAvailable(libossia)
 
@@ -43,26 +44,12 @@ FetchContent_MakeAvailable(Eigen)
 
 file(GLOB_RECURSE PUARA_SOURCE ../descriptors/*.cpp ../descriptors/*.h)
 
-add_library(puara-gestures STATIC ${PUARA_SOURCE})
-target_link_libraries(puara-gestures PUBLIC
-    Eigen3::Eigen
-    Boost::boost
-)
-
 # Project setup
-add_executable(puara-gestures-standalone)
-
-target_sources(puara-gestures-standalone
-  PRIVATE
-  main.cpp
+add_executable(puara-gestures-standalone
+    main.cpp
 )
 target_link_libraries(puara-gestures-standalone
   PRIVATE
     ossia
-    puara-gestures
-)
-target_include_directories(puara-gestures-standalone
-  PRIVATE
-  ${libossia_SOURCE_DIR}/ossia/include
-  ${libossia_SOURCE_DIR}/ossia
+    puara_gestures
 )

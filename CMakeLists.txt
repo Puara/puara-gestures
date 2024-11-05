@@ -8,6 +8,7 @@ project(
 
 ### Library options ###
 option(PUARA_GESTURES_ENABLE_TESTING "Enable building and running Puara gestures tests" ON)
+option(PUARA_GESTURES_ENABLE_STANDALONE "Enable building and running Puara standalone" ON)
 
 ### Dependencies ###
 if(POLICY CMP0167)
@@ -57,4 +58,9 @@ if(PUARA_GESTURES_ENABLE_TESTING)
   target_compile_definitions(testing_tilt PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
   target_link_libraries(testing_roll PRIVATE puara_gestures)
   target_link_libraries(testing_tilt PRIVATE puara_gestures)
+endif()
+
+### Example ###
+if(PUARA_GESTURES_ENABLE_STANDALONE)
+  add_subdirectory(standalone)
 endif()
