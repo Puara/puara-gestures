@@ -14,7 +14,9 @@ option(PUARA_GESTURES_ENABLE_STANDALONE "Enable building and running Puara stand
 if(POLICY CMP0167)
   cmake_policy(SET CMP0167 OLD)
 endif()
-find_package(Boost REQUIRED)
+if(NOT TARGET Boost::headers)
+  find_package(Boost REQUIRED)
+endif()
 
 ### Main library ###
 add_library(puara_gestures
