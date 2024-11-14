@@ -1,5 +1,8 @@
 #pragma once
 
+#include <puara/utils.h>
+#include <puara/utils/leakyintegrator.h>
+
 #include <cmath>
 
 namespace puara_gestures
@@ -8,34 +11,38 @@ namespace puara_gestures
 class Touch
 {
 public:
-  float touchAll = 0;    // f, 0--1
-  float touchTop = 0;    // f, 0--1
-  float touchMiddle = 0; // f, 0--1
-  float touchBottom = 0; // f, 0--1
-  float brush = 0;       // f, 0--? (~cm/s)
-  float multiBrush[4]{}; // ffff, 0--? (~cm/s)
-  float rub{};           // f, 0--? (~cm/s)
-  float multiRub[4]{};   // ffff, 0--? (~cm/s)
+  float touchAll = 0.0f;    // f, 0--1
+  float touchTop = 0.0f;    // f, 0--1
+  float touchMiddle = 0.0f; // f, 0--1
+  float touchBottom = 0.0f; // f, 0--1
+  float brush = 0.0f;       // f, 0--? (~cm/s)
+  float multiBrush[4]{};    // ffff, 0--? (~cm/s)
+  float rub{};              // f, 0--? (~cm/s)
+  float multiRub[4]{};      // ffff, 0--? (~cm/s)
 
   // touch array
   int touchSizeEdge
       = 4; // amount of touch stripes for top and bottom portions (arbitrary)
   int lastState_blobPos[4]{};
-  int maxBlobs = 4;  // max amount of blobs to be detected
-  int blobAmount{};  // amount of detected blobs
+  int maxBlobs = 4;    // max amount of blobs to be detected
+  int blobAmount{};    // amount of detected blobs
   int blobCenter[4]{}; // shows the "center" (index) of each blob (former blobArray)
   int blobPos[4]{};    // starting position (index) of each blob
   float blobSize[4]{}; // "size" (amount of stripes) of each blob
-  const int leakyBrushFreq = 100; // leaking frequency (Hz)
-  unsigned long leakyBrushTimer = 0;
-  const int leakyRubFreq = 100;
-  unsigned long leakyRubTimer = 0;
   int brushCounter[4]{};
 
-  // FIXME those are missing !!!
-  float arrayAverageZero(float* Array, int ArraySize);
-  float leakyIntegrator(
-      float reading, float old_value, float leak, int frequency, unsigned long& timer);
+  // Arrays of LeakyIntegrator instances
+  utils::LeakyIntegrator multiBrushIntegrator[4];
+  utils::LeakyIntegrator multiRubIntegrator[4];
+
+  Touch()
+  {
+    for(int i = 0; i < 4; ++i)
+    {
+      multiBrushIntegrator[i] = utils::LeakyIntegrator(0.0f, 0.0f, 0.7f, 100, 0);
+      multiRubIntegrator[i] = utils::LeakyIntegrator(0.0f, 0.0f, 0.7f, 100, 0);
+    }
+  }
 
   /* Expects an array of discrete touch values (int, 0 or 1) and
    * the size of the array
@@ -95,28 +102,40 @@ public:
         }
         else
         {
-          multiBrush[i] = leakyIntegrator(
-              movement * 0.15, multiBrush[i], 0.7, leakyBrushFreq, leakyBrushTimer);
-          multiRub[i] = leakyIntegrator(
-              abs(movement * 0.15), multiRub[i], 0.7, leakyRubFreq, leakyRubTimer);
+          //   multiBrush[i] = multiBrushIntegrator[i].integrate(
+          //       movement * 0.15, multiBrush[i], 0.7, leakyBrushFreq, leakyBrushTimer);
+
+          //   multiRub[i] = multiRubIntegrator[i].integrate(
+          //       (std::abs(movement * 0.15)), multiRub[i], 0.7, leakyRubFreq,
+          //       leakyRubTimer);
+          //
+          multiBrush[i] = multiBrushIntegrator[i].integrate(movement * 0.15);
+          multiRub[i] = multiRubIntegrator[i].integrate(std::abs(movement * 0.15));
         }
       }
-      else if(abs(movement) > 1)
+      else if(std::abs(movement) > 1)
       {
-        multiBrush[i]
-            = leakyIntegrator(0, multiBrush[i], 0.6, leakyBrushFreq, leakyBrushTimer);
+        // multiBrush[i] = multiBrushIntegrator[i].integrate(
+        //     0, multiBrush[i], 0.6, leakyBrushFreq, leakyBrushTimer);
+
+        multiBrush[i] = multiBrushIntegrator[i].integrate(0);
       }
       else
       {
-        multiBrush[i] = leakyIntegrator(
-            movement * 0.15, multiBrush[i], 0.8, leakyBrushFreq, leakyBrushTimer);
-        multiRub[i] = leakyIntegrator(
-            abs(movement) * 0.15, multiRub[i], 0.99, leakyRubFreq, leakyRubTimer);
+        // multiBrush[i] = multiBrushIntegrator[i].integrate(
+        //     movement * 0.15, multiBrush[i], 0.8, leakyBrushFreq, leakyBrushTimer);
+        // multiRub[i] = multiRubIntegrator[i].integrate(
+        //     (std::abs(movement * 0.15)) * 0.15, multiRub[i], 0.99, leakyRubFreq,
+        //     leakyRubTimer);
+
+        multiBrush[i] = multiBrushIntegrator[i].integrate(movement * 0.15);
+        multiRub[i] = multiRubIntegrator[i].integrate((std::abs(movement * 0.15)));
+
         brushCounter[i] = 0;
       }
     }
-    brush = arrayAverageZero(multiBrush, 4);
-    rub = arrayAverageZero(multiRub, 4);
+    brush = utils::arrayAverageZero(multiBrush, 4);
+    rub = utils::arrayAverageZero(multiRub, 4);
   }
 
   float touchAverage(float* touchArrayStrips, int firstStrip, int lastStrip)
@@ -137,6 +156,7 @@ public:
     return ((float)sum) / (lastStrip - firstStrip);
   }
 
+  //TODO: move to utils
   void blobDetection1D(int* discrete_touch, int touchSize)
   {
     blobAmount = 0;

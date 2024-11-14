@@ -8,7 +8,7 @@ project(
 
 ### Library options ###
 option(PUARA_GESTURES_ENABLE_TESTING "Enable building and running Puara gestures tests" ON)
-option(PUARA_GESTURES_ENABLE_STANDALONE "Enable building and running Puara standalone" ON)
+option(PUARA_GESTURES_ENABLE_STANDALONE "Enable building and running Puara standalone" OFF)
 
 ### Dependencies ###
 if(POLICY CMP0167)
@@ -54,12 +54,22 @@ target_link_libraries(puara_gestures PUBLIC Boost::headers)
 ### Tests ###
 if(PUARA_GESTURES_ENABLE_TESTING)
   include(CTest)
-  add_executable(testing_roll tests/testing_roll.cpp)
+
+target_sources(Continuous
+  PRIVATE
+  tests/testing_touch.cpp
+
+)
+add_executable(testing_roll tests/testing_roll.cpp)
   add_executable(testing_tilt tests/testing_tilt.cpp)
+  add_executable(testing_touch tests/testing_touch.cpp)
   target_compile_definitions(testing_roll PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
   target_compile_definitions(testing_tilt PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
+  target_compile_definitions(testing_touch PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
   target_link_libraries(testing_roll PRIVATE puara_gestures)
   target_link_libraries(testing_tilt PRIVATE puara_gestures)
+  target_link_libraries(testing_touch PRIVATE puara_gestures)
+
 endif()
 
 ### Example ###

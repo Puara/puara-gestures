@@ -23,6 +23,7 @@ public:
   double leak{};
   int frequency{}; // leaking frequency (Hz)
   unsigned long long timer{};
+  long long getCurrentTimeMicroseconds();
 
   explicit LeakyIntegrator(
       double currentValue = 0, double oldValue = 0, double leakValue = 0.5,
@@ -45,39 +46,39 @@ public:
    */
 
   double integrate(
-      double reading, double custom_old_value, double custom_leak, int custom_frequency,
-      unsigned long long& custom_timer)
+      double reading, double oldValue, double leakValue, int freq,
+      unsigned long long& timerValue)
   {
     auto currentTimePoint = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
         currentTimePoint.time_since_epoch());
     unsigned long long current_time = duration.count();
 
-    if(custom_frequency <= 0)
+    if(freq <= 0)
     {
-      current_value = reading + (custom_old_value * custom_leak);
+      current_value = reading + (oldValue * leakValue);
     }
-    else if((current_time / 1000LL) - (1000 / frequency) < custom_timer)
+    else if((current_time / 1000LL) - (1000 / frequency) < timerValue)
     {
       current_value = reading + old_value;
     }
     else
     {
-      current_value = reading + (custom_old_value * custom_leak);
+      current_value = reading + (oldValue * leakValue);
       timer = (current_time / 1000LL);
     }
     old_value = current_value;
     return current_value;
   }
 
-  double integrate(double reading, double leak, unsigned long long& time)
+  double integrate(double reading, double leakValue, unsigned long long& timerValue)
   {
-    return this->integrate(reading, old_value, leak, frequency, time);
+    return this->integrate(reading, old_value, leakValue, frequency, timerValue);
   }
 
-  double integrate(double reading, double custom_leak)
+  double integrate(double reading, double leakValue)
   {
-    return this->integrate(reading, old_value, custom_leak, frequency, timer);
+    return this->integrate(reading, old_value, leakValue, frequency, timer);
   }
 
   double integrate(double reading)
