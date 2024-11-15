@@ -8,7 +8,6 @@
 //********************************************************************************//
 
 #include <puara/gestures.h>
-#include <puara/utils.h>
 
 #include <cmath>
 
@@ -110,5 +109,11 @@ int main()
     std::cout << "In Threshold = " << threshold << ", ";
     double wrapped = test.wrap(threshold);
     std::cout << "Wrapped = " << wrapped << ".\n";
+
+    //testing arrayAverageZero
+    std::vector<double> testArray = {1.0, 2.0, 3.0, 4.0, 5.0};
+    double average
+        = puara_gestures::utils::arrayAverageZero(testArray.data(), testArray.size());
+    std::cout << "Average: " << average << std::endl;
   }
 }

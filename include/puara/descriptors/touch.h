@@ -16,9 +16,9 @@ public:
   float touchMiddle = 0.0f; // f, 0--1
   float touchBottom = 0.0f; // f, 0--1
   float brush = 0.0f;       // f, 0--? (~cm/s)
-  float multiBrush[4]{};    // ffff, 0--? (~cm/s)
+  double multiBrush[4]{};   // ffff, 0--? (~cm/s)
   float rub{};              // f, 0--? (~cm/s)
-  float multiRub[4]{};      // ffff, 0--? (~cm/s)
+  double multiRub[4]{};     // ffff, 0--? (~cm/s)
 
   // touch array
   int touchSizeEdge
