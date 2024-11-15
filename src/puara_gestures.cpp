@@ -6,8 +6,10 @@
 // Edu Meneses (2024) - 4ttps://www.edumeneses.com                                //
 //********************************************************************************//
 
-#include "puara_gestures.h" 
+#include <puara/gestures.h>
 
+// FIXME finish cleaning up this file
+#if 0
 void PuaraGestures::updateInertialGestures()
 {
   updateJabShakeAccl();
@@ -736,3 +738,4 @@ IMU_Orientation::Euler PuaraGestures::getOrientationEuler()
 //             return in;
 //         }
 //     }
+#endif

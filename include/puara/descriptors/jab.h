@@ -7,11 +7,8 @@
 //********************************************************************************//
 #pragma once
 
-#include "puara-structs.h"
-#include "puara-utils.h"
-
-#include <algorithm>
-#include <deque>
+#include <puara/structs.h>
+#include <puara/utils.h>
 
 namespace puara_gestures
 {
@@ -25,26 +22,34 @@ namespace puara_gestures
 class Jab
 {
 public:
-  Jab()
-      : tied_value(nullptr)
-      , threshold(5)
-      , minmax(10)
-  {
-  }
-  Jab(double* tied)
-      : tied_value(tied)
-      , threshold(5)
-      , minmax(10)
-  {
-  }
-  Jab(Coord1D* tied)
-      : tied_value(&(tied->x))
-      , threshold(5)
+  int threshold{};
+
+  Jab() noexcept
+      : threshold(5)
+      , tied_value(nullptr)
       , minmax(10)
   {
   }
 
-  int threshold;
+  Jab(const Jab&) noexcept = default;
+  Jab(Jab&&) noexcept = default;
+  Jab& operator=(const Jab&) noexcept = default;
+  Jab& operator=(Jab&&) noexcept = default;
+
+  explicit Jab(double* tied)
+      : threshold(5)
+      , tied_value(tied)
+      , minmax(10)
+  {
+  }
+
+  explicit Jab(Coord1D* tied)
+      : threshold(5)
+      , tied_value(&(tied->x))
+      , minmax(10)
+  {
+  }
+
   double update(double reading)
   {
     minmax.update(reading);
@@ -88,7 +93,7 @@ public:
     }
   }
 
-  double current_value() { return value; }
+  double current_value() const { return value; }
 
   int tie(Coord1D* new_tie)
   {
@@ -97,9 +102,9 @@ public:
   }
 
 private:
+  double* tied_value{};
   double value = 0;
   puara_gestures::utils::RollingMinMax<double> minmax;
-  double* tied_value;
 };
 
 /**
@@ -111,18 +116,20 @@ private:
 class Jab2D
 {
 public:
-  Jab2D()
-      : x()
-      , y()
-  {
-  }
-  Jab2D(Coord2D* tied)
+  Jab x{}, y{};
+
+  Jab2D() noexcept = default;
+  Jab2D(const Jab2D&) noexcept = default;
+  Jab2D(Jab2D&&) noexcept = default;
+  Jab2D& operator=(const Jab2D&) noexcept = default;
+  Jab2D& operator=(Jab2D&&) noexcept = default;
+
+  explicit Jab2D(Coord2D* tied) noexcept
       : x(&(tied->x))
       , y(&(tied->y))
   {
   }
 
-  Jab x, y;
   int update(double readingX, double readingY)
   {
     x.update(readingX);
@@ -145,7 +152,7 @@ public:
   }
 
   double frequency(double freq);
-  Coord2D current_value()
+  Coord2D current_value() const
   {
     Coord2D answer;
     answer.x = x.current_value();
@@ -157,15 +164,21 @@ public:
 class Jab3D
 {
 public:
-  Jab3D() { }
-  Jab3D(Coord3D* tied)
+  Jab x{}, y{}, z{};
+
+  Jab3D() = default;
+  Jab3D(const Jab3D&) noexcept = default;
+  Jab3D(Jab3D&&) noexcept = default;
+  Jab3D& operator=(const Jab3D&) noexcept = default;
+  Jab3D& operator=(Jab3D&&) noexcept = default;
+
+  explicit Jab3D(Coord3D* tied)
       : x(&(tied->x))
       , y(&(tied->y))
       , z(&(tied->z))
   {
   }
 
-  Jab x, y, z;
   int update(double readingX, double readingY, double readingZ)
   {
     x.update(readingX);
@@ -191,7 +204,7 @@ public:
   }
 
   double frequency(double freq);
-  Coord3D current_value()
+  Coord3D current_value() const
   {
     Coord3D answer;
     answer.x = x.current_value();

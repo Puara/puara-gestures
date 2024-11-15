@@ -11,21 +11,17 @@
 
 // clang-format -i *.h
 
-#include "../puara_gestures.h"
-
-#include <ossia/network/generic/generic_device.hpp>
-#include <ossia/network/osc/osc.hpp>
-
 #include <ossia/network/base/parameter_data.hpp>
 #include <ossia/network/common/debug.hpp>
+#include <ossia/network/generic/generic_device.hpp>
+#include <ossia/network/osc/osc.hpp>
+#include <puara/gestures.h>
 
+#include <chrono>
 #include <iostream>
 #include <sstream>
-
-#include <vector>
-#include <chrono>
 #include <thread>
-#include "../descriptors/IMU_Sensor_Fusion/imu_orientation.h"
+#include <vector>
 
 std::string client_ip = "127.0.0.1";
 int client_port = 9000;
@@ -42,10 +38,6 @@ puara_gestures::Shake3D shake;
 puara_gestures::Jab3D jab;
 puara_gestures::utils::LeakyIntegrator leakyintegrator;
 IMU_Orientation orientation;
-puara_gestures::testing_roll rollTest;
-puara_gestures::testing_tilt tiltTest;
-
-#include <vector>
 
 // struct Coord3D {
 //     double x, y, z;
@@ -75,13 +67,12 @@ int main(int argc, char* argv[]) {
         leakyintegrator.integrate(accelerometer[0]);
     });
 
-    //rollTest.test();
-    tiltTest.test();
-
-//     while(true) {
-//         puara_gestures::Coord3D shakeout = shake.current_value();
-//         puara_gestures::Coord3D jabout = jab.current_value();
-//         std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x << ", Integrator: " << leakyintegrator.current_value << std::endl;
-//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//   };
+    while(true)
+    {
+      puara_gestures::Coord3D shakeout = shake.current_value();
+      puara_gestures::Coord3D jabout = jab.current_value();
+      std::cout << "Shake X: " << shakeout.x << ", Jab X: " << jabout.x
+                << ", Integrator: " << leakyintegrator.current_value << std::endl;
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    };
 }

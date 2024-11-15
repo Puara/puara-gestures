@@ -8,10 +8,8 @@
 
 #pragma once
 
-#include "puara-structs.h"
-#include "puara-utils.h"
-
-#include <algorithm>
+#include <puara/structs.h>
+#include <puara/utils.h>
 
 namespace puara_gestures
 {
@@ -28,25 +26,23 @@ namespace puara_gestures
 class Shake
 {
 public:
+  utils::LeakyIntegrator integrator{0, 0, 0.6, 10, 0};
+  double fast_leak = 0.6;
+  double slow_leak = 0.3;
+
   Shake()
       : tied_value(nullptr)
-      , integrator(0, 0, 0.6, 10, 0)
   {
   }
-  Shake(double* tied)
+  explicit Shake(double* tied)
       : tied_value(tied)
-      , integrator(0, 0, 0.6, 10, 0)
   {
   }
-  Shake(Coord1D* tied)
+  explicit Shake(Coord1D* tied)
       : tied_value(&(tied->x))
-      , integrator(0, 0, 0.6, 10, 0)
   {
   }
 
-  utils::LeakyIntegrator integrator;
-  double fast_leak = 0.6;
-  double slow_leak = 0.3;
   double update(double reading)
   {
     if(tied_value != nullptr)
@@ -90,7 +86,7 @@ public:
     }
   }
 
-  double frequency() { return integrator.frequency; }
+  double frequency() const { return integrator.frequency; }
 
   double frequency(double freq)
   {
@@ -98,7 +94,7 @@ public:
     return freq;
   }
 
-  double current_value() { return integrator.current_value; }
+  double current_value() const { return integrator.current_value; }
 
   int tie(Coord1D* new_tie)
   {
@@ -107,7 +103,7 @@ public:
   }
 
 private:
-  double* tied_value;
+  double* tied_value{};
 };
 
 /**
@@ -123,7 +119,12 @@ private:
 class Shake2D
 {
 public:
-  Shake2D() { }
+  Shake2D() noexcept = default;
+  Shake2D(const Shake2D&) noexcept = default;
+  Shake2D(Shake2D&&) noexcept = default;
+  Shake2D& operator=(const Shake2D&) noexcept = default;
+  Shake2D& operator=(Shake2D&&) noexcept = default;
+
   Shake2D(Coord2D* tied)
       : x(&(tied->x))
       , y(&(tied->y))
@@ -160,7 +161,7 @@ public:
     return freq;
   }
 
-  Coord2D current_value()
+  Coord2D current_value() const
   {
     Coord2D answer;
     answer.x = x.current_value();
@@ -182,15 +183,21 @@ public:
 class Shake3D
 {
 public:
-  Shake3D() { }
-  Shake3D(Coord3D* tied)
+  Shake x, y, z;
+
+  Shake3D() noexcept = default;
+  Shake3D(const Shake3D&) noexcept = default;
+  Shake3D(Shake3D&&) noexcept = default;
+  Shake3D& operator=(const Shake3D&) noexcept = default;
+  Shake3D& operator=(Shake3D&&) noexcept = default;
+
+  explicit Shake3D(Coord3D* tied)
       : x(&(tied->x))
       , y(&(tied->y))
       , z(&(tied->z))
   {
   }
 
-  Shake x, y, z;
   int update(double readingX, double readingY, double readingZ)
   {
     x.update(readingX);
@@ -222,7 +229,8 @@ public:
     z.frequency(freq);
     return freq;
   }
-  Coord3D current_value()
+
+  Coord3D current_value() const
   {
     Coord3D answer;
     answer.x = x.current_value();

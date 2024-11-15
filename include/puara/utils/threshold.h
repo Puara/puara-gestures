@@ -1,5 +1,5 @@
 //********************************************************************************//
-// Puara Gestures - Sensor fusion and gestural descriptors algorithms             //
+// Puara Gestures - Utilities (.h)                                                //
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
@@ -8,18 +8,34 @@
 
 #pragma once
 
-#include <cmath>
+#include <puara/structs.h>
 
-#include <algorithm>
-#include <chrono>
-#include <deque>
+namespace puara_gestures::utils
+{
 
-// puara-gesture descriptors
-#include "descriptors/IMU_Sensor_Fusion/imu_orientation.h"
-#include "descriptors/puara-button.h"
-#include "descriptors/puara-jab.h"
-#include "descriptors/puara-roll.h"
-#include "descriptors/puara-shake.h"
-#include "descriptors/puara-tilt.h"
-#include "testing_roll.h"
-#include "testing_tilt.h"
+/**
+ * Simple Threshold class to ensure a value doesn't exceed settable max and min values.
+ */
+class Threshold
+{
+public:
+  double min{-10.0};
+  double max{10.0};
+  double current{};
+
+  double update(double reading)
+  {
+    current = reading;
+    if(reading < min)
+    {
+      return min;
+    }
+    if(reading > max)
+    {
+      return max;
+    }
+    return reading;
+  }
+};
+
+}

@@ -10,13 +10,10 @@
 #pragma once
 
 #include "IMU_Sensor_Fusion/imu_orientation.h"
-#include "puara-structs.h"
-#include "puara-utils.h"
+#include <puara/structs.h>
+#include <puara/utils.h>
 
 #include <cmath>
-
-#include <algorithm>
-#include <list>
 
 namespace puara_gestures
 {
@@ -44,7 +41,7 @@ public:
   Roll()
       : unwrapper(-M_PI, M_PI)
       , smoother(50)
-      , wrapper(0, 2 * M_PI)
+      , wrapper{0, 2 * M_PI}
   {
   }
 
@@ -53,10 +50,10 @@ public:
    *
    * @param smoothValue number of previous values that "smoother" object averages
    */
-  Roll(double smoothValue)
+  explicit Roll(double smoothValue)
       : unwrapper(-M_PI, M_PI)
       , smoother(smoothValue)
-      , wrapper(0, 2 * M_PI)
+      , wrapper{0, 2 * M_PI}
   {
   }
 
@@ -69,7 +66,7 @@ public:
   Roll(double wrapMin, double wrapMax)
       : unwrapper(-M_PI, M_PI)
       , smoother(50)
-      , wrapper(wrapMin, wrapMax)
+      , wrapper{wrapMin, wrapMax}
   {
   }
 
@@ -83,7 +80,7 @@ public:
   Roll(double smoothValue, double wrapMin, double wrapMax)
       : unwrapper(-M_PI, M_PI)
       , smoother(smoothValue)
-      , wrapper(wrapMin, wrapMax)
+      , wrapper{wrapMin, wrapMax}
   {
   }
 

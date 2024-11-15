@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "puara-utils.h"
+#include <puara/utils.h>
 
 namespace puara_gestures
 {
@@ -146,55 +146,5 @@ public:
       buttonCount = 0;
     }
   }
-
-  // unsigned int getButtonCount() {
-  //     return buttonCount;
-  // }
-
-  // bool   getButtonTouch() {
-  //     return   buttonPress;
-  // }
-
-  // unsigned int   getButtonValue() {
-  //     return   buttonValue;
-  // }
-
-  // unsigned int   getButtonTap() {
-  //     return   buttonTap;
-  // }
-
-  // unsigned int   getButtonDTap() {
-  //     return   buttonDtap;
-  // }
-
-  // unsigned int   getButtonTTap() {
-  //     return   buttonTtap;
-  // }
-
-  // unsigned int   getButtonThreshold() {
-  //     return   buttonValue;
-  // }
-
-  // unsigned int   setButtonThreshold(int value) {
-  //       buttonThreshold = value;
-  //     return 0;
-  // }
-
-  // unsigned int   getButtonPressTime() {
-  //     return   buttonPressTime;
-  // }
-
-  // bool   getButtonHold() {
-  //     return   buttonHold;
-  // }
-
-  // unsigned int   getButtonHoldInterval() {
-  //     return   buttonHoldInterval;
-  // }
-
-  // unsigned int   setButtonHoldInterval(int value) {
-  //       buttonHoldInterval = value;
-  //     return 0;
-  // }
 };
 }

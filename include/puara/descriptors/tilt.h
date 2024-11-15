@@ -10,12 +10,10 @@
 #pragma once
 
 #include "IMU_Sensor_Fusion/imu_orientation.h"
-#include "puara-structs.h"
-#include "puara-utils.h"
+#include <puara/structs.h>
+#include <puara/utils.h>
 
 #include <cmath>
-#include <algorithm>
-#include <list>
 
 namespace puara_gestures
 {
@@ -24,31 +22,12 @@ namespace puara_gestures
  * @brief This class measures tilt gestures using 3DoF info from an accelerometer,
  * gyroscope, and magnetometer
  */
-class Tilt
+class Tilt : public utils::Smooth
 {
 public:
   IMU_Orientation orientation;
-  utils::Smooth smoother;
 
-  /**
-   * @brief Default constructor for Tilt
-   *
-   * @return Sets "smoother" object to average the previous 50 objects
-   */
-  Tilt()
-      : smoother(50)
-  {
-  }
-
-  /**
-   * @brief Constructor for Tilt
-   *
-   * @param smoothValue number of previous values that "smoother" object averages
-   */
-  explicit Tilt(double smoothValue)
-      : smoother(smoothValue)
-  {
-  }
+  using utils::Smooth::Smooth;
 
   /**
    * @brief Calculates tilt (aka "pitch") measurement
@@ -70,15 +49,8 @@ public:
   }
 
   /**
-   * @brief Option to "smooth" value stream by taking the average of a given
-   * number of previous values
-   * Set to 50 in default Tilt constructor
-   */
-  double smooth(double reading) { return smoother.smooth(reading); }
-
-  /**
    * @brief Clears list of all previous inputs
    */
-  void clear_smooth() { smoother.clear(); }
+  void clear_smooth() { clear(); }
 };
 }
