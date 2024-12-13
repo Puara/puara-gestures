@@ -1,6 +1,7 @@
 #pragma once
 
 #include <puara/utils.h>
+#include <puara/utils/blobDetection.h>
 #include <puara/utils/leakyintegrator.h>
 
 #include <cmath>
@@ -24,11 +25,8 @@ public:
   int touchSizeEdge
       = 4; // amount of touch stripes for top and bottom portions (arbitrary)
   int lastState_blobPos[4]{};
-  int maxBlobs = 4;    // max amount of blobs to be detected
-  int blobAmount{};    // amount of detected blobs
-  int blobCenter[4]{}; // shows the "center" (index) of each blob (former blobArray)
-  int blobPos[4]{};    // starting position (index) of each blob
-  float blobSize[4]{}; // "size" (amount of stripes) of each blob
+  BlobDetection blob;
+  int blobPos[4]{}; // starting position (index) of each blob
   int brushCounter[4]{};
 
   // Arrays of LeakyIntegrator instances
@@ -74,7 +72,7 @@ public:
     }
 
     // 1D blob detection: used for brush
-    blobDetection1D(discrete_touch, touchSize);
+    blob.blobDetection1D(discrete_touch, touchSize, blobPos);
 
     // brush: direction and intensity of capsense brush motion
     // rub: intensity of rub motion
@@ -154,40 +152,6 @@ public:
       sum += (float)touchArrayStrips[i];
 
     return ((float)sum) / (lastStrip - firstStrip);
-  }
-
-  //TODO: move to utils
-  void blobDetection1D(int* discrete_touch, int touchSize)
-  {
-    blobAmount = 0;
-    int sizeCounter = 0;
-    int stripe = 0;
-    for(int i = 0; i < 4; i++)
-    {
-      blobCenter[i] = 0;
-      blobPos[i] = 0;
-      blobSize[i] = 0;
-    }
-
-    for(; stripe < touchSize; stripe++)
-    {
-      if(blobAmount < maxBlobs)
-      {
-        if(discrete_touch[stripe] == 1)
-        { // check for beggining of blob...
-          sizeCounter = 1;
-          blobPos[blobAmount] = stripe;
-          while(discrete_touch[stripe + sizeCounter] == 1)
-          { // then keep checking for end
-            sizeCounter++;
-          }
-          blobSize[blobAmount] = sizeCounter;
-          blobCenter[blobAmount] = stripe + (sizeCounter / 2);
-          stripe += sizeCounter + 1; // skip stripes already read
-          blobAmount++;
-        }
-      }
-    }
   }
 };
 }
