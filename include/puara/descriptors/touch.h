@@ -1,7 +1,7 @@
 #pragma once
 
 #include <puara/utils.h>
-#include <puara/utils/blobDetection.h>
+#include <puara/utils/blobDetector.h>
 #include <puara/utils/leakyintegrator.h>
 
 #include <cmath>
@@ -12,7 +12,7 @@ namespace puara_gestures
 class Touch
 {
 public:
-  static const int maxNumBlobs = BlobDetection::maxNumBlobs;
+  static const int maxNumBlobs = BlobDetector::maxNumBlobs;
   float touchAll = 0.0f;    // f, 0--1
   float touchTop = 0.0f;    // f, 0--1
   float touchMiddle = 0.0f; // f, 0--1
@@ -25,7 +25,7 @@ public:
   // touch array
   int touchSizeEdge = 4; // amount of touch stripes for top and bottom portions (arbitrary)
 
-  BlobDetection blob;
+  BlobDetector blob;
   int brushCounter[maxNumBlobs]{};
 
   // Arrays of LeakyIntegrator instances
@@ -64,12 +64,8 @@ public:
     // normalized between 0 and 1
     touchBottom = touchAverage(discrete_touch, (touchSize - touchSizeEdge), touchSize);
 
-    //NOW HERE -- not too sure what the heck that loop is, but that i is probably just == 4 lol
-    //I need to continue moving the blobPos logic to the blobDetector
-    //I should add a getBlobPos to it so this client doesn't have to store it itself
-
      // 1D blob detection: used for brush
-    const auto movement = blob.blobDetection1D(discrete_touch, touchSize);
+    const auto movement = blob.detect1D(discrete_touch, touchSize);
 
     // brush: direction and intensity of capsense brush motion
     // rub: intensity of rub motion

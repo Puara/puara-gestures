@@ -30,6 +30,7 @@ add_library(puara_gestures
   include/puara/descriptors/tilt.h
   include/puara/descriptors/touch.h
 
+  include/puara/utils/blobDetector.h
   include/puara/utils/calibration.h
   include/puara/utils/circularbuffer.h
   include/puara/utils/leakyintegrator.h
