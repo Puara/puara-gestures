@@ -1,45 +1,57 @@
-
+#pragma once
 namespace puara_gestures
 {
 
-struct BlobDetection
+class BlobDetection
 {
-  int maxBlobs = 4;    // max amount of blobs to be detected
-  int blobAmount{};    // amount of detected blobs
-  int blobCenter[4]{}; // shows the "center" (index) of each blob (former blobArray)
-  float blobSize[4]{}; // "size" (amount of stripes) of each blob
+public:
+  static const int maxNumBlobs = 4; // max amount of blobs to be detected
 
-  void blobDetection1D(int* discrete_touch, int touchSize, int* blobPos)
+#include <vector>
+
+  std::vector<int> blobDetection1D(const int* const touchArray, const int size)
   {
-    blobAmount = 0;
-    int sizeCounter = 0;
-    int stripe = 0;
-    for(int i = 0; i < 4; i++)
+    int blobCenter[maxNumBlobs]{}; // shows the "center" (index) of each blob
+    float blobSize[maxNumBlobs]{}; // "size" (amount of stripes) of each blob
+    int blobAmount{};              // amount of detected blobs
+    int sizeCounter{};
+
+    for(int i = 0; i < maxNumBlobs; i++)
     {
-      blobCenter[i] = 0;
+      //cache the last blobPos before clearing it
+      lastState_blobPos[i] = blobPos[i];
       blobPos[i] = 0;
-      blobSize[i] = 0;
     }
 
-    for(; stripe < touchSize; stripe++)
+    for(int stripe = 0; stripe < size; ++stripe)
     {
-      if(blobAmount < maxBlobs)
+      if(touchArray[stripe] == 1)
       {
-        if(discrete_touch[stripe] == 1)
-        { // check for beggining of blob...
-          sizeCounter = 1;
-          blobPos[blobAmount] = stripe;
-          while(discrete_touch[stripe + sizeCounter] == 1)
-          { // then keep checking for end
-            sizeCounter++;
-          }
-          blobSize[blobAmount] = sizeCounter;
-          blobCenter[blobAmount] = stripe + (sizeCounter / 2);
-          stripe += sizeCounter + 1; // skip stripes already read
-          blobAmount++;
-        }
+        sizeCounter = 1;
+        blobPos[blobAmount] = stripe;
+
+        while(touchArray[stripe + sizeCounter] == 1)
+          sizeCounter++;
+
+        blobSize[blobAmount] = sizeCounter;
+        blobCenter[blobAmount] = stripe + (sizeCounter / 2);
+        stripe += sizeCounter + 1;
+
+        if(++blobAmount >= maxNumBlobs)
+          break;
       }
     }
+
+    //return the movement since the last time blobDetection1D was called
+    std::vector<int> movement(blobAmount, 0);
+    for(int i = 0; i < blobAmount; ++i)
+      movement[i] = blobPos[i] - lastState_blobPos[i];
+
+    return movement;
   }
+
+private:
+  int blobPos[maxNumBlobs]{};
+  int lastState_blobPos[maxNumBlobs]{};
 };
 }

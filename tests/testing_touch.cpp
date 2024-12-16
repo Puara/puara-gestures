@@ -8,11 +8,12 @@ int main()
 {
   Touch touch;
 
-  int touchSize = 16;
-  int discrete_touch[16] = {0};
+  const int touchSize = 16;
+  int discrete_touch[touchSize] = {0};
 
-  // simulate a touch (1) at a position 5
+  // simulate a blob of size 2 starting at position 5
   discrete_touch[5] = 1;
+  discrete_touch[6] = 1;
 
   // Update the touch data
   touch.updateTouchArray(discrete_touch, touchSize);
