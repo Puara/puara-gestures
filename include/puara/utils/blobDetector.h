@@ -8,7 +8,7 @@ namespace puara_gestures
  * @struct BlobDetector
  * @brief A structure for detecting contiguous regions (blobs) of `1`s in binary arrays.
  *
- * The `BlobDetector` identifies contiguous blobs in a binary input array where elements are either 
+ * The `BlobDetector` identifies contiguous blobs in a binary input array where elements are either
  * `0` or `1`.
  * For each blob, it computes:
  * - The start position (`blobStartPos`)
@@ -60,26 +60,26 @@ struct BlobDetector
 
   /**
     * @brief Detects contiguous regions (blobs) of `1`s in a 1D binary array and computes their movement.
-    * 
-    * This function identifies blobs in the input binary array `touchArray`, calculates their start 
-    * positions, sizes, and centers, and returns the movement of the blobs compared to their positions 
+    *
+    * This function identifies blobs in the input binary array `touchArray`, calculates their start
+    * positions, sizes, and centers, and returns the movement of the blobs compared to their positions
     * from the previous function call.
-    * 
+    *
     * @param touchArray Pointer to the 1D binary array representing touch data. Each element is expected to be 0 or 1.
     * @param size The size of the `touchArray`.
-    * @return A vector of integers representing the movement of each blob's start position since the 
+    * @return A vector of integers representing the movement of each blob's start position since the
     *         last invocation of `detect1D`. The size of the returned vector is `maxNumBlobs`.
-    * 
+    *
     * @note
-    * - The function updates the global variables `blobStartPos`, `blobSize`, `blobCenter`, 
+    * - The function updates the global variables `blobStartPos`, `blobSize`, `blobCenter`,
     *   and `lastState_blobPos`.
     * - The number of blobs detected is limited by `maxNumBlobs`.
     * - If the number of blobs exceeds `maxNumBlobs`, additional blobs are ignored.
-    * 
+    *
     * @warning
     * - Ensure that `touchArray` has at least `size` elements to avoid out-of-bounds access.
-    * - The function relies on external global variables (`blobStartPos`, `blobSize`, `blobCenter`, 
-    *   `lastState_blobPos`, `maxNumBlobs`, `blobAmount`). Ensure they are initialized appropriately 
+    * - The function relies on external global variables (`blobStartPos`, `blobSize`, `blobCenter`,
+    *   `lastState_blobPos`, `maxNumBlobs`, `blobAmount`). Ensure they are initialized appropriately
     *   before calling the function.
     */
   std::vector<int> detect1D(const int* const touchArray, const int size)

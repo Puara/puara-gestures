@@ -72,14 +72,6 @@ public:
     // in ~cm/s (distance between stripes = ~1.5cm)
     for(int i = 0; i < maxNumBlobs; ++i)
     {
-      //TODO: unclear how we ever could get here?
-      // if(blobPos[i] == -1)
-      // {
-      //   multiBrush[i] = 0;
-      //   multiRub[i] = 0;
-      //   brushCounter[i] = 0;
-      // }
-      // else 
       if(movement[i] == 0)
       {
         if(brushCounter[i] < 10)
