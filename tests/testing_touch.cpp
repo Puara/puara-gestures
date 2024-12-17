@@ -6,7 +6,7 @@ int main()
 {
   Touch touch;
 
-  const int touchSize = 16;
+  constexpr int touchSize = 16;
   int discrete_touch[touchSize] = {0};
 
   // simulate a blob of size 1 starting at position 0

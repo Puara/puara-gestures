@@ -37,8 +37,9 @@ namespace puara_gestures
  * - The number of blobs processed is limited by `maxNumBlobs` (default is `4`).
  * - If the input contains more blobs than `maxNumBlobs`, the additional blobs are ignored.
  */
-struct BlobDetector
+class BlobDetector
 {
+public:
   /** The maximum number of blobs that the algorithm should detect. */
   static constexpr int maxNumBlobs = 4;
 
