@@ -5,6 +5,7 @@
 #include <puara/utils/leakyintegrator.h>
 
 #include <cmath>
+#include<iostream>
 
 namespace puara_gestures
 {
@@ -12,7 +13,7 @@ namespace puara_gestures
 class Touch
 {
 public:
-  static const int maxNumBlobs = BlobDetector::maxNumBlobs;
+  static constexpr int maxNumBlobs = BlobDetector::maxNumBlobs;
   float touchAll = 0.0f;    // f, 0--1
   float touchTop = 0.0f;    // f, 0--1
   float touchMiddle = 0.0f; // f, 0--1
@@ -70,7 +71,7 @@ public:
     // brush: direction and intensity of capsense brush motion
     // rub: intensity of rub motion
     // in ~cm/s (distance between stripes = ~1.5cm)
-    for(int i = 0; i < maxNumBlobs; ++i)
+    for(int i = 0; i < movement.size(); ++i)
     {
       if(movement[i] == 0)
       {

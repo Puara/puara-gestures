@@ -1,6 +1,7 @@
 #pragma once
 
-#include <iostream>
+#include <boost/container/small_vector.hpp>
+
 namespace puara_gestures
 {
 
@@ -39,7 +40,7 @@ namespace puara_gestures
 struct BlobDetector
 {
   /** The maximum number of blobs that the algorithm should detect. */
-  static const int maxNumBlobs = 4;
+  static constexpr int maxNumBlobs = 4;
 
   /** The start index of detected blobs. */
   int blobStartPos[maxNumBlobs]{};
@@ -49,7 +50,7 @@ struct BlobDetector
     */
   int lastState_blobPos[maxNumBlobs]{};
 
-  /** "size" (amount of stripes) of each blob */
+  /** size (amount of stripes) of each blob */
   int blobSize[maxNumBlobs]{};
 
   /** shows the "center"(index)of each blob */
@@ -66,9 +67,11 @@ struct BlobDetector
     * from the previous function call.
     *
     * @param touchArray Pointer to the 1D binary array representing touch data. Each element is expected to be 0 or 1.
-    * @param size The size of the `touchArray`.
-    * @return A vector of integers representing the movement of each blob's start position since the
-    *         last invocation of `detect1D`. The size of the returned vector is `maxNumBlobs`.
+    * @param touchArraySize The size of the `touchArray`, representing the number of touch sensor in the array.
+    *        This is expected to be larger than maxNumBlobs, which by definition will be a portion of the number
+    *        of sensors, or at most equal to the number of sensors.
+    * @return A small_vector of integers representing the movement of each blob's start position since the
+    *         last invocation of `detect1D`.
     *
     * @note
     * - The function updates the global variables `blobStartPos`, `blobSize`, `blobCenter`,
@@ -82,7 +85,8 @@ struct BlobDetector
     *   `lastState_blobPos`, `maxNumBlobs`, `blobAmount`). Ensure they are initialized appropriately
     *   before calling the function.
     */
-  std::vector<int> detect1D(const int* const touchArray, const int size)
+  boost::container::small_vector<int, maxNumBlobs>
+  detect1D(const int* const touchArray, const int touchArraySize)
   {
     blobAmount = 0;
     for(int i = 0; i < maxNumBlobs; i++)
@@ -94,7 +98,7 @@ struct BlobDetector
       blobCenter[i] = 0;
     }
 
-    for(int stripe = 0; stripe < size;)
+    for(int stripe = 0; stripe < touchArraySize;)
     {
       if(touchArray[stripe] == 1)
       {
@@ -103,11 +107,14 @@ struct BlobDetector
 
         //continue the blob until we no longer have 1s
         int sizeCounter = 1;
-        while(touchArray[stripe + sizeCounter] == 1 && (stripe + sizeCounter) <= size)
+        while((stripe + sizeCounter) <= touchArraySize
+              && touchArray[stripe + sizeCounter] == 1)
+        {
           sizeCounter++;
+        }
 
         blobSize[blobAmount] = sizeCounter;
-        blobCenter[blobAmount] = stripe + (sizeCounter - 1.f) / 2.f;
+        blobCenter[blobAmount] = stripe + (sizeCounter - 1.0) / 2.0;
         stripe += sizeCounter;
 
         if(++blobAmount >= maxNumBlobs)
@@ -120,7 +127,7 @@ struct BlobDetector
     }
 
     //return the movement since the last time detect1D was called
-    std::vector<int> movement(maxNumBlobs, 0);
+    boost::container::small_vector<int, maxNumBlobs> movement(maxNumBlobs, 0);
     for(int i = 0; i < maxNumBlobs; ++i)
       movement[i] = blobStartPos[i] - lastState_blobPos[i];
 
