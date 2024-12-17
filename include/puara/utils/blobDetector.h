@@ -1,7 +1,41 @@
 #pragma once
+
+#include <iostream>
 namespace puara_gestures
 {
 
+/**
+ * @struct BlobDetector
+ * @brief A structure for detecting contiguous regions (blobs) of `1`s in binary arrays.
+ *
+ * The `BlobDetector` identifies contiguous blobs in a binary input array where elements are either 
+ * `0` or `1`.
+ * For each blob, it computes:
+ * - The start position (`blobStartPos`)
+ * - The size in terms of consecutive `1`s (`blobSize`)
+ * - The center index (`blobCenter`)
+ * - Movement compared to the previous detection (`lastState_blobPos`)
+ * @warning Most of these values are reset when a detection function, e.g., detect1D(), is called,
+ * and calculated during the detection funtion calls -- so their value is only really valid right
+ * after such a call. There is no locking mechanism on any of these values so it is on the client
+ * to ensure there is no race conditions.
+ *
+ * @details
+ * The struct maintains internal arrays to store information about detected blobs, including their
+ * start positions, sizes, and centers. It also tracks blob positions from the previous invocation
+ * of the detection function to compute movement values.
+ *
+ * ## Key Functionalities:
+ * - **Blob Detection:** Detects contiguous regions of `1`s in a binary input array.
+ * - **Movement Calculation:** Computes the positional changes (movement) of blobs compared to
+ *   their last positions.
+ * - **Data Management:** Maintains internal state between function calls to facilitate movement
+ *   tracking.
+ *
+ * @note
+ * - The number of blobs processed is limited by `maxNumBlobs` (default is `4`).
+ * - If the input contains more blobs than `maxNumBlobs`, the additional blobs are ignored.
+ */
 struct BlobDetector
 {
   /** The maximum number of blobs that the algorithm should detect. */
@@ -13,7 +47,7 @@ struct BlobDetector
   /** The cached start index of detected blobs, from the previous time detect1D
     * was called.
     */
-  int lastState_blobPos [maxNumBlobs]{};
+  int lastState_blobPos[maxNumBlobs]{};
 
   /** "size" (amount of stripes) of each blob */
   int blobSize[maxNumBlobs]{};
@@ -50,12 +84,14 @@ struct BlobDetector
     */
   std::vector<int> detect1D(const int* const touchArray, const int size)
   {
-
+    blobAmount = 0;
     for(int i = 0; i < maxNumBlobs; i++)
     {
       //cache the last blobStartPos before clearing it
       lastState_blobPos[i] = blobStartPos[i];
       blobStartPos[i] = 0;
+      blobSize[i] = 0;
+      blobCenter[i] = 0;
     }
 
     for(int stripe = 0; stripe < size;)
