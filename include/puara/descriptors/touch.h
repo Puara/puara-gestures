@@ -25,7 +25,7 @@ public:
   // touch array
   int touchSizeEdge = 4; // amount of touch stripes for top and bottom portions (arbitrary)
 
-  BlobDetector blob;
+  BlobDetector blobDetector;
   int brushCounter[maxNumBlobs]{};
 
   // Arrays of LeakyIntegrator instances
@@ -65,7 +65,7 @@ public:
     touchBottom = touchAverage(discrete_touch, (touchSize - touchSizeEdge), touchSize);
 
      // 1D blob detection: used for brush
-    const auto movement = blob.detect1D(discrete_touch, touchSize);
+    const auto movement = blobDetector.detect1D(discrete_touch, touchSize);
 
     // brush: direction and intensity of capsense brush motion
     // rub: intensity of rub motion
