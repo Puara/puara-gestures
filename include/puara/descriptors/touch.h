@@ -1,9 +1,11 @@
 #pragma once
 
 #include <puara/utils.h>
+#include <puara/utils/blobDetector.h>
 #include <puara/utils/leakyintegrator.h>
 
 #include <cmath>
+#include<iostream>
 
 namespace puara_gestures
 {
@@ -11,33 +13,29 @@ namespace puara_gestures
 class Touch
 {
 public:
+  static constexpr int maxNumBlobs = BlobDetector::maxNumBlobs;
   float touchAll = 0.0f;    // f, 0--1
   float touchTop = 0.0f;    // f, 0--1
   float touchMiddle = 0.0f; // f, 0--1
   float touchBottom = 0.0f; // f, 0--1
   float brush = 0.0f;       // f, 0--? (~cm/s)
-  double multiBrush[4]{};   // ffff, 0--? (~cm/s)
+  double multiBrush[maxNumBlobs]{}; // ffff, 0--? (~cm/s)
   float rub{};              // f, 0--? (~cm/s)
-  double multiRub[4]{};     // ffff, 0--? (~cm/s)
+  double multiRub[maxNumBlobs]{}; // ffff, 0--? (~cm/s)
 
   // touch array
-  int touchSizeEdge
-      = 4; // amount of touch stripes for top and bottom portions (arbitrary)
-  int lastState_blobPos[4]{};
-  int maxBlobs = 4;    // max amount of blobs to be detected
-  int blobAmount{};    // amount of detected blobs
-  int blobCenter[4]{}; // shows the "center" (index) of each blob (former blobArray)
-  int blobPos[4]{};    // starting position (index) of each blob
-  float blobSize[4]{}; // "size" (amount of stripes) of each blob
-  int brushCounter[4]{};
+  int touchSizeEdge = 4; // amount of touch stripes for top and bottom portions (arbitrary)
+
+  BlobDetector blobDetector;
+  int brushCounter[maxNumBlobs]{};
 
   // Arrays of LeakyIntegrator instances
-  utils::LeakyIntegrator multiBrushIntegrator[4];
-  utils::LeakyIntegrator multiRubIntegrator[4];
+  utils::LeakyIntegrator multiBrushIntegrator[maxNumBlobs];
+  utils::LeakyIntegrator multiRubIntegrator[maxNumBlobs];
 
   Touch()
   {
-    for(int i = 0; i < 4; ++i)
+    for(int i = 0; i < maxNumBlobs; ++i)
     {
       multiBrushIntegrator[i] = utils::LeakyIntegrator(0.0f, 0.0f, 0.7f, 100, 0);
       multiRubIntegrator[i] = utils::LeakyIntegrator(0.0f, 0.0f, 0.7f, 100, 0);
@@ -67,28 +65,15 @@ public:
     // normalized between 0 and 1
     touchBottom = touchAverage(discrete_touch, (touchSize - touchSizeEdge), touchSize);
 
-    // Save last blob detection state before reading new data
-    for(int i = 0; i < (sizeof(blobPos) / sizeof(blobPos[0])); ++i)
-    {
-      lastState_blobPos[i] = blobPos[i];
-    }
-
-    // 1D blob detection: used for brush
-    blobDetection1D(discrete_touch, touchSize);
+     // 1D blob detection: used for brush
+    const auto movement = blobDetector.detect1D(discrete_touch, touchSize);
 
     // brush: direction and intensity of capsense brush motion
     // rub: intensity of rub motion
     // in ~cm/s (distance between stripes = ~1.5cm)
-    for(int i = 0; i < (sizeof(blobPos) / sizeof(blobPos[0])); ++i)
+    for(int i = 0; i < movement.size(); ++i)
     {
-      float movement = blobPos[i] - lastState_blobPos[i];
-      if(blobPos[i] == -1)
-      {
-        multiBrush[i] = 0;
-        multiRub[i] = 0;
-        brushCounter[i] = 0;
-      }
-      else if(movement == 0)
+      if(movement[i] == 0)
       {
         if(brushCounter[i] < 10)
         {
@@ -109,11 +94,11 @@ public:
           //       (std::abs(movement * 0.15)), multiRub[i], 0.7, leakyRubFreq,
           //       leakyRubTimer);
           //
-          multiBrush[i] = multiBrushIntegrator[i].integrate(movement * 0.15);
-          multiRub[i] = multiRubIntegrator[i].integrate(std::abs(movement * 0.15));
+          multiBrush[i] = multiBrushIntegrator[i].integrate(movement[i] * 0.15);
+          multiRub[i] = multiRubIntegrator[i].integrate(std::abs(movement[i] * 0.15));
         }
       }
-      else if(std::abs(movement) > 1)
+      else if(std::abs(movement[i]) > 1)
       {
         // multiBrush[i] = multiBrushIntegrator[i].integrate(
         //     0, multiBrush[i], 0.6, leakyBrushFreq, leakyBrushTimer);
@@ -128,14 +113,14 @@ public:
         //     (std::abs(movement * 0.15)) * 0.15, multiRub[i], 0.99, leakyRubFreq,
         //     leakyRubTimer);
 
-        multiBrush[i] = multiBrushIntegrator[i].integrate(movement * 0.15);
-        multiRub[i] = multiRubIntegrator[i].integrate((std::abs(movement * 0.15)));
+        multiBrush[i] = multiBrushIntegrator[i].integrate(movement[i] * 0.15);
+        multiRub[i] = multiRubIntegrator[i].integrate((std::abs(movement[i] * 0.15)));
 
         brushCounter[i] = 0;
       }
     }
-    brush = utils::arrayAverageZero(multiBrush, 4);
-    rub = utils::arrayAverageZero(multiRub, 4);
+    brush = utils::arrayAverageZero(multiBrush, maxNumBlobs);
+    rub = utils::arrayAverageZero(multiRub, maxNumBlobs);
   }
 
   float touchAverage(float* touchArrayStrips, int firstStrip, int lastStrip)
@@ -154,40 +139,6 @@ public:
       sum += (float)touchArrayStrips[i];
 
     return ((float)sum) / (lastStrip - firstStrip);
-  }
-
-  //TODO: move to utils
-  void blobDetection1D(int* discrete_touch, int touchSize)
-  {
-    blobAmount = 0;
-    int sizeCounter = 0;
-    int stripe = 0;
-    for(int i = 0; i < 4; i++)
-    {
-      blobCenter[i] = 0;
-      blobPos[i] = 0;
-      blobSize[i] = 0;
-    }
-
-    for(; stripe < touchSize; stripe++)
-    {
-      if(blobAmount < maxBlobs)
-      {
-        if(discrete_touch[stripe] == 1)
-        { // check for beggining of blob...
-          sizeCounter = 1;
-          blobPos[blobAmount] = stripe;
-          while(discrete_touch[stripe + sizeCounter] == 1)
-          { // then keep checking for end
-            sizeCounter++;
-          }
-          blobSize[blobAmount] = sizeCounter;
-          blobCenter[blobAmount] = stripe + (sizeCounter / 2);
-          stripe += sizeCounter + 1; // skip stripes already read
-          blobAmount++;
-        }
-      }
-    }
   }
 };
 }
