@@ -90,8 +90,6 @@ public:
 class Wrap
 {
 public:
-  Wrap(double pMin, double pMax) : min {pMin}, max {pMax}{}
-
   double min{};
   double max{};
 
