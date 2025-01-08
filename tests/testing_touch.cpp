@@ -5,7 +5,7 @@ using namespace puara_gestures;
 
 int main()
 {
-  Touch touch;
+  Touch2D touch;
 
   constexpr int touchSize = 16;
   int discrete_touch[touchSize] = {0};

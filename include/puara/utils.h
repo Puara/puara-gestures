@@ -84,35 +84,6 @@ inline double arrayAverageZero(double* Array, int ArraySize)
 }
 
 /**
- * @brief Function used to reduce feature arrays into single values.
- * E.g., brush uses it to reduce multiBrush instances. Any value in
- * the passed Array that is == 0 is ignored in the average calculation.
- */
-template <typename T>
-inline double arrayAverageZero(T* Array, int ArraySize)
-{
-  static_assert(std::is_same<decltype(T::value), float>::value, "T must have a public float value member");
-
-  double sum = 0.0;
-  int count = 0;
-  double output = 0.0;
-
-  for(int i = 0; i < ArraySize; ++i)
-  {
-    if(Array[i].value != 0.0f)
-    {
-      sum += Array[i].value;
-      count++;
-    }
-  }
-
-  if(count > 0)
-    output = sum / count;
-
-  return output;
-}
-
-/**
  * @brief Legacy function used to calculate 1D blob detection in older
  * digital musical instruments
  */

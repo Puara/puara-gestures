@@ -6,7 +6,22 @@
 
 namespace puara_gestures
 {
-class Touch
+class Touch1D
+{
+public:
+  Brush brush;
+  Rub rub;
+
+  void update(int movement)
+  {
+    brush.update(movement);
+    rub.update(movement);
+  }
+};
+
+//======================================================================
+
+class Touch2D
 {
 public:
   static constexpr int maxNumBlobs = BlobDetector::maxNumBlobs;
@@ -19,13 +34,9 @@ public:
 
   /** brush: direction and intensity of capsense brush motion in ~cm/s (distance between stripes = ~1.5cm) */
   float brush{};
-  Brush brushes[maxNumBlobs];
 
   /** rub: intensity of rub motion in ~cm/s (distance between stripes = ~1.5cm) */
   float rub{};
-  Rub rubs[maxNumBlobs];
-
-  BlobDetector blobDetector;
 
   /* Expects an array of discrete touch values (int, 0 or 1) and
    * the size of the array
@@ -41,12 +52,26 @@ public:
 
     const auto blobMovements{blobDetector.detect1D(discrete_touch, touchSize)};
     for(int i = 0; i < maxNumBlobs; ++i)
+      touches[i].update(blobMovements[i]);
+
+    updateBrushAndRub();
+  }
+
+private:
+  BlobDetector blobDetector;
+  Touch1D touches[maxNumBlobs];
+
+  void updateBrushAndRub()
+  {
+    // Calculate total brush and rub values
+    double brushes[maxNumBlobs];
+    double rubs[maxNumBlobs];
+    for(int i = 0; i < maxNumBlobs; ++i)
     {
-      brushes[i].update(blobMovements[i]);
-      rubs[i].update(blobMovements[i]);
+      brushes[i] = touches[i].brush.value;
+      rubs[i] = touches[i].rub.value;
     }
 
-    // Calculate total brush and rub values
     brush = utils::arrayAverageZero(brushes, maxNumBlobs);
     rub = utils::arrayAverageZero(rubs, maxNumBlobs);
   }

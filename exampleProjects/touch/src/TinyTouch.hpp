@@ -154,7 +154,7 @@ private:
   //======================== setup puara =======================
   static constexpr int RECT_COUNT{16};
   int touchedRectangles[RECT_COUNT] = {0};
-  puara_gestures::Touch touch;
+  puara_gestures::Touch2D touch;
 
   // Keep track of previous values
   int previouslyTouchedRectangles[RECT_COUNT] = {0};

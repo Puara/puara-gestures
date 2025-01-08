@@ -42,7 +42,7 @@ public:
    * @brief Updates the feature based on the movement from the last update.
    * @param movement The measured movement value to process.
    */
-  void update(float movement)
+  void update(int movement)
   {
     // No movement since the last update -> potentially reset the value
     if(movement == 0)
