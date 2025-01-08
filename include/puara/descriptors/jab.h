@@ -18,6 +18,17 @@ namespace puara_gestures
  * 
  * It expects 1 axis of a accelerometer in m/s^2, but can be used
  * with any double or float.
+ *
+ * Jab can use `tied_data`, which is an external variable that users update on their own.
+ * Users can then call update() without any argumments to extract the features from the `tied_data`.
+* The usage should be:
+* setup:
+*   - user creates variable, e.g. sensor_data
+* user instantiates the class, e.g. puara::jab my_jab(sensor_data)
+* loop/task:
+*   - user saves sensor value into sensor_data
+*   - user/task calls my_jab.update()
+*   - user accesses jab value with my_jab.current_value()
  */
 class Jab
 {
@@ -26,8 +37,7 @@ public:
 
   Jab() noexcept
       : threshold(5)
-      , tied_value(nullptr)
-      , minmax(10)
+      , tied_data(nullptr)
   {
   }
 
@@ -38,21 +48,19 @@ public:
 
   explicit Jab(double* tied)
       : threshold(5)
-      , tied_value(tied)
-      , minmax(10)
+      , tied_data(tied)
   {
   }
 
   explicit Jab(Coord1D* tied)
       : threshold(5)
-      , tied_value(&(tied->x))
-      , minmax(10)
+      , tied_data(&(tied->x))
   {
   }
 
-  double update(double reading)
+  double update(double data)
   {
-    minmax.update(reading);
+    minmax.update(data);
     double min = minmax.current_value.min;
     double max = minmax.current_value.max;
 
@@ -82,13 +90,14 @@ public:
 
   int update()
   {
-    if(tied_value != nullptr)
+    if(tied_data != nullptr)
     {
-      Jab::update(*tied_value);
+      Jab::update(*tied_data);
       return 1;
     }
     else
     {
+      // should we assert here, it seems like an error to call update() without a tied_value?
       return 0;
     }
   }
@@ -97,14 +106,16 @@ public:
 
   int tie(Coord1D* new_tie)
   {
-    tied_value = &(new_tie->x);
+    tied_data = &(new_tie->x);
     return 1;
   }
 
 private:
-  double* tied_value{};
+  const double* tied_data{};
   double value = 0;
-  puara_gestures::utils::RollingMinMax<double> minmax;
+
+  /** Keep track of the min and max values over the last 10 times Jab::update() was called. */
+  puara_gestures::utils::RollingMinMax<double> minmax{};
 };
 
 /**

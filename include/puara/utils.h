@@ -36,8 +36,32 @@ inline unsigned long long getCurrentTimeMicroseconds()
 }
 
 /**
+ * @brief Computes the average of elements in an array over a specified range.
+ *
+ * @tparam T The type of the elements in the array. Must be an arithmetic type (e.g., int, float, double).
+ * @param array Pointer to the array of elements.
+ * @param start The starting index of the range (inclusive). Must be >= 0.
+ * @param end The ending index of the range (exclusive). Must be >= start.
+ * @return The average of the elements in the specified range as a float. Returns 0.0 if the range is invalid or empty.
+ */
+template <typename T>
+float arrayAverage(const T* array, int start, int end)
+{
+  static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type!");
+  assert(start >= 0 && end >= start);
+
+  float sum{};
+  for(int i = start; i < end; ++i)
+    sum += static_cast<float>(array[i]);
+
+  const auto count = end - start;
+  return (count > 0) ? (sum / count) : 0.0;
+}
+
+/**
  * @brief Function used to reduce feature arrays into single values.
- * E.g., brush uses it to reduce multiBrush instances
+ * E.g., brush uses it to reduce multiBrush instances. Any value in
+ * the passed Array that is == 0 is ignored in the average calculation.
  */
 inline double arrayAverageZero(double* Array, int ArraySize)
 {
@@ -56,6 +80,35 @@ inline double arrayAverageZero(double* Array, int ArraySize)
   {
     output = sum / count;
   }
+  return output;
+}
+
+/**
+ * @brief Function used to reduce feature arrays into single values.
+ * E.g., brush uses it to reduce multiBrush instances. Any value in
+ * the passed Array that is == 0 is ignored in the average calculation.
+ */
+template <typename T>
+inline double arrayAverageZero(T* Array, int ArraySize)
+{
+  static_assert(std::is_same<decltype(T::value), float>::value, "T must have a public float value member");
+
+  double sum = 0.0;
+  int count = 0;
+  double output = 0.0;
+
+  for(int i = 0; i < ArraySize; ++i)
+  {
+    if(Array[i].value != 0.0f)
+    {
+      sum += Array[i].value;
+      count++;
+    }
+  }
+
+  if(count > 0)
+    output = sum / count;
+
   return output;
 }
 

@@ -1,4 +1,5 @@
 #include <puara/gestures.h>
+#include <iostream>
 
 using namespace puara_gestures;
 
