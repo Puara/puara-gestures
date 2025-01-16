@@ -26,6 +26,6 @@ void setup(void)
 
 void loop()
 {
-  tinyTouch.updateRectangles();
+  tinyTouch.update();
   tinyTouch.printUpdate();
 }
