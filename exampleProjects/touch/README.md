@@ -2,6 +2,13 @@
 
 This project is part of the Puara Framework and showcases the integration of `puara-gestures` with a touchscreen in a [Wokwi](https://wokwi.com/) simulation to detect and display touch interactions.
 
+## Project Overview
+
+This example project has 3 main components:
+- A Wokwi `diagram.json` containing a simple circuit simulation consisting of a ILI9341 touch screen and a TinyPico ESP32 development board.
+- A simple `main.cpp` which mainly initiates and update a `TinyTouch` object.
+- A `TinyTouch` class, which is closely tied to the Wokwi `diagram.json`, and displays rectangles on a screen to simulate a touch array. As the screen is touched, `TinyTouch` updates its `TouchArrayGestureDetector` class member (which is part of the `puara-gesture` namespace), which calculates brush and rub gestures. The resulting total `brush` and `rub` values are printed to the terminal.
+
 ## Running the Project Using Wokwi in Visual Studio Code
 
 1. Install [Visual Studio Code](https://code.visualstudio.com/), as well as the [PlatformIO](https://platformio.org/install/ide?install=vscode) and [Wokwi](https://docs.wokwi.com/vscode/getting-started) VS Code extensions. As part of the process you'll need to create a free [Wokwi](https://wokwi.com/) online account.

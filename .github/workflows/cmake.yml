@@ -19,8 +19,8 @@ jobs:
             }
           - {
               os: windows-latest,
-              cmake_options: "BOOST_ROOT=c:/local/boost_1_86_0",
-              dependencies: "choco install eigen -y --no-progress && choco install boost-msvc-14.3 -y --no-progress"
+              cmake_options: "Boost_INCLUDE_DIR=D:/a/puara-gestures/puara-gestures/3rdparty",
+              dependencies: "choco install eigen -y --no-progress"
             }
 
     runs-on: ${{ matrix.config.os }}
@@ -31,7 +31,7 @@ jobs:
           submodules: recursive
 
       - name: Dependencies
-        run:  ${{ matrix.config.dependencies }}
+        run: ${{ matrix.config.dependencies }}
 
       - name: Build Project
         uses: threeal/cmake-action@v2.0.0
@@ -39,4 +39,3 @@ jobs:
           options: |
             PUARA_GESTURES_ENABLE_STANDALONE=0
             ${{ matrix.config.cmake_options }}
-

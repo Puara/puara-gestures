@@ -4,3 +4,4 @@ build/
 *.user
 *code-workspace
 .pio
+exampleProjects/touch/.gitignore

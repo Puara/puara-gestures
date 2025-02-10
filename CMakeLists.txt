@@ -29,7 +29,7 @@ add_library(puara_gestures
   include/puara/descriptors/roll.h
   include/puara/descriptors/shake.h
   include/puara/descriptors/tilt.h
-  include/puara/descriptors/touch.h
+  include/puara/descriptors/touchArrayGestureDetector.h
 
   include/puara/utils/blobDetector.h
   include/puara/utils/calibration.h
