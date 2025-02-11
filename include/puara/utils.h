@@ -18,7 +18,6 @@
 #include <puara/utils/wrap.h>
 
 #include <cmath>
-
 #include <chrono>
 
 namespace puara_gestures::utils
@@ -50,10 +49,7 @@ float arrayAverage(const T* array, int start, int end)
   static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type!");
   assert(start >= 0 && end >= start);
 
-  float sum{};
-  for(int i = start; i < end; ++i)
-    sum += static_cast<float>(array[i]);
-
+  const float sum = std::accumulate(array + start, array + end, 0.0f);
   const auto count = end - start;
   return (count > 0) ? (sum / count) : 0.0;
 }
