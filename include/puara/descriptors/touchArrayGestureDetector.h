@@ -6,10 +6,6 @@
 
 namespace puara_gestures
 {
-
-// touchSizeEdge: number of stripes for top and bottom portions (arbitrary)
-//maxNumBlobs: maximum number of "blobs" that the blob detector can detect at once on the touch array
-
 /**
  * @class TouchArrayGestureDetector
  * @brief A class to detect gestures on a touch-array device.

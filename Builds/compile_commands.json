@@ -1,0 +1,32 @@
+[
+{
+  "directory": "C:/Users/barth/Documents/git/sat/puara/puara-gestures/Builds",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -D_USE_MATH_DEFINES -IC:/Users/barth/Documents/git/sat/puara/puara-gestures/include -isystem C:/Users/barth/Documents/git/sat/puara/puara-gestures/3rdparty -O0 -std=gnu++20 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview @CMakeFiles\\puara_gestures.dir\\3rdparty\\IMU_Sensor_Fusion\\imu_orientation.cpp.obj.modmap -o CMakeFiles\\puara_gestures.dir\\3rdparty\\IMU_Sensor_Fusion\\imu_orientation.cpp.obj -c C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\3rdparty\\IMU_Sensor_Fusion\\imu_orientation.cpp",
+  "file": "C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\3rdparty\\IMU_Sensor_Fusion\\imu_orientation.cpp",
+  "output": "CMakeFiles\\puara_gestures.dir\\3rdparty\\IMU_Sensor_Fusion\\imu_orientation.cpp.obj"
+},
+{
+  "directory": "C:/Users/barth/Documents/git/sat/puara/puara-gestures/Builds",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -D_USE_MATH_DEFINES -IC:/Users/barth/Documents/git/sat/puara/puara-gestures/include -isystem C:/Users/barth/Documents/git/sat/puara/puara-gestures/3rdparty -O0 -std=gnu++20 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview @CMakeFiles\\puara_gestures.dir\\src\\puara_gestures.cpp.obj.modmap -o CMakeFiles\\puara_gestures.dir\\src\\puara_gestures.cpp.obj -c C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\src\\puara_gestures.cpp",
+  "file": "C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\src\\puara_gestures.cpp",
+  "output": "CMakeFiles\\puara_gestures.dir\\src\\puara_gestures.cpp.obj"
+},
+{
+  "directory": "C:/Users/barth/Documents/git/sat/puara/puara-gestures/Builds",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DPUARA_TESTS_DIR=\"\\\"C:/Users/barth/Documents/git/sat/puara/puara-gestures/testing files\\\"\" -D_USE_MATH_DEFINES -IC:/Users/barth/Documents/git/sat/puara/puara-gestures/include -isystem C:/Users/barth/Documents/git/sat/puara/puara-gestures/3rdparty -O0 -std=gnu++20 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview @CMakeFiles\\testing_roll.dir\\tests\\testing_roll.cpp.obj.modmap -o CMakeFiles\\testing_roll.dir\\tests\\testing_roll.cpp.obj -c C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\tests\\testing_roll.cpp",
+  "file": "C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\tests\\testing_roll.cpp",
+  "output": "CMakeFiles\\testing_roll.dir\\tests\\testing_roll.cpp.obj"
+},
+{
+  "directory": "C:/Users/barth/Documents/git/sat/puara/puara-gestures/Builds",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DPUARA_TESTS_DIR=\"\\\"C:/Users/barth/Documents/git/sat/puara/puara-gestures/testing files\\\"\" -D_USE_MATH_DEFINES -IC:/Users/barth/Documents/git/sat/puara/puara-gestures/include -isystem C:/Users/barth/Documents/git/sat/puara/puara-gestures/3rdparty -O0 -std=gnu++20 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview @CMakeFiles\\testing_tilt.dir\\tests\\testing_tilt.cpp.obj.modmap -o CMakeFiles\\testing_tilt.dir\\tests\\testing_tilt.cpp.obj -c C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\tests\\testing_tilt.cpp",
+  "file": "C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\tests\\testing_tilt.cpp",
+  "output": "CMakeFiles\\testing_tilt.dir\\tests\\testing_tilt.cpp.obj"
+},
+{
+  "directory": "C:/Users/barth/Documents/git/sat/puara/puara-gestures/Builds",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DPUARA_TESTS_DIR=\"\\\"C:/Users/barth/Documents/git/sat/puara/puara-gestures/testing files\\\"\" -D_USE_MATH_DEFINES -IC:/Users/barth/Documents/git/sat/puara/puara-gestures/include -isystem C:/Users/barth/Documents/git/sat/puara/puara-gestures/3rdparty -O0 -std=gnu++20 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview @CMakeFiles\\testing_touch.dir\\tests\\testing_touch.cpp.obj.modmap -o CMakeFiles\\testing_touch.dir\\tests\\testing_touch.cpp.obj -c C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\tests\\testing_touch.cpp",
+  "file": "C:\\Users\\barth\\Documents\\git\\sat\\puara\\puara-gestures\\tests\\testing_touch.cpp",
+  "output": "CMakeFiles\\testing_touch.dir\\tests\\testing_touch.cpp.obj"
+}
+]
