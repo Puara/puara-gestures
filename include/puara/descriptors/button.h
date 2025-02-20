@@ -27,7 +27,7 @@ class Button
 private:
   long long getCurrentTimeMicroseconds();
   long timer = 0;
-  int tied_data = 0;
+  const int* tied_data = 0;
 
 public:
   Button() noexcept
