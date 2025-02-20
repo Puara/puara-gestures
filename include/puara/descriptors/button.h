@@ -60,7 +60,6 @@ public:
   void update(int value)
   {
     long currentTime = getCurrentTimeMicroseconds() / 999LL;
-    tied_data = value;
     if(value < threshold)
     {
       if(!press)
