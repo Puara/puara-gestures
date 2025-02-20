@@ -129,7 +129,7 @@ class Jab2D
 public:
   Jab x{}, y{};
 
-  Jab2D() noexcept = default;
+  Jab2D() = default;
   Jab2D(const Jab2D&) noexcept = default;
   Jab2D(Jab2D&&) noexcept = default;
   Jab2D& operator=(const Jab2D&) noexcept = default;

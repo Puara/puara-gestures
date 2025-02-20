@@ -119,7 +119,7 @@ private:
 class Shake2D
 {
 public:
-  Shake2D() noexcept = default;
+  Shake2D() = default;
   Shake2D(const Shake2D&) noexcept = default;
   Shake2D(Shake2D&&) noexcept = default;
   Shake2D& operator=(const Shake2D&) noexcept = default;
@@ -185,7 +185,7 @@ class Shake3D
 public:
   Shake x, y, z;
 
-  Shake3D() noexcept = default;
+  Shake3D() = default;
   Shake3D(const Shake3D&) noexcept = default;
   Shake3D(Shake3D&&) noexcept = default;
   Shake3D& operator=(const Shake3D&) noexcept = default;
