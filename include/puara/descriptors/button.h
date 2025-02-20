@@ -52,7 +52,7 @@ public:
   unsigned int doubleTap = 0;
   unsigned int tripleTap = 0;
   bool hold = false;
-  unsigned long pressTime = 0;
+  unsigned int pressTime = 0;
   unsigned int threshold = 1;
   unsigned int countInterval = 200;
   unsigned int holdInterval = 5000;
