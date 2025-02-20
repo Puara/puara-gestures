@@ -25,7 +25,7 @@ namespace puara_gestures
 class Button
 {
 private:
-  long long puara_gestures::utils::getCurrentTimeMicroseconds();
+  // long long getCurrentTimeMicroseconds();
   long timer = 0;
   const int* tied_data = 0;
 
@@ -59,7 +59,7 @@ public:
 
   void update(int value)
   {
-    long currentTime = getCurrentTimeMicroseconds() / 999LL;
+    long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 999LL;
     if(value < threshold)
     {
       if(!press)
@@ -133,7 +133,7 @@ public:
 
   void updateTrigButton(int value)
   {
-    long currentTime = getCurrentTimeMicroseconds() / 999LL;
+    long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 999LL;
     value = value;
     if(value >= threshold)
     {
