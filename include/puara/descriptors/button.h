@@ -25,7 +25,7 @@ namespace puara_gestures
 class Button
 {
 private:
-  long long getCurrentTimeMicroseconds();
+  long long puara_gestures::utils::getCurrentTimeMicroseconds();
   long timer = 0;
   const int* tied_data = 0;
 
