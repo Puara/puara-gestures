@@ -41,8 +41,7 @@ public:
   Button& operator=(Button&&) noexcept = default;
 
   explicit Button(int* tied)
-  : threshold(5)
-  , tied_data(tied)
+  : tied_data(tied)
   {
   }
 
