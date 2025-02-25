@@ -59,80 +59,6 @@ public:
   void update(int value)
   {
     long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 999LL;
-    if(value < threshold)
-    {
-      if(!press)
-      {
-        press = true;
-        timer = currentTime;
-      }
-      if(currentTime - timer > holdInterval)
-      {
-        hold = true;
-      }
-    }
-    else if(hold)
-    {
-      hold = false;
-      press = false;
-      count = 0;
-    }
-    else
-    {
-      if(press)
-      {
-        press = false;
-        pressTime = currentTime - timer;
-        timer = currentTime;
-        count++;
-      }
-    }
-    if(!press && (currentTime - timer > countInterval))
-    {
-      switch(count)
-      {
-        case 0:
-          tap = 0;
-          doubleTap = 0;
-          tripleTap = 0;
-          break;
-        case 1:
-          tap = 1;
-          doubleTap = 0;
-          tripleTap = 0;
-          break;
-        case 2:
-          tap = 0;
-          doubleTap = 1;
-          tripleTap = 0;
-          break;
-        case 3:
-          tap = 0;
-          doubleTap = 0;
-          tripleTap = 1;
-          break;
-      }
-      count = 0;
-    }
-  }
-
-  int update()
-  {
-    if(tied_data != nullptr)
-    {
-      Button::update(*tied_data);
-      return 1;
-    }
-    else
-    {
-      // should we assert here, it seems like an error to call update() without a tied_value?
-      return 0;
-    }
-  }
-
-  void updateTrigButton(int value)
-  {
-    long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 999LL;
     value = value;
     if(value >= threshold)
     {
@@ -191,7 +117,7 @@ public:
     }
   }
 
-  int updateTrigButton()
+  int update()
   {
     if(tied_data != nullptr)
     {
