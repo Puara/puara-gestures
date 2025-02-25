@@ -121,7 +121,7 @@ public:
   {
     if(tied_data != nullptr)
     {
-      Button::updateTrigButton(*tied_data);
+      Button::update(*tied_data);
       return 1;
     }
     else
