@@ -4,14 +4,14 @@ namespace puara_gestures::utils
 {
 
 template <typename T>
-class ValueMonitor {
+class Discretizer {
 private:
   T latestValue;
   bool firstValue; // Flag to track if it's the first value
 
 public:
   // Constructor
-  ValueMonitor() : firstValue(true) {
+  Discretizer() : firstValue(true) {
     // Initialize latestValue to a default value.  Important to avoid
     // undefined behavior on the first comparison.  Using the minimum
     // value for numeric types is usually a good choice.
@@ -19,7 +19,7 @@ public:
   }
 
   // Method to update the value and check for difference
-  bool updateAndCheck(const T& newValue) {
+  bool isNew(const T& newValue) {
     if (firstValue) {
       latestValue = newValue;
       firstValue = false;
