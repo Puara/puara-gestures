@@ -16,6 +16,7 @@
 #include <puara/utils/smooth.h>
 #include <puara/utils/threshold.h>
 #include <puara/utils/wrap.h>
+#include <puara/utils/discretizer.h>
 
 #include <cmath>
 #include <chrono>
