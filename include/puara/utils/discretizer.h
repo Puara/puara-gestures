@@ -1,5 +1,8 @@
 #pragma once
 
+namespace puara_gestures::utils
+{
+
 template <typename T>
 class ValueMonitor {
 private:
@@ -41,3 +44,5 @@ public:
     return latestValue;
   }
 };
+
+}
