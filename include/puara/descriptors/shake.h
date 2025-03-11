@@ -29,6 +29,7 @@ public:
   utils::LeakyIntegrator integrator{0, 0, 0.6, 10, 0};
   double fast_leak = 0.6;
   double slow_leak = 0.3;
+  double threshold = 0.01;
 
   Shake()
       : tied_value(nullptr)
@@ -59,7 +60,7 @@ public:
     else
     {
       integrator.integrate(0.0, slow_leak);
-      if(integrator.current_value < 0.01)
+      if(integrator.current_value < threshold)
       {
         integrator.current_value = 0;
       }
@@ -168,6 +169,13 @@ public:
     answer.y = y.current_value();
     return answer;
   }
+
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    return new_threshold;
+  }
 };
 
 /**
@@ -237,6 +245,13 @@ public:
     answer.y = y.current_value();
     answer.z = z.current_value();
     return answer;
+  }
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    z.threshold = new_threshold;
+    return new_threshold;
   }
 };
 
