@@ -29,7 +29,7 @@ public:
   utils::LeakyIntegrator integrator{0, 0, 0.6, 10, 0};
   double fast_leak = 0.6;
   double slow_leak = 0.3;
-  double threshold = 0.01;
+  double threshold = 0.1;
 
   Shake()
       : tied_value(nullptr)
@@ -53,14 +53,14 @@ public:
 
     double abs_reading = std::abs(reading);
 
-    if(abs_reading > 0.1)
+    if(abs_reading > threshold)
     {
       integrator.integrate(abs_reading / 10, fast_leak);
     }
     else
     {
       integrator.integrate(0.0, slow_leak);
-      if(integrator.current_value < threshold)
+      if( integrator.current_value < (threshold/10) )
       {
         integrator.current_value = 0;
       }
