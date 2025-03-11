@@ -170,6 +170,13 @@ public:
     answer.y = y.current_value();
     return answer;
   }
+
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    return new_threshold;
+  }
 };
 
 class Jab3D
@@ -223,5 +230,13 @@ public:
     answer.z = z.current_value();
     return answer;
   }
+
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    z.threshold = new_threshold;
+    return new_threshold;
+  };
 };
 }
