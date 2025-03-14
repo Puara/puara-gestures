@@ -29,6 +29,7 @@ public:
   utils::LeakyIntegrator integrator{0, 0, 0.6, 10, 0};
   double fast_leak = 0.6;
   double slow_leak = 0.3;
+  double threshold = 0.1;
 
   Shake()
       : tied_value(nullptr)
@@ -52,14 +53,14 @@ public:
 
     double abs_reading = std::abs(reading);
 
-    if(abs_reading > 0.1)
+    if(abs_reading > threshold)
     {
       integrator.integrate(abs_reading / 10, fast_leak);
     }
     else
     {
       integrator.integrate(0.0, slow_leak);
-      if(integrator.current_value < 0.01)
+      if( integrator.current_value < (threshold/10) )
       {
         integrator.current_value = 0;
       }
@@ -119,7 +120,7 @@ private:
 class Shake2D
 {
 public:
-  Shake2D() noexcept = default;
+  Shake2D() = default;
   Shake2D(const Shake2D&) noexcept = default;
   Shake2D(Shake2D&&) noexcept = default;
   Shake2D& operator=(const Shake2D&) noexcept = default;
@@ -168,6 +169,13 @@ public:
     answer.y = y.current_value();
     return answer;
   }
+
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    return new_threshold;
+  }
 };
 
 /**
@@ -185,7 +193,7 @@ class Shake3D
 public:
   Shake x, y, z;
 
-  Shake3D() noexcept = default;
+  Shake3D() = default;
   Shake3D(const Shake3D&) noexcept = default;
   Shake3D(Shake3D&&) noexcept = default;
   Shake3D& operator=(const Shake3D&) noexcept = default;
@@ -237,6 +245,13 @@ public:
     answer.y = y.current_value();
     answer.z = z.current_value();
     return answer;
+  }
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    z.threshold = new_threshold;
+    return new_threshold;
   }
 };
 

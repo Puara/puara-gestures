@@ -129,7 +129,7 @@ class Jab2D
 public:
   Jab x{}, y{};
 
-  Jab2D() noexcept = default;
+  Jab2D() = default;
   Jab2D(const Jab2D&) noexcept = default;
   Jab2D(Jab2D&&) noexcept = default;
   Jab2D& operator=(const Jab2D&) noexcept = default;
@@ -169,6 +169,13 @@ public:
     answer.x = x.current_value();
     answer.y = y.current_value();
     return answer;
+  }
+
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    return new_threshold;
   }
 };
 
@@ -223,5 +230,13 @@ public:
     answer.z = z.current_value();
     return answer;
   }
+
+  double threshold(double new_threshold)
+  {
+    x.threshold = new_threshold;
+    y.threshold = new_threshold;
+    z.threshold = new_threshold;
+    return new_threshold;
+  };
 };
 }

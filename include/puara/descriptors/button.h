@@ -6,144 +6,128 @@
 namespace puara_gestures
 {
 
-class button
+  /**
+ * @brief This class extract several features from a discrete value, e.g., a button.
+ * 
+ * It expects a discete value (an int with value 0 or 1).
+ *
+ * Button can use `tied_data`, which is an external variable that users update on their own.
+ * Users can then call update() without any argumments to extract the features from the `tied_data`.
+* The usage should be:
+* setup:
+*   - user creates variable, e.g. button_data
+* user instantiates the class, e.g. puara::Button my_button(button_data)
+* loop/task:
+*   - user saves sensor value into button_data
+*   - user/task calls my_button.update()
+*   - user accesses button descriptors with my_button functions
+ */
+class Button
 {
 private:
-  unsigned int buttonCount = 0;
-  unsigned int buttonCountInterval = 200;
-  int buttonValue = 0;
-  bool buttonPress = false;
-  unsigned int buttonTap = 0;
-  unsigned int buttonDtap = 0;
-  unsigned int buttonTtap = 0;
-  bool buttonHold = false;
-  unsigned int buttonHoldInterval = 5000;
-  unsigned int buttonFilterPeriod = 10;
-  long buttonTimer = 0;
-  unsigned long buttonPressTime = 0;
-  unsigned int buttonThreshold = 1;
-  long long getCurrentTimeMicroseconds();
+  // long long getCurrentTimeMicroseconds();
+  long timer = 0;
+  const int* tied_data = 0;
 
 public:
-  void updateButton(int buttonValue)
+  Button() noexcept
+  : tied_data(nullptr)
   {
-    long currentTime = getCurrentTimeMicroseconds() / 999LL;
-    buttonValue = buttonValue;
-    if(buttonValue < buttonThreshold)
+  }
+
+  Button(const Button&) noexcept = default;
+  Button(Button&&) noexcept = default;
+  Button& operator=(const Button&) noexcept = default;
+  Button& operator=(Button&&) noexcept = default;
+
+  explicit Button(int* tied)
+  : tied_data(tied)
+  {
+  }
+
+  unsigned int count = 0;
+  bool press = false;
+  unsigned int tap = 0;
+  unsigned int doubleTap = 0;
+  unsigned int tripleTap = 0;
+  bool hold = false;
+  unsigned int pressTime = 0;
+  unsigned int threshold = 1;
+  unsigned int countInterval = 200;
+  unsigned int holdInterval = 5000;
+
+  void update(int value)
+  {
+    long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 999LL;
+    value = value;
+    if(value >= threshold)
     {
-      if(!buttonPress)
+      if(!press)
       {
-        buttonPress = true;
-        buttonTimer = currentTime;
+        press = true;
+        timer = currentTime;
       }
-      if(currentTime - buttonTimer > buttonHoldInterval)
+      if(currentTime - timer > holdInterval)
       {
-        buttonHold = true;
+        hold = true;
       }
     }
-    else if(buttonHold)
+    else if(hold)
     {
-      buttonHold = false;
-      buttonPress = false;
-      buttonCount = 0;
+      hold = false;
+      press = false;
+      count = -1;
     }
     else
     {
-      if(buttonPress)
+      if(press)
       {
-        buttonPress = false;
-        buttonPressTime = currentTime - buttonTimer;
-        buttonTimer = currentTime;
-        buttonCount++;
+        press = false;
+        pressTime = currentTime - timer;
+        timer = currentTime;
+        count++;
       }
     }
-    if(!buttonPress && (currentTime - buttonTimer > buttonCountInterval))
+    if(!press && (currentTime - timer > countInterval))
     {
-      switch(buttonCount)
+      switch(count)
       {
         case 0:
-          buttonTap = 0;
-          buttonDtap = 0;
-          buttonTtap = 0;
+          tap = 0;
+          doubleTap = 0;
+          tripleTap = 0;
           break;
         case 1:
-          buttonTap = 1;
-          buttonDtap = 0;
-          buttonTtap = 0;
+          tap = 1;
+          doubleTap = 0;
+          tripleTap = 0;
           break;
         case 2:
-          buttonTap = 0;
-          buttonDtap = 1;
-          buttonTtap = 0;
+          tap = 0;
+          doubleTap = 1;
+          tripleTap = 0;
           break;
         case 3:
-          buttonTap = 0;
-          buttonDtap = 0;
-          buttonTtap = 1;
+          tap = 0;
+          doubleTap = 0;
+          tripleTap = 1;
           break;
       }
-      buttonCount = 0;
+      count = 0;
     }
   }
 
-  void updateTrigButton(int buttonValue)
+  int update()
   {
-    long currentTime = getCurrentTimeMicroseconds() / 999LL;
-    buttonValue = buttonValue;
-    if(buttonValue >= buttonThreshold)
+    if(tied_data != nullptr)
     {
-      if(!buttonPress)
-      {
-        buttonPress = true;
-        buttonTimer = currentTime;
-      }
-      if(currentTime - buttonTimer > buttonHoldInterval)
-      {
-        buttonHold = true;
-      }
-    }
-    else if(buttonHold)
-    {
-      buttonHold = false;
-      buttonPress = false;
-      buttonCount = -1;
+      Button::update(*tied_data);
+      return 1;
     }
     else
     {
-      if(buttonPress)
-      {
-        buttonPress = false;
-        buttonPressTime = currentTime - buttonTimer;
-        buttonTimer = currentTime;
-        buttonCount++;
-      }
-    }
-    if(!buttonPress && (currentTime - buttonTimer > buttonCountInterval))
-    {
-      switch(buttonCount)
-      {
-        case 0:
-          buttonTap = 0;
-          buttonDtap = 0;
-          buttonTtap = 0;
-          break;
-        case 1:
-          buttonTap = 1;
-          buttonDtap = 0;
-          buttonTtap = 0;
-          break;
-        case 2:
-          buttonTap = 0;
-          buttonDtap = 1;
-          buttonTtap = 0;
-          break;
-        case 3:
-          buttonTap = 0;
-          buttonDtap = 0;
-          buttonTtap = 1;
-          break;
-      }
-      buttonCount = 0;
+      // should we assert here, it seems like an error to call update() without a tied_value?
+      return 0;
     }
   }
 };

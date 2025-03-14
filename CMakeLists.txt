@@ -46,6 +46,7 @@ add_library(puara_gestures
   include/puara/utils.h
 
   src/puara_gestures.cpp
+
 )
 
 target_compile_definitions(puara_gestures PUBLIC $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>)
