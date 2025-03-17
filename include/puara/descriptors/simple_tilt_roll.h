@@ -33,8 +33,6 @@ namespace puara_gestures
 class Tilt_Roll
 {
 public:
-  int threshold{};
-
   Tilt_Roll() noexcept
       : tied_x(nullptr)
       , tied_y(nullptr)
@@ -89,6 +87,16 @@ public:
   Simple_Orientation current_value() const
   {
     return Simple_Orientation{roll, tilt, magnitude};
+  }
+
+  double current_roll_value() const
+  {
+    return roll;
+  }
+
+  double current_tilt_value() const
+  {
+    return tilt;
   }
 
   int tie(Coord3D* new_tie)
