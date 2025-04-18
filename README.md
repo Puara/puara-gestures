@@ -5,7 +5,7 @@ The `puara-gestures` library provides a set of tools for creating and managing h
 ## Gestures (descriptors) and Features
 
 - **Shake**: Detects "shake" movements. It is often used on accelerometer data, but it can be applied to any 1 to 3DoF data flow.
-- - **Jab**: Detects jab movements using accelerometer data.
+- **Jab**: Detects jab movements using accelerometer data.
 - **Roll**: Measures roll gestures using 9DoF (IMU data) info from an accelerometer, gyroscope, and magnetometer.
 - **Tilt**: Measures tilt gestures using 9DoF (IMU data) info from an accelerometer, gyroscope, and magnetometer.
 - **Touch (Brush/Rub)**: Extract features for 1 to 3DoF agnostic data. It is often used to interpret standard touch features (swipe/brush, rub, positional, area, etc.) based on movement input.
@@ -72,8 +72,8 @@ We only need to add a class (header) in the [descriptors folder](include/puara/d
 
 ## More Info on the research related to [Puara](https://github.com/Puara)
 
-- [SAT](http://www.sat.qc.ca)
-- [IDMIL](http://www.idmil.org)
+- [SAT](https://www.sat.qc.ca)
+- [IDMIL](https://www.idmil.org)
 
 ## Licensing
 
