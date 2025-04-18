@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "author": "Vincent Berthiaume",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-tinypico", "id": "esp", "top": -0.7, "left": 81.4, "attrs": {} },
+    {
+      "type": "board-ili9341-cap-touch",
+      "id": "lcd1",
+      "top": -143.24,
+      "left": -230.78,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "lcd1:GND", "esp:GND.1", "black", [ "v67.2", "h240", "v-105.4" ] ],
+    [ "esp:3V3", "lcd1:VCC", "red", [ "h-38.4", "v134.1", "h-240" ] ],
+    [ "lcd1:LED", "esp:3V3", "red", [ "v28.8", "h76.8", "v-86.4", "h134.4" ] ],
+    [ "lcd1:CS", "esp:14", "orange", [ "v57.6", "h211.2", "v-133.8" ] ],
+    [ "lcd1:RST", "esp:15", "gold", [ "v48", "h192", "v-124.8" ] ],
+    [ "lcd1:D/C", "esp:27", "green", [ "v19.2", "h172.8", "v-114.9" ] ],
+    [ "lcd1:MOSI", "esp:23", "green", [ "v38.4", "h288" ] ],
+    [ "lcd1:MISO", "esp:19", "green", [ "v105.6", "h278.4", "v-153.6" ] ],
+    [ "lcd1:SCK", "esp:18", "green", [ "v86.4", "h307.2", "v9.6" ] ],
+    [ "lcd1:SDA", "esp:25", "violet", [ "v9.6", "h96", "v-124.8" ] ],
+    [ "lcd1:SCL", "esp:26", "green", [ "v28.8", "h115.2", "v-134.4" ] ]
+  ],
+  "dependencies": {}
+}

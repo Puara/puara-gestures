@@ -1,0 +1,12 @@
+{
+  "name": "puara-gestures",
+  "version": "0.1.0",
+  "platforms": "*",
+  "frameworks": "*",
+  "build": {
+    "flags": [
+      "-Iinclude/",
+      "-I3rdparty/"
+    ]
+  }
+}

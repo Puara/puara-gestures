@@ -1,0 +1,7 @@
+.DS_Store
+build/
+.vscode/
+*.user
+*code-workspace
+.pio
+exampleProjects/touch/.gitignore
