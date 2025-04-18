@@ -1,4 +1,5 @@
 # Puara Gestures
+
 The `puara-gestures` library provides a set of tools for creating and managing high-level gestural descriptors using data from various sensors such as accelerometers, gyroscopes, and magnetometers. The library includes classes for handling different types of gestures, including shakes, rolls, tilts, jabs, and touches.
 
 ## Gestures (descriptors) and Features
