@@ -2,7 +2,7 @@
 // Puara Gestures - Projection (.h)                                               //
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Zach L'Heureux (2025)                                                          //
+// Zachary L'Heureux (2025)                                                          //
 //********************************************************************************//
 #pragma once
 
@@ -36,20 +36,22 @@ class Projection2D
 public:
   int threshold{};
 
-  Jab() noexcept
+  Projection2D() noexcept
       : tied_data(nullptr)
   {
   }
 
-  Jab(const Jab&) noexcept = default;
-  Jab(Jab&&) noexcept = default;
-  Jab& operator=(const Jab&) noexcept = default;
-  Jab& operator=(Jab&&) noexcept = default;
+  Projection2D(const Projection2D&) noexcept = default;
+  Projection2D(Projection2D&&) noexcept = default;
+  Projection2D& operator=(const Projection2D&) noexcept = default;
+  Projection2D& operator=(Projection2D&&) noexcept = default;
 
 
-  explicit Jab3D(Coord3D* tied)
+  explicit Projection2D(Coord3D* tied)
       : threshold(5)
-      , tied_data(&(tied->x))
+      , tied_x(&(tied->x))
+      , tied_y(&(tied->y))
+      , tied_z(&(tied->z))
   {
   }
 
@@ -75,7 +77,7 @@ public:
 
   int update(Coord3D reading)
   {
-    Jab::update(reading.x, reading.y, reading.z);
+    Projection2D::update(reading.x, reading.y, reading.z);
     return 1;
   }
 
@@ -83,7 +85,7 @@ public:
   {
     if(tied_data != nullptr)
     {
-      Jab::update(*tied_data);
+      Projection2D::update(*tied_data);
       return 1;
     }
     else
@@ -95,9 +97,11 @@ public:
 
   double current_value() const { return value; }
 
-  int tie(Coord1D* new_tie)
+  int tie(Coord3D* new_tie)
   {
-    tied_data = &(new_tie->x);
+    tied_x = &(new_tie->x);
+    tied_y = &(new_tie->y);
+    tied_z = &(new_tie->z);
     return 1;
   }
 
@@ -108,3 +112,4 @@ private:
   /** Keep track of the min and max values over the last 10 times Jab::update() was called. */
   puara_gestures::utils::RollingMinMax<double> minmax{};
 };
+}
