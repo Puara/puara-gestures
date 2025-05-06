@@ -6,35 +6,39 @@
 //********************************************************************************//
 #pragma once
 
+#define _USE_MATH_DEFINES
+
 #include <puara/structs.h>
 #include <puara/utils.h>
+#include <cmath>
 
 namespace puara_gestures
 {
 
 /**
- * @brief Zach add description here
+ * @brief This class calculates a 2D projection of a point based on rotation angles and radius from the origin.
  * 
- * This class creates jab gestures using 1DoF info.
+ * Calculation is based on this math: https://farside.ph.utexas.edu/teaching/celestial/Celestial/node122.html
  * 
- * It expects 1 axis of a accelerometer in m/s^2, but can be used
- * with any double or float.
+ * It expects a Coord3D struct containing euler angles in degrees, in order of yaw, pitch, roll (x,y,z).
  *
- * Jab can use `tied_data`, which is an external variable that users update on their own.
- * Users can then call update() without any argumments to extract the features from the `tied_data`.
+ * Projection can use `tied_data`, which is an external variable that users update on their own.
+ * Users can then call update() without any arguments to extract the features from the `tied_data`.
 * The usage should be:
 * setup:
 *   - user creates variable, e.g. sensor_data
-* user instantiates the class, e.g. puara::jab my_jab(sensor_data)
+* user instantiates the class, e.g. puara::Projection2D my_projection(sensor_data)
 * loop/task:
 *   - user saves sensor value into sensor_data
-*   - user/task calls my_jab.update()
-*   - user accesses jab value with my_jab.current_value()
+*   - user/task calls my_projection.update()
+*   - user accesses projection value with my_projection.current_value()
  */
 class Projection2D
 {
 public:
-  int threshold{};
+  int projectionRadius{};
+  double xPosition = 0;
+  double yPosition = 0;
 
   Projection2D() noexcept
       : tied_data(nullptr)
@@ -48,29 +52,24 @@ public:
 
 
   explicit Projection2D(Coord3D* tied)
-      : threshold(5)
+      : projectionRadius(5)
       , tied_x(&(tied->x))
       , tied_y(&(tied->y))
       , tied_z(&(tied->z))
   {
   }
 
-  int update(double data_x, double data_y, double data_z){ // Zach adjust the function
+  int update(double data_x, double data_y, double data_z){
+    double xAngle = data_x;
+    double yAngle = data_y;
+    double zAngle = data_z;
 
-    double xAngle = (offsetValue(data_x, xOffset, 0, 360));
-    double yAngle = (offsetValue(data_y, yOffset, -180, 180));
-    double zAngle = (offsetValue(data_z, zOffset, -90, 90));
-
-    // Convert angles to radians and find X and Y positions
-    float x = sin(yAngle*PI/180);
-    float y = sin(zAngle*PI/180);
-    xPosition = (x * (cos(xAngle*PI/180))) - (y * (sin(xAngle*PI/180)));
-    yPosition = (x * (sin(xAngle*PI/180))) + (y * (cos(xAngle*PI/180)));
-    
-    Serial.print("X Position: ");
-    Serial.println(xPosition);
-    Serial.print("Y Position: ");
-    Serial.println(yPosition);
+    // Convert angles to radians and find X and Y positions from pitch and roll
+    double xRadians = sin(yAngle*M_PI/180);
+    double yRadians = sin(zAngle*M_PI/180);
+    // Apply yaw rotation to offset the X and Y positions
+    xPosition = projectionRadius * (xRadians * (cos(xAngle*M_PI/180))) - (yRadians * (sin(xAngle*M_PI/180)));
+    yPosition = projectionRadius * (xRadians * (sin(xAngle*M_PI/180))) + (yRadians * (cos(xAngle*M_PI/180)));
 
     return 1;
   }
@@ -105,11 +104,5 @@ public:
     return 1;
   }
 
-private:
-  const double* tied_data{};
-  double value = 0;
-
-  /** Keep track of the min and max values over the last 10 times Jab::update() was called. */
-  puara_gestures::utils::RollingMinMax<double> minmax{};
 };
 }

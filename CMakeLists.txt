@@ -26,6 +26,7 @@ add_library(puara_gestures
 
   include/puara/descriptors/button.h
   include/puara/descriptors/jab.h
+  include/puara/descriptors/projection.h
   include/puara/descriptors/roll.h
   include/puara/descriptors/shake.h
   include/puara/descriptors/tilt.h
@@ -36,6 +37,7 @@ add_library(puara_gestures
   include/puara/utils/circularbuffer.h
   include/puara/utils/leakyintegrator.h
   include/puara/utils/maprange.h
+  include/puara/utils/offsetValue.h
   include/puara/utils/rollingminmax.h
   include/puara/utils/smooth.h
   include/puara/utils/threshold.h
@@ -63,7 +65,7 @@ target_sources(Continuous
   tests/testing_touch.cpp
 
 )
-add_executable(testing_roll tests/testing_roll.cpp)
+  add_executable(testing_roll tests/testing_roll.cpp)
   add_executable(testing_tilt tests/testing_tilt.cpp)
   add_executable(testing_touch tests/testing_touch.cpp)
   target_compile_definitions(testing_roll PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
