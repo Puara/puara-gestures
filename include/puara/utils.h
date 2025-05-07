@@ -17,6 +17,7 @@
 #include <puara/utils/threshold.h>
 #include <puara/utils/wrap.h>
 #include <puara/utils/discretizer.h>
+#include <puara/utils/offsetValue.h>
 
 #include <cmath>
 #include <chrono>

@@ -52,7 +52,6 @@ int main()
 
   // read in gyro data
   std::string gyro_path = common + "gyro_raw.csv";
-  ;
   std::ifstream gyro_file(gyro_path);
   std::string gyro_line;
 

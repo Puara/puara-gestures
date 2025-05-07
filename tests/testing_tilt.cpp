@@ -1,4 +1,4 @@
-// //********************************************************************************//
+//********************************************************************************//
 // Puara Gestures standalone - Receive OSC data to generate high-level            //
 //                             gestural descriptors                               //
 // https://github.com/Puara/puara-gestures                                        //

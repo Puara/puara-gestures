@@ -2,7 +2,7 @@
 // Puara Gestures - Projection (.h)                                               //
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Zachary L'Heureux (2025)                                                          //
+// Zachary L'Heureux (2025)                                                       //
 //********************************************************************************//
 #pragma once
 
@@ -36,12 +36,11 @@ namespace puara_gestures
 class Projection2D
 {
 public:
-  int projectionRadius{};
-  double xPosition = 0;
-  double yPosition = 0;
+  double projectionRadius{};
 
   Projection2D() noexcept
-      : tied_data(nullptr)
+      : projectionRadius(5)
+      , tied_data(nullptr)
   {
   }
 
@@ -65,11 +64,12 @@ public:
     double zAngle = data_z;
 
     // Convert angles to radians and find X and Y positions from pitch and roll
-    double xRadians = sin(yAngle*M_PI/180);
-    double yRadians = sin(zAngle*M_PI/180);
+    double xTemp = sin(yAngle*M_PI/180);
+    double yTemp = sin(zAngle*M_PI/180);
     // Apply yaw rotation to offset the X and Y positions
-    xPosition = projectionRadius * (xRadians * (cos(xAngle*M_PI/180))) - (yRadians * (sin(xAngle*M_PI/180)));
-    yPosition = projectionRadius * (xRadians * (sin(xAngle*M_PI/180))) + (yRadians * (cos(xAngle*M_PI/180)));
+    // Values are between -1 and 1, so we multiply by the projection radius to get the actual position
+    xPosition = projectionRadius * (xTemp * (cos(xAngle*M_PI/180))) - (yTemp * (sin(xAngle*M_PI/180)));
+    yPosition = projectionRadius * (xTemp * (sin(xAngle*M_PI/180))) + (yTemp * (cos(xAngle*M_PI/180)));
 
     return 1;
   }
@@ -103,6 +103,13 @@ public:
     tied_z = &(new_tie->z);
     return 1;
   }
+
+private:
+  const double* tied_x{};
+  const double* tied_y{};
+  const double* tied_z{};
+  double xPosition = 0;
+  double yPosition = 0;
 
 };
 }
