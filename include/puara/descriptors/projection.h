@@ -6,8 +6,6 @@
 //********************************************************************************//
 #pragma once
 
-#define _USE_MATH_DEFINES
-
 #include <puara/structs.h>
 #include <puara/utils.h>
 #include <cmath>
@@ -40,7 +38,9 @@ public:
 
   Projection2D() noexcept
       : projectionRadius(5)
-      , tied_data(nullptr)
+      , tied_x(nullptr)
+      , tied_y(nullptr)
+      , tied_z(nullptr)
   {
   }
 
@@ -68,8 +68,8 @@ public:
     double yTemp = sin(zAngle*M_PI/180);
     // Apply yaw rotation to offset the X and Y positions
     // Values are between -1 and 1, so we multiply by the projection radius to get the actual position
-    xPosition = projectionRadius * (xTemp * (cos(xAngle*M_PI/180))) - (yTemp * (sin(xAngle*M_PI/180)));
-    yPosition = projectionRadius * (xTemp * (sin(xAngle*M_PI/180))) + (yTemp * (cos(xAngle*M_PI/180)));
+    position.x = projectionRadius * (xTemp * (cos(xAngle*M_PI/180))) - (yTemp * (sin(xAngle*M_PI/180)));
+    position.y = projectionRadius * (xTemp * (sin(xAngle*M_PI/180))) + (yTemp * (cos(xAngle*M_PI/180)));
 
     return 1;
   }
@@ -82,9 +82,9 @@ public:
 
   int update()
   {
-    if(tied_data != nullptr)
+    if(tied_x != nullptr && tied_y != nullptr && tied_z != nullptr)
     {
-      Projection2D::update(*tied_data);
+      Projection2D::update(*tied_x, *tied_y, *tied_z);
       return 1;
     }
     else
@@ -94,7 +94,7 @@ public:
     }
   }
 
-  double current_value() const { return value; }
+  Coord2D current_value() const { return position; }
 
   int tie(Coord3D* new_tie)
   {
@@ -108,8 +108,7 @@ private:
   const double* tied_x{};
   const double* tied_y{};
   const double* tied_z{};
-  double xPosition = 0;
-  double yPosition = 0;
+  Coord2D position{0, 0};
 
 };
 }

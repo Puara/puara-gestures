@@ -65,15 +65,19 @@ target_sources(Continuous
   tests/testing_touch.cpp
 
 )
+  
   add_executable(testing_roll tests/testing_roll.cpp)
   add_executable(testing_tilt tests/testing_tilt.cpp)
   add_executable(testing_touch tests/testing_touch.cpp)
+  add_executable(testing_projection tests/testing_projection.cpp)
   target_compile_definitions(testing_roll PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
   target_compile_definitions(testing_tilt PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
   target_compile_definitions(testing_touch PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
+  target_compile_definitions(testing_projection PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")
   target_link_libraries(testing_roll PRIVATE puara_gestures)
   target_link_libraries(testing_tilt PRIVATE puara_gestures)
   target_link_libraries(testing_touch PRIVATE puara_gestures)
+  target_link_libraries(testing_projection PRIVATE puara_gestures)
 
 endif()
 

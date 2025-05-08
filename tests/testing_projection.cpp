@@ -60,6 +60,6 @@ int main()
         // update projection with orientation data
         test.update(orientation.x, orientation.y, orientation.z);
         // print projection value
-        std::cout << "Projection: " << test.current_value() << std::endl;
+        std::cout << "Projection: " << test.current_value().x << ", " << test.current_value().y << std::endl;
     }
 }
