@@ -21,6 +21,10 @@
 #include <cmath>
 #include <chrono>
 
+#ifndef M_PI
+  #define M_PI 3.141592653589793238462643383279502984
+#endif
+
 namespace puara_gestures::utils
 {
 
