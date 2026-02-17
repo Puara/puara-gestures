@@ -50,7 +50,7 @@ public:
   Projection2D& operator=(Projection2D&&) noexcept = default;
 
 
-  explicit Projection2D(Coord3D tied)
+  explicit Projection2D(const Coord3D& tied)
       : projectionRadius(5)
       , tied_x(&(tied.x))
       , tied_y(&(tied.y))
