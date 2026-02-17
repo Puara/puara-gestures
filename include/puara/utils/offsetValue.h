@@ -29,7 +29,7 @@ public:
     // Wrap around the value to stay within the range
     if(current_in < minValue)
     {
-      current_in = maxValue + (minValue - current_in);
+      current_in = maxValue - (minValue - current_in);
     }
     if(current_in > maxValue)
     {
