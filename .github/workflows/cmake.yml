@@ -10,17 +10,14 @@ jobs:
           - {
               os: ubuntu-latest,
               cmake_options: "",
-              dependencies: "sudo apt update -yqq && sudo apt -yqq install libboost-dev"
             }
           - {
               os: macos-latest,
               cmake_options: "CMAKE_PREFIX_PATH=/opt/homebrew",
-              dependencies: "brew install boost eigen && brew link boost eigen"
             }
           - {
               os: windows-latest,
-              cmake_options: "Boost_INCLUDE_DIR=D:/a/puara-gestures/puara-gestures/3rdparty",
-              dependencies: "choco install eigen -y --no-progress"
+              cmake_options: "",
             }
 
     runs-on: ${{ matrix.config.os }}
@@ -29,9 +26,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Dependencies
-        run: ${{ matrix.config.dependencies }}
 
       - name: Build Project
         uses: threeal/cmake-action@v2.0.0

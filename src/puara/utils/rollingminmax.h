@@ -9,8 +9,7 @@
 #pragma once
 
 #include <puara/structs.h>
-
-#include <boost/circular_buffer.hpp>
+#include <puara/utils/circularbuffer.h>
 
 namespace puara_gestures::utils
 {
@@ -25,28 +24,28 @@ class RollingMinMax
 {
 public:
   RollingMinMax(size_t buffer_size = 10)
-      : buf(buffer_size)
   {
+    buf.size = buffer_size;
   }
 
   puara_gestures::MinMax<T> current_value;
   puara_gestures::MinMax<T> update(T value)
   {
     puara_gestures::MinMax<T> ret{.min = value, .max = value};
-    buf.push_back(value);
-    for(const T value : buf)
+    buf.add(value);
+    for(const T& v : buf.buffer)
     {
-      if(value < ret.min)
-        ret.min = value;
-      if(value > ret.max)
-        ret.max = value;
+      if(v < ret.min)
+        ret.min = v;
+      if(v > ret.max)
+        ret.max = v;
     }
     current_value = ret;
     return ret;
   }
 
 private:
-  boost::circular_buffer<T> buf;
+  CircularBuffer<T> buf;
 };
 
 }

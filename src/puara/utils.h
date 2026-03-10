@@ -18,6 +18,7 @@
 #include <puara/utils/wrap.h>
 #include <puara/utils/discretizer.h>
 
+#include <cassert>
 #include <cmath>
 #include <chrono>
 

@@ -10,60 +10,48 @@ project(
 option(PUARA_GESTURES_ENABLE_TESTING "Enable building and running Puara gestures tests" ON)
 option(PUARA_GESTURES_ENABLE_STANDALONE "Enable building and running Puara standalone" OFF)
 
-### Dependencies ###
-if(POLICY CMP0167)
-  cmake_policy(SET CMP0167 OLD)
-endif()
-
-set(BOOST_ROOT "${CMAKE_SOURCE_DIR}/3rdparty")
-set(Boost_NO_SYSTEM_PATHS ON)
-find_package(Boost REQUIRED)
-
 ### Main library ###
 add_library(puara_gestures
-  3rdparty/IMU_Sensor_Fusion/imu_orientation.h
-  3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
+  src/IMU_Sensor_Fusion/imu_orientation.h
+  src/IMU_Sensor_Fusion/imu_orientation.cpp
 
-  include/puara/descriptors/button.h
-  include/puara/descriptors/jab.h
-  include/puara/descriptors/roll.h
-  include/puara/descriptors/shake.h
-  include/puara/descriptors/tilt.h
-  include/puara/descriptors/touchArrayGestureDetector.h
+  src/puara/descriptors/brushRub.h
+  src/puara/descriptors/button.h
+  src/puara/descriptors/jab.h
+  src/puara/descriptors/roll.h
+  src/puara/descriptors/shake.h
+  src/puara/descriptors/simple_tilt_roll.h
+  src/puara/descriptors/tilt.h
+  src/puara/descriptors/touchArrayGestureDetector.h
 
-  include/puara/utils/blobDetector.h
-  include/puara/utils/calibration.h
-  include/puara/utils/circularbuffer.h
-  include/puara/utils/leakyintegrator.h
-  include/puara/utils/maprange.h
-  include/puara/utils/rollingminmax.h
-  include/puara/utils/smooth.h
-  include/puara/utils/threshold.h
-  include/puara/utils/wrap.h
+  src/puara/utils/blobDetector.h
+  src/puara/utils/calibration.h
+  src/puara/utils/circularbuffer.h
+  src/puara/utils/discretizer.h
+  src/puara/utils/leakyintegrator.h
+  src/puara/utils/maprange.h
+  src/puara/utils/rollingminmax.h
+  src/puara/utils/smooth.h
+  src/puara/utils/threshold.h
+  src/puara/utils/wrap.h
 
-  include/puara/structs.h
-  include/puara/gestures.h
-  include/puara/utils.h
+  src/puara/structs.h
+  src/puara/gestures.h
+  src/puara/utils.h
 
   src/puara_gestures.cpp
 
 )
 
 target_compile_definitions(puara_gestures PUBLIC $<$<BOOL:${WIN32}>:_USE_MATH_DEFINES>)
-target_include_directories(puara_gestures PUBLIC include 3rdparty)
+target_include_directories(puara_gestures PUBLIC src)
 target_compile_features(puara_gestures PUBLIC cxx_std_20)
-target_link_libraries(puara_gestures PUBLIC Boost::headers)
 
 ### Tests ###
 if(PUARA_GESTURES_ENABLE_TESTING)
   include(CTest)
 
-target_sources(Continuous
-  PRIVATE
-  tests/testing_touch.cpp
-
-)
-add_executable(testing_roll tests/testing_roll.cpp)
+  add_executable(testing_roll tests/testing_roll.cpp)
   add_executable(testing_tilt tests/testing_tilt.cpp)
   add_executable(testing_touch tests/testing_touch.cpp)
   target_compile_definitions(testing_roll PRIVATE "-DPUARA_TESTS_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/testing files\"")

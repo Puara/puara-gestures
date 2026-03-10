@@ -18,13 +18,14 @@ namespace puara_gestures::utils
  *  Simple circular buffer.
  *  This was created to ensure compatibility with older ESP SoCs
  */
+template <typename T = double>
 class CircularBuffer
 {
 public:
   std::size_t size = 10;
-  std::deque<double> buffer;
+  std::deque<T> buffer;
 
-  double add(double element)
+  T add(T element)
   {
     buffer.push_front(element);
     if(buffer.size() > size)
