@@ -9,8 +9,7 @@
 #pragma once
 
 #include <puara/structs.h>
-
-#include <deque>
+#include <puara/utils/circularbuffer.h>
 
 namespace puara_gestures::utils
 {
@@ -25,18 +24,16 @@ class RollingMinMax
 {
 public:
   RollingMinMax(size_t buffer_size = 10)
-      : buf_capacity(buffer_size)
   {
+    buf.size = buffer_size;
   }
 
   puara_gestures::MinMax<T> current_value;
   puara_gestures::MinMax<T> update(T value)
   {
     puara_gestures::MinMax<T> ret{.min = value, .max = value};
-    buf.push_back(value);
-    if(buf.size() > buf_capacity)
-      buf.pop_front();
-    for(const T& v : buf)
+    buf.add(value);
+    for(const T& v : buf.buffer)
     {
       if(v < ret.min)
         ret.min = v;
@@ -48,8 +45,7 @@ public:
   }
 
 private:
-  std::deque<T> buf;
-  size_t buf_capacity;
+  CircularBuffer<T> buf;
 };
 
 }
