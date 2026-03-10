@@ -10,17 +10,14 @@ jobs:
           - {
               os: ubuntu-latest,
               cmake_options: "",
-              dependencies: "echo 'ok'"
             }
           - {
               os: macos-latest,
               cmake_options: "CMAKE_PREFIX_PATH=/opt/homebrew",
-              dependencies: "echo 'ok'"
             }
           - {
               os: windows-latest,
               cmake_options: "",
-              dependencies: "echo ok"
             }
 
     runs-on: ${{ matrix.config.os }}
@@ -29,9 +26,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Dependencies
-        run: ${{ matrix.config.dependencies }}
 
       - name: Build Project
         uses: threeal/cmake-action@v2.0.0
