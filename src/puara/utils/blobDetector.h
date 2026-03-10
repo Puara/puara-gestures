@@ -1,7 +1,5 @@
 #pragma once
 
-#include <boost/container/small_vector.hpp>
-
 namespace puara_gestures
 {
 

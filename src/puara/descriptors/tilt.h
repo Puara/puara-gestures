@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "IMU_Sensor_Fusion/imu_orientation.h"
+#include <IMU_Sensor_Fusion/imu_orientation.h>
 #include <puara/structs.h>
 #include <puara/utils.h>
 

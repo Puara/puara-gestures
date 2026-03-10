@@ -10,17 +10,17 @@ jobs:
           - {
               os: ubuntu-latest,
               cmake_options: "",
-              dependencies: "sudo apt update -yqq && sudo apt -yqq install libboost-dev"
+              dependencies: "echo 'ok'"
             }
           - {
               os: macos-latest,
               cmake_options: "CMAKE_PREFIX_PATH=/opt/homebrew",
-              dependencies: "brew install boost eigen && brew link boost eigen"
+              dependencies: "echo 'ok'"
             }
           - {
               os: windows-latest,
-              cmake_options: "Boost_INCLUDE_DIR=D:/a/puara-gestures/puara-gestures/3rdparty",
-              dependencies: "choco install eigen -y --no-progress"
+              cmake_options: "",
+              dependencies: "echo ok"
             }
 
     runs-on: ${{ matrix.config.os }}

@@ -10,7 +10,7 @@
 
 #include <puara/structs.h>
 
-#include <boost/circular_buffer.hpp>
+#include <deque>
 
 namespace puara_gestures::utils
 {
@@ -25,7 +25,7 @@ class RollingMinMax
 {
 public:
   RollingMinMax(size_t buffer_size = 10)
-      : buf(buffer_size)
+      : buf_capacity(buffer_size)
   {
   }
 
@@ -34,19 +34,22 @@ public:
   {
     puara_gestures::MinMax<T> ret{.min = value, .max = value};
     buf.push_back(value);
-    for(const T value : buf)
+    if(buf.size() > buf_capacity)
+      buf.pop_front();
+    for(const T& v : buf)
     {
-      if(value < ret.min)
-        ret.min = value;
-      if(value > ret.max)
-        ret.max = value;
+      if(v < ret.min)
+        ret.min = v;
+      if(v > ret.max)
+        ret.max = v;
     }
     current_value = ret;
     return ret;
   }
 
 private:
-  boost::circular_buffer<T> buf;
+  std::deque<T> buf;
+  size_t buf_capacity;
 };
 
 }

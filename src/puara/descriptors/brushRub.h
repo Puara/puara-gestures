@@ -1,6 +1,9 @@
+#pragma once
+
 #include <puara/utils.h>
 #include <puara/utils/leakyintegrator.h>
 
+#include <cassert>
 #include <cmath>
 
 namespace puara_gestures
