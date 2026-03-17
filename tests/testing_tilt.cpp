@@ -7,34 +7,11 @@
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 
-#include <puara/gestures.h>
-
-#include <cmath>
-
 #include <fstream>
-#include <iostream>
+#include <puara/gestures.h>
+#include "rapidcsv.h"
 
 using namespace puara_gestures;
-Coord3D readinRawCSV(std::string line)
-{
-  Coord3D cart;
-  int first_space = line.find_first_of(",");
-  int second_space = line.substr(first_space + 1).find_first_of(",") + first_space + 1;
-  double x = std::stod(line.substr(0, first_space));
-  double y = std::stod(line.substr(first_space + 1, second_space));
-  double z = std::stod(line.substr(second_space + 1, line.size()));
-  // add three doubles to a Coord3D
-  cart.x = x;
-  cart.y = y;
-  cart.z = z;
-  // return Coord3D
-  return cart;
-}
-
-double readinRawSingleValue(std::string line)
-{
-  return std::stod(line);
-}
 
 int main()
 {
@@ -42,68 +19,53 @@ int main()
   Tilt test;
   utils::Threshold thresh;
 
-  // set up common path
-  std::string common = PUARA_TESTS_DIR "/tilt/";
+  // Load CSV with header row (labels in first line)
+  // (use a relative path from the repo root where this is typically run)
+  const std::string path = "tests/imu_data_tilt.csv";
 
-  // read in accl data
-  std::string accl_path = common + "accel_raw.csv";
-  std::ifstream accl_file(accl_path);
-  std::string accl_line;
+  rapidcsv::Document doc = rapidcsv::Document(path, rapidcsv::LabelParams(0, -1));
 
-  // read in gyro data
-  std::string gyro_path = common + "gyro_raw.csv";
-  ;
-  std::ifstream gyro_file(gyro_path);
-  std::string gyro_line;
+ /*  // Uncomment to output to CSV
+  std::ofstream out("tests/imu_data_tilt_out.csv");
+  out << "timestamp,t-stick_tilt,puara_tilt,diff_tstick-puara,smoothed,in_threshold\n";
+ */
+  const size_t rowCount = doc.GetRowCount();
 
-  // read in timestamp data
-  std::string timestamp_path = common + "timestamp_raw.csv";
-  std::ifstream timestamp_file(timestamp_path);
-  std::string timestamp_line;
-
-  // read in mag data
-  std::string mag_path = common + "mag_raw.csv";
-  std::ifstream mag_file(mag_path);
-  std::string mag_line;
-
-  // read in tilt data
-  std::string tilt_path = common + "tilt_raw.csv";
-  std::ifstream tilt_file(tilt_path);
-  std::string tilt_line;
-
-  while(std::getline(accl_file, accl_line, '\n')
-        && std::getline(gyro_file, gyro_line, '\n')
-        && std::getline(timestamp_file, timestamp_line, '\n')
-        && std::getline(mag_file, mag_line, '\n')
-        && std::getline(tilt_file, tilt_line, '\n'))
+  for (size_t r = 0; r < rowCount; ++r)
   {
-    if(accl_line.empty() || gyro_line.empty() || timestamp_line.empty()
-       || mag_line.empty() || tilt_line.empty())
-    {
-      break;
-    }
+    double timestamp = doc.GetCell<double>("timestamp", r);
 
     Coord3D accl;
-    accl = readinRawCSV(accl_line);
+    accl.x = doc.GetCell<double>("accl_x", r);
+    accl.y = doc.GetCell<double>("accl_y", r);
+    accl.z = doc.GetCell<double>("accl_z", r);
 
     Coord3D gyro;
-    gyro = readinRawCSV(gyro_line);
+    gyro.x = doc.GetCell<double>("gyro_x", r);
+    gyro.y = doc.GetCell<double>("gyro_y", r);
+    gyro.z = doc.GetCell<double>("gyro_z", r);
 
-    double timestamp = readinRawSingleValue(timestamp_line);
 
     Coord3D mag;
-    mag = readinRawCSV(mag_line);
+    mag.x = doc.GetCell<double>("mag_x", r);
+    mag.y = doc.GetCell<double>("mag_y", r);
+    mag.z = doc.GetCell<double>("mag_z", r);
 
-    double tilt = readinRawSingleValue(tilt_line);
+    double tilt = doc.GetCell<double>("tilt", r);
 
     double puara_tilt = test.tilt(accl, gyro, mag, timestamp);
 
-    std::cout << "Tilt Value from Puara = " << puara_tilt << ", ";
-    std::cout << "Tilt Value from T-Stick = " << tilt << ". ";
-    std::cout << "Diff = " << (std::fabs(puara_tilt - tilt)) << ".\n";
+    double diff = std::fabs(puara_tilt - tilt);
     double smoothed = test.smooth(puara_tilt);
-    std::cout << "Smoothed = " << smoothed << ", ";
-    double threshold = thresh.update(smoothed);
-    std::cout << "In Threshold = " << threshold << ", ";
+    double in_threshold = thresh.update(smoothed);
+
+    /* // Uncomment to output to CSV
+    out << timestamp << ","
+        << tilt << "," << puara_tilt << "," << diff << ","
+        << smoothed << "," << in_threshold << "\n";
+    */
   }
+
+  return 0; 
+
 }
