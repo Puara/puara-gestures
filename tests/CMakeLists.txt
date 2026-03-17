@@ -8,7 +8,7 @@ enable_testing()
 # Common include paths for both tests.
 set(TEST_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}/../include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/IMU_Sensor_Fusion
+  ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
