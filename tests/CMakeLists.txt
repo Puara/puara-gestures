@@ -8,12 +8,13 @@ enable_testing()
 # Common include paths for both tests.
 set(TEST_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}/../include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/IMU_Sensor_Fusion
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_executable(roll
   testing_roll.cpp
-  ../include/IMU_Sensor_Fusion/imu_orientation.cpp
+  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
 )
 target_compile_features(roll PRIVATE cxx_std_17)
 target_include_directories(roll PRIVATE ${TEST_INCLUDE_DIRS})
@@ -22,7 +23,7 @@ set_tests_properties(roll PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DI
 
 add_executable(tilt
   testing_tilt.cpp
-  ../include/IMU_Sensor_Fusion/imu_orientation.cpp
+  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
 )
 target_compile_features(tilt PRIVATE cxx_std_17)
 target_include_directories(tilt PRIVATE ${TEST_INCLUDE_DIRS})

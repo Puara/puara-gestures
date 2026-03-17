@@ -21,7 +21,7 @@ int main()
 
   // Load CSV with header row (labels in first line)
   // (use a relative path from the repo root where this is typically run)
-  const std::string path = "tests/imu_data_roll.csv";
+  const std::string path = "tests/data/imu_data_roll.csv";
 
   rapidcsv::Document doc = rapidcsv::Document(path, rapidcsv::LabelParams(0, -1));
 
