@@ -8,33 +8,9 @@
 //********************************************************************************//
 
 #include <puara/gestures.h>
-
-#include <cmath>
-
-#include <fstream>
-#include <iostream>
+#include "rapidcsv.h"
 
 using namespace puara_gestures;
-Coord3D readinRawCSV(std::string line)
-{
-  Coord3D cart;
-  int first_space = line.find_first_of(",");
-  int second_space = line.substr(first_space + 1).find_first_of(",") + first_space + 1;
-  double x = std::stod(line.substr(0, first_space));
-  double y = std::stod(line.substr(first_space + 1, second_space));
-  double z = std::stod(line.substr(second_space + 1, line.size()));
-  // add three doubles to a Coord3D
-  cart.x = x;
-  cart.y = y;
-  cart.z = z;
-  // return Coord3D
-  return cart;
-}
-
-double readinRawSingleValue(std::string line)
-{
-  return std::stod(line);
-}
 
 int main()
 {
@@ -42,78 +18,51 @@ int main()
   Roll test;
   utils::Threshold thresh;
 
-  // set up common path
-  std::string common = PUARA_TESTS_DIR "/roll/";
+  // Load CSV with header row (labels in first line)
+  // (use a relative path from the repo root where this is typically run)
+  const std::string path = "tests/data/imu_data_roll.csv";
 
-  // read in accl data
-  std::string accl_path = common + "accel_raw.csv";
-  std::ifstream accl_file(accl_path);
-  std::string accl_line;
+  rapidcsv::Document doc = rapidcsv::Document(path, rapidcsv::LabelParams(0, -1));
 
-  // read in gyro data
-  std::string gyro_path = common + "gyro_raw.csv";
-  ;
-  std::ifstream gyro_file(gyro_path);
-  std::string gyro_line;
+  const size_t rowCount = doc.GetRowCount();
 
-  // read in timestamp data
-  std::string timestamp_path = common + "timestamp_raw.csv";
-  std::ifstream timestamp_file(timestamp_path);
-  std::string timestamp_line;
-
-  // read in mag data
-  std::string mag_path = common + "mag_raw.csv";
-  std::ifstream mag_file(mag_path);
-  std::string mag_line;
-
-  // read in roll data
-  std::string roll_path = common + "roll_raw.csv";
-  std::ifstream roll_file(roll_path);
-  std::string roll_line;
-
-  while(std::getline(accl_file, accl_line, '\n')
-        && std::getline(gyro_file, gyro_line, '\n')
-        && std::getline(timestamp_file, timestamp_line, '\n')
-        && std::getline(mag_file, mag_line, '\n')
-        && std::getline(roll_file, roll_line, '\n'))
+  for (size_t r = 0; r < rowCount; ++r)
   {
-    if(accl_line.empty() || gyro_line.empty() || timestamp_line.empty()
-       || mag_line.empty() || roll_line.empty())
-    {
-      break;
-    }
+    double timestamp = doc.GetCell<double>("timestamp", r);
 
     Coord3D accl;
-    accl = readinRawCSV(accl_line);
+    accl.x = doc.GetCell<double>("accl_x", r);
+    accl.y = doc.GetCell<double>("accl_y", r);
+    accl.z = doc.GetCell<double>("accl_z", r);
 
     Coord3D gyro;
-    gyro = readinRawCSV(gyro_line);
+    gyro.x = doc.GetCell<double>("gyro_x", r);
+    gyro.y = doc.GetCell<double>("gyro_y", r);
+    gyro.z = doc.GetCell<double>("gyro_z", r);
 
-    double timestamp = readinRawSingleValue(timestamp_line);
 
     Coord3D mag;
-    mag = readinRawCSV(mag_line);
+    mag.x = doc.GetCell<double>("mag_x", r);
+    mag.y = doc.GetCell<double>("mag_y", r);
+    mag.z = doc.GetCell<double>("mag_z", r);
 
-    double roll = readinRawSingleValue(roll_line);
+    double roll = doc.GetCell<double>("roll", r);
 
     double puara_roll = test.roll(accl, gyro, mag, timestamp);
 
-    std::cout << "Roll Value from Puara = " << puara_roll << ", ";
-    std::cout << "Roll Value from T-Stick = " << roll << ". ";
-    std::cout << "Diff = " << (std::fabs(puara_roll - roll)) << ".\n";
-    double unwrapped = test.unwrap(roll);
-    std::cout << "Unwrapped = " << unwrapped << ", ";
-    double smoothed = test.smooth(unwrapped);
-    std::cout << "Smoothed = " << smoothed << ", ";
-    double threshold = thresh.update(smoothed);
-    std::cout << "In Threshold = " << threshold << ", ";
-    double wrapped = test.wrap(threshold);
-    std::cout << "Wrapped = " << wrapped << ".\n";
+    double diff = std::fabs(puara_roll - roll);
+    double smoothed = test.smooth(puara_roll);
+    double in_threshold = thresh.update(smoothed);
+    double wrapped = test.wrap(in_threshold);
 
-    //testing arrayAverageZero
-    std::vector<double> testArray = {1.0, 2.0, 3.0, 4.0, 5.0};
-    double average
-        = puara_gestures::utils::arrayAverageZero(testArray.data(), testArray.size());
-    std::cout << "Average: " << average << std::endl;
+    std::cout << "timestamp : " << timestamp << ","
+              << "t_stick-roll : " << roll << ","
+              << "puara_roll : " << puara_roll << ",\n"
+              << "diff (puara-roll - t-stick-roll): " << diff << ","
+              << "smoothed(puara-roll) : " << smoothed << ","
+              << "in_threshold(smoothed) : " << in_threshold << ","
+              << "wrapped :   " << wrapped << "\n";
   }
+
+  return 0;
 }
