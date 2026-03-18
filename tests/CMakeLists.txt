@@ -30,3 +30,12 @@ target_compile_features(tilt PRIVATE cxx_std_17)
 target_include_directories(tilt PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME tilt COMMAND tilt)
 set_tests_properties(tilt PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+add_executable(touch
+  testing_touch.cpp
+  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
+)
+target_compile_features(touch PRIVATE cxx_std_17)
+target_include_directories(touch PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME touch COMMAND touch)
+set_tests_properties(touch PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)

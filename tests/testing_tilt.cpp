@@ -7,7 +7,6 @@
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 
-#include <fstream>
 #include <puara/gestures.h>
 #include "rapidcsv.h"
 
@@ -25,10 +24,6 @@ int main()
 
   rapidcsv::Document doc = rapidcsv::Document(path, rapidcsv::LabelParams(0, -1));
 
- /*  // Uncomment to output to CSV
-  std::ofstream out("tests/imu_data_tilt_out.csv");
-  out << "timestamp,t-stick_tilt,puara_tilt,diff_tstick-puara,smoothed,in_threshold\n";
- */
   const size_t rowCount = doc.GetRowCount();
 
   for (size_t r = 0; r < rowCount; ++r)
@@ -59,11 +54,12 @@ int main()
     double smoothed = test.smooth(puara_tilt);
     double in_threshold = thresh.update(smoothed);
 
-    /* // Uncomment to output to CSV
-    out << timestamp << ","
-        << tilt << "," << puara_tilt << "," << diff << ","
-        << smoothed << "," << in_threshold << "\n";
-    */
+    std::cout << "timestamp : " << timestamp << ","
+        << "t_stick-tilt : " << tilt << ","
+        << "puara_tilt : " << puara_tilt << ",\n"
+        << "diff (puara-tilt - t-stick-tilt): " << diff << ","
+        << "smoothed(puara-tilt) : " << smoothed << ","
+        << "in_threshold(smoothed) : " << in_threshold << "\n";
   }
 
   return 0; 
