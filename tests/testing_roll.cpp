@@ -54,6 +54,7 @@ int main()
     double smoothed = test.smooth(puara_roll);
     double in_threshold = thresh.update(smoothed);
     double wrapped = test.wrap(in_threshold);
+    double unwrapped = test.unwrap(wrapped);
 
     std::cout << "timestamp : " << timestamp << ","
               << "t_stick-roll : " << roll << ","
@@ -61,8 +62,16 @@ int main()
               << "diff (puara-roll - t-stick-roll): " << diff << ","
               << "smoothed(puara-roll) : " << smoothed << ","
               << "in_threshold(smoothed) : " << in_threshold << ","
-              << "wrapped :   " << wrapped << "\n";
+              << "wrapped :   " << wrapped << ","
+              << "unwrapped : " << unwrapped << "\n\n";
   }
+
+  std::cout << "Before clear_unwrap(), unwrap(0.5) value: " << test.unwrap(0.5) << "\n"; 
+  test.clear_unwrap();
+  std::cout << "After clear_unwrap(), unwrap(0.5) value: " << test.unwrap(0.5) << "\n"; 
+  std::cout << "Before clear_smooth(), smooth(0.5) value: " << test.smooth(0.5) << "\n";
+  test.clear_smooth();
+  std::cout << "After clear_smooth, smooth(0.5) value: " << test.smooth(0.5) << "\n";
 
   return 0;
 }
