@@ -33,14 +33,15 @@ jobs:
       - name: Dependencies
         run: ${{ matrix.config.dependencies }}
 
-      - name: Configure & Build
-        uses: threeal/cmake-action@v2.0.0
-        with:
-          options: |
-            PUARA_GESTURES_ENABLE_STANDALONE=0
-            ${{ matrix.config.cmake_options }}
+      - name: Configure
+        run: |
+          cmake -S tests -B build -DPUARA_GESTURES_ENABLE_STANDALONE=0 ${{ matrix.config.cmake_options }}
+
+      - name: Build
+        run: |
+          cmake --build build --config Release
 
       - name: Run Tests
         run: |
           cd build
-          ctest -V 
+          ctest -V
