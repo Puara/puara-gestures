@@ -175,9 +175,9 @@ inline Coord3D polar_to_cartesian(Spherical polarCoords)
 {
   Coord3D cartesianCoords;
 
-  cartesianCoords.x = polarCoords.r * cos(polarCoords.theta) * cos(polarCoords.phi);
-  cartesianCoords.y = polarCoords.r * cos(polarCoords.theta) * sin(polarCoords.phi);
-  cartesianCoords.z = polarCoords.r * sin(polarCoords.theta);
+  cartesianCoords.x = polarCoords.r * sin(polarCoords.theta) * cos(polarCoords.phi);
+  cartesianCoords.y = polarCoords.r * sin(polarCoords.theta) * sin(polarCoords.phi);
+  cartesianCoords.z = polarCoords.r * cos(polarCoords.theta);
 
   return cartesianCoords;
 }
@@ -191,13 +191,11 @@ inline Spherical cartesian_to_polar(Coord3D cartesianCoords)
   Spherical polarCoords;
 
   polarCoords.r = sqrt(
-      cartesianCoords.x * cartesianCoords.x + cartesianCoords.y * cartesianCoords.y
-      + cartesianCoords.z * cartesianCoords.z);
+                      (cartesianCoords.x * cartesianCoords.x )
+                    + (cartesianCoords.y * cartesianCoords.y)
+                    + (cartesianCoords.z * cartesianCoords.z));
 
-  polarCoords.theta = atan2(
-      cartesianCoords.z, sqrt(
-                             cartesianCoords.x * cartesianCoords.x
-                             + cartesianCoords.y * cartesianCoords.y));
+  polarCoords.theta = acos(cartesianCoords.z / polarCoords.r); 
 
   polarCoords.phi = atan2(cartesianCoords.y, cartesianCoords.x);
 
