@@ -38,3 +38,58 @@ TEST_CASE("getCurrentTimeMicroseconds is monotonic", "[utils]")
     REQUIRE(t1 >= t0);
     REQUIRE(t1 - t0 >= 0);
 }
+
+TEST_CASE("polar_to_cartesian and cartesian_to_polar round trip", "[utils]")
+{
+    using namespace puara_gestures::utils::convert;
+
+    puara_gestures::Spherical p0{};
+    p0.azimuth = M_PI/2.0;           // phi
+    p0.elevation = M_PI/2.0;         // theta
+    p0.distance = 1.0;          // r
+    auto c0 = polar_to_cartesian(p0);
+    REQUIRE(c0.x == Approx(0.0).margin(1e-15));
+    REQUIRE(c0.y == Approx(1.0));
+    REQUIRE(c0.z == Approx(0.0).margin(1e-15));
+
+    puara_gestures::Spherical p1{};
+    p1.azimuth = M_PI;           // phi
+    p1.elevation = M_PI;         // theta
+    p1.distance = 1.0;          // r
+    auto c1 = polar_to_cartesian(p1);
+    REQUIRE(c1.x == Approx(0.0).margin(1e-15));
+    REQUIRE(c1.y == Approx(0.0).margin(1e-15));
+    REQUIRE(c1.z == Approx(-1.0));
+
+    puara_gestures::Spherical p2{};
+    p2.azimuth = M_PI;           // phi
+    p2.elevation = M_PI/4;    // theta -> z-axis
+    p2.distance = 1.0;         // r
+    auto c2 = polar_to_cartesian(p2);
+    REQUIRE(c2.x == Approx(-0.7071));
+    REQUIRE(c2.y == Approx(0.0).margin(1e-15));
+    REQUIRE(c2.z == Approx(0.7071));
+
+    puara_gestures::Coord3D c3{0.0, 1.0, 0.0};
+    auto p3 = cartesian_to_polar(c3);
+    REQUIRE(p3.r == Approx(1.0));
+    REQUIRE(p3.theta == Approx(M_PI/2.0));
+    REQUIRE(p3.phi == Approx(M_PI/2.0));
+
+    puara_gestures::Coord3D c4{1.0, 1.0, 1.0};
+    auto p4 = cartesian_to_polar(c4);
+    REQUIRE(p4.r == Approx(sqrt(3.0)));
+    REQUIRE(p4.theta == Approx(atan(sqrt(2.0))));
+    REQUIRE(p4.phi == Approx(M_PI/4.0));
+
+    // round-trip conversion
+    puara_gestures::Spherical p5{};
+    p5.azimuth = 2.0;
+    p5.elevation = M_PI/6.0;
+    p5.distance = M_PI/4.0;
+    auto c5 = polar_to_cartesian(p5);
+    auto p5rt = cartesian_to_polar(c5);
+    REQUIRE(p5rt.r == Approx(p5.r));
+    REQUIRE(p5rt.theta == Approx(p5.theta));
+    REQUIRE(p5rt.phi == Approx(p5.phi));
+}
