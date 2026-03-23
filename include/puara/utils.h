@@ -168,10 +168,10 @@ inline double utesla_to_gauss(double reading)
 }
 
 /**
- * @brief Convert polar coordinates to cartesian
+ * @brief Convert spheric coordinates to cartesian
  * 
  */
-inline Coord3D polar_to_cartesian(Spherical polarCoords)
+inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 {
   Coord3D cartesianCoords;
 
@@ -183,23 +183,23 @@ inline Coord3D polar_to_cartesian(Spherical polarCoords)
 }
 
 /**
- * @brief Convert cartesian coordinates to polar
+ * @brief Convert cartesian coordinates to spheric
  * 
  */
-inline Spherical cartesian_to_polar(Coord3D cartesianCoords)
+inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
 {
-  Spherical polarCoords;
+  Spherical sphericalCoords;
 
-  polarCoords.r = sqrt(
+  sphericalCoords.r = sqrt(
                       (cartesianCoords.x * cartesianCoords.x )
                     + (cartesianCoords.y * cartesianCoords.y)
                     + (cartesianCoords.z * cartesianCoords.z));
 
-  polarCoords.theta = acos(cartesianCoords.z / polarCoords.r); 
+  sphericalCoords.theta = acos(cartesianCoords.z / sphericalCoords.r); 
 
-  polarCoords.phi = atan2(cartesianCoords.y, cartesianCoords.x);
+  sphericalCoords.phi = atan2(cartesianCoords.y, cartesianCoords.x);
 
-  return polarCoords;
+  return sphericalCoords;
 }
 
 }
