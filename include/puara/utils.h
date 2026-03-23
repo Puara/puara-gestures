@@ -168,38 +168,38 @@ inline double utesla_to_gauss(double reading)
 }
 
 /**
- * @brief Convert spheric coordinates to cartesian
+ * @brief Convert polar coordinates to cartesian
  * 
  */
 inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 {
   Coord3D cartesianCoords;
 
-  cartesianCoords.x = polarCoords.r * sin(polarCoords.theta) * cos(polarCoords.phi);
-  cartesianCoords.y = polarCoords.r * sin(polarCoords.theta) * sin(polarCoords.phi);
-  cartesianCoords.z = polarCoords.r * cos(polarCoords.theta);
+  cartesianCoords.x = polarCoords.r * cos(polarCoords.azimuth) * sin(polarCoords.elevation);
+  cartesianCoords.y = polarCoords.r * sin(polarCoords.elevation) * sin(polarCoords.azimuth);
+  cartesianCoords.z = polarCoords.r * cos(polarCoords.elevation);
 
   return cartesianCoords;
 }
 
 /**
- * @brief Convert cartesian coordinates to spheric
+ * @brief Convert cartesian coordinates to polar
  * 
  */
 inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
 {
-  Spherical sphericalCoords;
+  Spherical sphericCoords;
 
-  sphericalCoords.r = sqrt(
-                      (cartesianCoords.x * cartesianCoords.x )
-                    + (cartesianCoords.y * cartesianCoords.y)
-                    + (cartesianCoords.z * cartesianCoords.z));
+  sphericCoords.r = sqrt(
+                      pow(cartesianCoords.x, 2)
+                    + pow(cartesianCoords.y, 2)
+                    + pow(cartesianCoords.z, 2));
 
-  sphericalCoords.theta = acos(cartesianCoords.z / sphericalCoords.r); 
+  sphericCoords.elevation = acos(cartesianCoords.z / sphericCoords.r); 
 
-  sphericalCoords.phi = atan2(cartesianCoords.y, cartesianCoords.x);
+  sphericCoords.azimuth = atan2(cartesianCoords.y, cartesianCoords.x);
 
-  return sphericalCoords;
+  return sphericCoords;
 }
 
 }

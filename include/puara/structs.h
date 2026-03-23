@@ -25,13 +25,13 @@ struct Simple_Orientation
   double roll, tilt, magnitude;
 };
 
+// Due to confusion between ISO and mathematical conventions, we do not use phi nor theta for spherical coordinates
+// but rather only azimuth, elevation and distance. 
 struct Spherical
 {
   double azimuth;
-  double& phi = azimuth;
   double& yaw = azimuth;
   double elevation;
-  double& theta = elevation;
   double& pitch = elevation;
   double distance;
   double& r = distance;
