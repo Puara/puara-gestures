@@ -20,13 +20,13 @@ TEST_CASE("arrayAverage works for ranges", "[utils]")
 TEST_CASE("arrayAverageZero ignores zeros", "[utils]")
 {
     double data1[] = {0.0, 0.0, 0.0};
-    REQUIRE(arrayAverageZero(data1, 3) == Approx(0.0));
+    REQUIRE(arrayAverageWithoutZero(data1, 3) == Approx(0.0));
 
     double data2[] = {1.0, 0.0, 3.0, 0.0, 5.0};
-    REQUIRE(arrayAverageZero(data2, 5) == Approx((1.0 + 3.0 + 5.0) / 3.0));
+    REQUIRE(arrayAverageWithoutZero(data2, 5) == Approx((1.0 + 3.0 + 5.0) / 3.0));
 
     double data3[] = {2.0, 4.0, 6.0};
-    REQUIRE(arrayAverageZero(data3, 3) == Approx((2.0 + 4.0 + 6.0) / 3.0));
+    REQUIRE(arrayAverageWithoutZero(data3, 3) == Approx((2.0 + 4.0 + 6.0) / 3.0));
 }
 
 TEST_CASE("getCurrentTimeMicroseconds is monotonic", "[utils]")

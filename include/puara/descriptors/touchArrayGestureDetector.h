@@ -71,8 +71,8 @@ private:
       rubs[i] = brushRubDetector[i].rub.value;
     }
 
-    totalBrush = utils::arrayAverageZero(brushes, maxNumBlobs);
-    totalRub = utils::arrayAverageZero(rubs, maxNumBlobs);
+    totalBrush = utils::arrayAverageWithoutZero(brushes, maxNumBlobs);
+    totalRub = utils::arrayAverageWithoutZero(rubs, maxNumBlobs);
   }
 };
 }

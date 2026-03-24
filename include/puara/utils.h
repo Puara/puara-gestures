@@ -64,7 +64,7 @@ float arrayAverage(const T* array, int start, int end)
  * E.g., brush uses it to reduce multiBrush instances. Any value in
  * the passed Array that is == 0 is ignored in the average calculation.
  */
-inline double arrayAverageZero(double* Array, int ArraySize)
+inline double arrayAverageWithoutZero(double* Array, int ArraySize)
 {
   double sum = 0;
   int count = 0;
