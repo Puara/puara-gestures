@@ -168,8 +168,12 @@ inline double utesla_to_gauss(double reading)
 }
 
 /**
- * @brief Convert polar coordinates to cartesian
- * 
+ * @brief Convert spheric coordinates to cartesian coordinates using 
+ * the ISO convention and mathematical approach where instead of arduing
+ * on the phi and theta notation, we use azimuth, elevation and distance 
+ * as field names. 
+ * In these conventions, the default "pointing" direction is along the 
+ * positive z-axis.
  */
 inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 {
@@ -183,8 +187,12 @@ inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 }
 
 /**
- * @brief Convert cartesian coordinates to polar
- * 
+ * @brief Convert cartesian coordinates to spherical coordinates using 
+ * the ISO convention and mathematical approach where instead of arduing
+ * on the phi and theta notation, we use azimuth, elevation and distance 
+ * as field names. 
+ * In these conventions, the default "pointing" direction is along the 
+ * positive z-axis.
  */
 inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
 {
@@ -200,6 +208,52 @@ inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
   sphericCoords.azimuth = atan2(cartesianCoords.y, cartesianCoords.x);
 
   return sphericCoords;
+}
+
+/**
+ * @brief Convert rectangular coordinates to spherical coordinates
+ * using Matlab's phased convention where direction default "pointing"
+ * in the direction of the positive x-axis rather than the positive z-axis
+ *  as in the ISO convention.
+ */
+inline Spherical phased_cartesian_to_spheric(Coord3D cartesianCoords)
+{
+  Spherical sphericCoords;
+
+  sphericCoords.r = sqrt(
+                      pow(cartesianCoords.x, 2)
+                    + pow(cartesianCoords.y, 2)
+                    + pow(cartesianCoords.z, 2)
+                  );
+
+  sphericCoords.elevation = atan2(cartesianCoords.z , sqrt(
+                                            pow(cartesianCoords.x, 2)
+                                          + pow(cartesianCoords.y, 2))
+                                        ); 
+
+  sphericCoords.azimuth = atan2(cartesianCoords.y, cartesianCoords.x);
+
+  //sphericCoords.roll = 0; // should roll be left undefined after initiatlization ?
+
+  return sphericCoords;
+}
+
+/**
+ * @brief Convert spherical coordinates to rectangular coordinates
+ * using Matlab's phased convention where direction defaults to "pointing"
+ * in the direction of the positive x-axis rather than the positive z-axis
+ *  as in the ISO convention. 
+ * Calculations are done by "pointing" forward (x-axis) rather than up (z-axis).
+ */
+inline Coord3D phased_spheric_to_cartesian(Spherical sphericCoords)
+{
+  Coord3D cartesianCoords;
+
+  cartesianCoords.x = sphericCoords.r * cos(sphericCoords.elevation) * cos(sphericCoords.azimuth);
+  cartesianCoords.y = sphericCoords.r * cos(sphericCoords.elevation) * sin(sphericCoords.azimuth);
+  cartesianCoords.z = sphericCoords.r * sin(sphericCoords.elevation);
+
+ return cartesianCoords;
 }
 
 }
