@@ -61,3 +61,12 @@ target_link_libraries(utils PRIVATE Catch2::Catch2WithMain)
 target_include_directories(utils PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME utils COMMAND utils)
 set_tests_properties(utils PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+add_executable(structs
+  testing_structs.cpp
+)
+target_compile_features(structs PRIVATE cxx_std_20)
+target_link_libraries(structs PRIVATE Catch2::Catch2WithMain)
+target_include_directories(structs PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME structs COMMAND structs)
+set_tests_properties(structs PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)

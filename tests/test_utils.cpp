@@ -94,6 +94,40 @@ TEST_CASE("polar_to_cartesian and cartesian_to_polar round trip", "[utils]")
     REQUIRE(p5rt.azimuth == Approx(p5.azimuth));
 }
 
+TEST_CASE("phased spherical/cartesian round trip", "[utils]")
+{
+    using namespace puara_gestures::utils::convert;
+
+    puara_gestures::Spherical p0{};
+    p0.azimuth = M_PI / 2.0;
+    p0.elevation = M_PI / 6.0;
+    p0.distance = 2.0;
+
+    auto c0 = phased_spheric_to_cartesian(p0);
+    REQUIRE(c0.x == Approx(2.0 * cos(M_PI / 6.0) * cos(M_PI / 2.0)));
+    REQUIRE(c0.y == Approx(2.0 * cos(M_PI / 6.0) * sin(M_PI / 2.0)));
+    REQUIRE(c0.z == Approx(2.0 * sin(M_PI / 6.0)));
+
+    auto p0rt = phased_cartesian_to_spheric(c0);
+    REQUIRE(p0rt.r == Approx(p0.distance));
+    REQUIRE(p0rt.elevation == Approx(p0.elevation));
+    REQUIRE(p0rt.azimuth == Approx(p0.azimuth));
+
+    // check primary x-axis convention: elevation=0 and azimuth=0 should map to (r,0,0)
+    puara_gestures::Spherical p1{};
+    p1.azimuth = 0.0;
+    p1.elevation = 0.0;
+    p1.distance = 1.0;
+    auto c1 = phased_spheric_to_cartesian(p1);
+    REQUIRE(c1.x == Approx(1.0));
+    REQUIRE(c1.y == Approx(0.0).margin(1e-15));
+    REQUIRE(c1.z == Approx(0.0).margin(1e-15));
+
+    auto p1rt = phased_cartesian_to_spheric(c1);
+    REQUIRE(p1rt.azimuth == Approx(0.0).margin(1e-15));
+    REQUIRE(p1rt.elevation == Approx(0.0).margin(1e-15));
+}
+
 TEST_CASE("unit conversion helpers", "[utils]")
 {
     using namespace puara_gestures::utils::convert;
