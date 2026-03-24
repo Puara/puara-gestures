@@ -86,7 +86,7 @@ inline double arrayAverageWithoutZero(double* Array, int ArraySize)
 
 /**
  * @brief Legacy function used to calculate 1D blob detection in older
- * digital musical instruments
+ * digital musical instruments. 
  */
 inline void bitShiftArrayL(int* origArray, int* shiftedArray, int arraySize, int shift)
 {

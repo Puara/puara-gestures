@@ -93,3 +93,49 @@ TEST_CASE("polar_to_cartesian and cartesian_to_polar round trip", "[utils]")
     REQUIRE(p5rt.elevation == Approx(p5.elevation));
     REQUIRE(p5rt.azimuth == Approx(p5.azimuth));
 }
+
+TEST_CASE("unit conversion helpers", "[utils]")
+{
+    using namespace puara_gestures::utils::convert;
+
+    REQUIRE(g_to_ms2(1.0) == Approx(9.80665));
+    REQUIRE(ms2_to_g(9.80665) == Approx(1.0));
+
+    REQUIRE(dps_to_rads(180.0) == Approx(M_PI));
+    REQUIRE(rads_to_dps(M_PI) == Approx(180.0));
+
+    REQUIRE(gauss_to_utesla(10000.0) == Approx(1.0));
+    REQUIRE(utesla_to_gauss(1.0) == Approx(10000.0));
+}
+
+TEST_CASE("bitShiftArrayL works as shift register with carry from next cell", "[utils]")
+{
+    int orig[] = {1, 1, 0, 0};
+    int shifted[4] = {0};
+
+    bitShiftArrayL(orig, shifted, 4, 1);
+
+    REQUIRE(shifted[0] == ((orig[0] << 1) | (orig[1] >> 7)));
+    REQUIRE(shifted[1] == ((orig[1] << 1) | (orig[2] >> 7)));
+    REQUIRE(shifted[2] == ((orig[2] << 1) | (orig[3] >> 7)));
+    REQUIRE(shifted[3] == (orig[3] << 1));
+
+    int shifted2[4] = {0};
+    bitShiftArrayL(orig, shifted2, 4, 2);
+
+    int oneShift[4] = {0};
+    bitShiftArrayL(orig, oneShift, 4, 1);
+
+    int expected2[4];
+    for (int i = 0; i < 4; ++i) {
+        if (i == 3) {
+            expected2[i] = (oneShift[i] << 1);
+        } else {
+            expected2[i] = (oneShift[i] << 1) | (oneShift[i + 1] >> 7);
+        }
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        REQUIRE(shifted2[i] == expected2[i]);
+    }
+}
