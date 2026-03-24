@@ -169,11 +169,11 @@ inline double utesla_to_gauss(double reading)
 
 /**
  * @brief Convert spheric coordinates to cartesian coordinates using 
- * the ISO convention and mathematical approach where instead of arduing
- * on the phi and theta notation, we use azimuth, elevation and distance 
- * as field names. 
+ * the ISO convention and mathematical approach. Phi and Theta debate is 
+ * replaced by azimuth and elevation to reduce confusion between conventions.
  * In these conventions, the default "pointing" direction is along the 
  * positive z-axis.
+ * See : https://en.wikipedia.org/wiki/Spherical_coordinate_system
  */
 inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 {
@@ -188,11 +188,11 @@ inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 
 /**
  * @brief Convert cartesian coordinates to spherical coordinates using 
- * the ISO convention and mathematical approach where instead of arduing
- * on the phi and theta notation, we use azimuth, elevation and distance 
- * as field names. 
+ * the ISO convention and mathematical approach. Phi and Theta debate is 
+ * replaced by azimuth and elevation to reduce confusion between conventions.
  * In these conventions, the default "pointing" direction is along the 
  * positive z-axis.
+ * See : https://en.wikipedia.org/wiki/Spherical_coordinate_system
  */
 inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
 {
@@ -211,10 +211,10 @@ inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
 }
 
 /**
- * @brief Convert rectangular coordinates to spherical coordinates
- * using Matlab's phased convention where direction default "pointing"
- * in the direction of the positive x-axis rather than the positive z-axis
- *  as in the ISO convention.
+ * @brief Convert rectangular coordinates to spherical coordinates using 
+ * Matlab's phased convention where default "pointing" direction is along 
+ * the positive x-axis rather than the positive z-axis.
+ * See : https://www.mathworks.com/help/phased/ug/spherical-coordinates.html
  */
 inline Spherical phased_cartesian_to_spheric(Coord3D cartesianCoords)
 {
@@ -239,11 +239,10 @@ inline Spherical phased_cartesian_to_spheric(Coord3D cartesianCoords)
 }
 
 /**
- * @brief Convert spherical coordinates to rectangular coordinates
- * using Matlab's phased convention where direction defaults to "pointing"
- * in the direction of the positive x-axis rather than the positive z-axis
- *  as in the ISO convention. 
- * Calculations are done by "pointing" forward (x-axis) rather than up (z-axis).
+ * @brief Convert spherical coordinates to rectangular coordinates using 
+ * Matlab's phased convention where default "pointing" direction is along 
+ * the positive x-axis rather than the positive z-axis.
+ * See : https://www.mathworks.com/help/phased/ug/spherical-coordinates.html
  */
 inline Coord3D phased_spheric_to_cartesian(Spherical sphericCoords)
 {

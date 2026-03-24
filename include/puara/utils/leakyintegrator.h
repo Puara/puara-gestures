@@ -23,7 +23,6 @@ public:
   double leak{};
   int frequency{}; // leaking frequency (Hz)
   unsigned long long timer{};
-  long long getCurrentTimeMicroseconds();
 
   explicit LeakyIntegrator(
       double currentValue = 0, double oldValue = 0, double leakValue = 0.5,
