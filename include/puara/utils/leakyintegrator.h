@@ -5,6 +5,19 @@
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
+// Leaky integrator:                                                              //
+// - Takes a new input number each step.                                          //
+// - Adds the new input to a fraction of the previous output.                     //
+// - That fraction is "leak" (e.g. 0.5 means keep half of previous state).        //
+// - This produces a smooth value that reacts to changes slowly instead of        //
+//   jumping instantly.                                                           //
+//                                                                                //
+// Real-world example :                                                           //
+// Sensor raw data: 10, 17, 3, 22 → erratic.                                      //
+// Leaky output: 10, 13.5, 8.25, 15.1 (smoothed, trend-preserving).               //
+// Use cases: gesture detection, tracking smoothing, gamepad/MIDI modulation,     //
+// removing high-frequency jitter while keeping responsiveness.                   //
+//********************************************************************************//
 
 #pragma once
 #include <puara/utils/chrono.h>

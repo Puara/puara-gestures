@@ -17,9 +17,9 @@
 #include <puara/utils/threshold.h>
 #include <puara/utils/wrap.h>
 #include <puara/utils/discretizer.h>
+#include <puara/utils/chrono.h>
 
 #include <cmath>
-#include <chrono>
 
 #ifndef M_PI
   #define M_PI 3.141592653589793238462643383279502984
@@ -27,17 +27,6 @@
 
 namespace puara_gestures::utils
 {
-
-/**
- *  @brief Simple function to get the current elapsed time in microseconds.
- */
-inline unsigned long long getCurrentTimeMicroseconds()
-{
-  auto currentTimePoint = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-      currentTimePoint.time_since_epoch());
-  return duration.count();
-}
 
 /**
  * @brief Computes the average of elements in an array over a specified range.

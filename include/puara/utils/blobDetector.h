@@ -1,8 +1,5 @@
 #pragma once
 
-#include <boost/container/small_vector.hpp>
-//seemingly this boost header is never used
-
 namespace puara_gestures
 {
 

@@ -79,3 +79,12 @@ target_link_libraries(leakyintegrator PRIVATE Catch2::Catch2WithMain)
 target_include_directories(leakyintegrator PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME leakyintegrator COMMAND leakyintegrator)
 set_tests_properties(leakyintegrator PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+add_executable(blobDetector
+  testing_blobDetector.cpp
+)
+target_compile_features(blobDetector PRIVATE cxx_std_20)
+target_link_libraries(blobDetector PRIVATE Catch2::Catch2WithMain)
+target_include_directories(blobDetector PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME blobDetector COMMAND blobDetector)
+set_tests_properties(blobDetector PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
