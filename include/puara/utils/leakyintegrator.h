@@ -7,8 +7,8 @@
 //********************************************************************************//
 
 #pragma once
+#include <puara/utils/chrono.h>
 
-#include <chrono>
 
 namespace puara_gestures::utils
 {
@@ -48,10 +48,7 @@ public:
       double reading, double oldValue, double leakValue, int freq,
       unsigned long long& timerValue)
   {
-    auto currentTimePoint = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-        currentTimePoint.time_since_epoch());
-    unsigned long long current_time = duration.count();
+    auto current_time = utils::getCurrentTimeMicroseconds();
 
     if(freq <= 0)
     {
