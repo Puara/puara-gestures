@@ -23,6 +23,14 @@ namespace puara_gestures
  *
  * @note
  * - If the input contains more blobs than `maxNumBlobs`, the additional blobs are ignored.
+ *
+ * Behavior example:
+ * - Data: {1,1,0,1,0,1,1}
+ * - Contiguous runs: [0..1] (size 2), [3..3] (size 1), [5..6] (size 2)
+ * - If instantiated as `BlobDetector<2>`, the detector records only the first two runs
+ *   and stops at `maxNumBlobs`.
+ * - `blobCount` becomes 2, not because "single-1 blobs are skipped", but because
+ *   the detector is bounded by `maxNumBlobs` and stops early.
  */
 template <int maxNumBlobs>
 class BlobDetector
@@ -81,7 +89,7 @@ public:
 
       //continue the blob until we no longer have 1s
       int sizeCounter = 1;
-      while((stripe + sizeCounter) <= touchArraySize && touchArray[stripe + sizeCounter] == 1)
+      while((stripe + sizeCounter) < touchArraySize && touchArray[stripe + sizeCounter] == 1)
         ++sizeCounter;
 
       blobSize[blobCount] = sizeCounter;
