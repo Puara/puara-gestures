@@ -88,3 +88,12 @@ target_link_libraries(blobDetector PRIVATE Catch2::Catch2WithMain)
 target_include_directories(blobDetector PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME blobDetector COMMAND blobDetector)
 set_tests_properties(blobDetector PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+add_executable(magnetometerCalibration
+  testing_magnetometerCalibration.cpp
+)
+target_compile_features(magnetometerCalibration PRIVATE cxx_std_20)
+target_link_libraries(magnetometerCalibration PRIVATE Catch2::Catch2WithMain)
+target_include_directories(magnetometerCalibration PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME magnetometerCalibration COMMAND magnetometerCalibration)
+set_tests_properties(magnetometerCalibration PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
