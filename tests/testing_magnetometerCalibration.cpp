@@ -73,9 +73,9 @@ TEST_CASE("Calibration: applyMagnetometerCalibration adjusts readings from hardI
     REQUIRE(calib.myCalIMU.magn.z == Approx(1.0));
 }
 
-TEST_CASE("Calibration: generateMagnetometerMatrices with imu_data_56k.csv yields sphere-like calibrated field", "[calibration][csv]")
+TEST_CASE("Calibration: generateMagnetometerMatrices with magnetometer_data.csv yields sphere-like calibrated field", "[calibration][csv]")
 {
-    std::filesystem::path csvPath = std::filesystem::path(__FILE__).parent_path() / "data" / "imu_data_56k.csv";
+    std::filesystem::path csvPath = std::filesystem::path(__FILE__).parent_path() / "data" / "magnetometer_data.csv";
     REQUIRE(std::filesystem::exists(csvPath));
 
     rapidcsv::Document doc(csvPath.string(), rapidcsv::LabelParams(0, -1), rapidcsv::SeparatorParams(','));
