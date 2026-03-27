@@ -3,7 +3,7 @@ on:
   push:
 
 jobs:
-  build-project:
+  Desktop-OS-Tests:
     strategy:
       matrix:
         config:
