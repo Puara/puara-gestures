@@ -8,6 +8,7 @@
 #include <vector>
 
 using namespace Catch;
+using namespace puara_gestures;
 
 TEST_CASE("Calibration: recordRawMagData increments storage", "[calibration]")
 {

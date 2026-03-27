@@ -11,9 +11,13 @@
 
 #include <puara/structs.h>
 
-#include <Eigen/Core>
-#include <Eigen/Dense>
-#include <unsupported/Eigen/MatrixFunctions>
+#if defined(Arduino_h)
+  #include <ArduinoEigen.h>
+#else
+  #include <Eigen/Core>
+  #include <Eigen/Dense>
+  #include <unsupported/Eigen/MatrixFunctions>
+#endif
 
 namespace puara_gestures::utils
 {
@@ -28,10 +32,14 @@ public:
   std::vector<Coord3D> rawMagData;
   Eigen::MatrixXd softIronMatrix;
   Eigen::VectorXd hardIronBias;
+  bool enforceRadialEqualization = false;
+  double calibrationRadius = 0.0;
 
   Calibration()
       : softIronMatrix(3, 3)
       , hardIronBias(3)
+      , enforceRadialEqualization(false)
+      , calibrationRadius(0.0)
   {
     softIronMatrix << 1, 1, 1, 1, 1, 1, 1, 1, 1;
 
@@ -68,6 +76,24 @@ public:
     myCalIMU.magn.z = softIronMatrix(2, 0) * (myRawIMU.magn.x - hardIronBias(0))
                       + softIronMatrix(2, 1) * (myRawIMU.magn.y - hardIronBias(1))
                       + softIronMatrix(2, 2) * (myRawIMU.magn.z - hardIronBias(2));
+
+    if(enforceRadialEqualization)
+    {
+      Eigen::Vector3d calibrated{
+          myCalIMU.magn.x,
+          myCalIMU.magn.y,
+          myCalIMU.magn.z,
+      };
+      double r = calibrated.norm();
+      if(r > std::numeric_limits<double>::epsilon())
+      {
+        double scale = calibrationRadius / r;
+        calibrated *= scale;
+        myCalIMU.magn.x = calibrated(0);
+        myCalIMU.magn.y = calibrated(1);
+        myCalIMU.magn.z = calibrated(2);
+      }
+    }
   }
 
   /**
@@ -102,7 +128,7 @@ public:
     D.row(6) = 2.0 * s.row(0).array();
     D.row(7) = 2.0 * s.row(1).array();
     D.row(8) = 2.0 * s.row(2).array();
-    D.row(9) = Eigen::MatrixXd::Ones(1, 105);
+    D.row(9) = Eigen::MatrixXd::Ones(1, s.cols());
 
     // std::cout << std::fixed << std::setprecision(30);
 
@@ -149,14 +175,114 @@ public:
 
     return std::make_tuple(M, n, d);
   }
+  bool isSphereLikeCalibration(const Eigen::MatrixXd& s, const Eigen::MatrixXd& soft, const Eigen::VectorXd& hard) const
+  {
+    if(s.rows() == 0 || soft.rows() != 3 || soft.cols() != 3 || hard.size() != 3)
+    {
+      return false;
+    }
 
+    int n = s.rows();
+    Eigen::Vector3d mean = Eigen::Vector3d::Zero();
+    double radiusSum = 0.0;
+    double radiusSqSum = 0.0;
+    double radiusMin = std::numeric_limits<double>::infinity();
+    double radiusMax = 0.0;
+
+    for(int i = 0; i < n; ++i)
+    {
+      Eigen::Vector3d v = soft * (s.row(i).transpose() - hard);
+      double r = v.norm();
+      radiusSum += r;
+      radiusSqSum += r * r;
+      radiusMin = std::min(radiusMin, r);
+      radiusMax = std::max(radiusMax, r);
+      mean += v;
+    }
+
+    mean /= static_cast<double>(n);
+    double meanRadius = radiusSum / static_cast<double>(n);
+    if(meanRadius <= 0.0)
+    {
+      return false;
+    }
+
+    double varRadius = radiusSqSum / static_cast<double>(n) - meanRadius * meanRadius;
+    double stdRadius = std::sqrt(std::max(varRadius, 0.0));
+
+    if(!(mean.norm() < 0.2 * meanRadius))
+      return false;
+
+    if(!(stdRadius < 0.25 * meanRadius))
+      return false;
+
+    if(!((radiusMax - radiusMin) < 0.8 * meanRadius))
+      return false;
+
+    Eigen::Matrix3d cov = Eigen::Matrix3d::Zero();
+    for(int i = 0; i < n; ++i)
+    {
+      Eigen::Vector3d d = soft * (s.row(i).transpose() - hard) - mean;
+      cov += d * d.transpose();
+    }
+    cov /= static_cast<double>(n);
+
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> es(cov);
+    if(es.info() != Eigen::Success)
+      return false;
+
+    Eigen::Vector3d eval = es.eigenvalues();
+    if(eval(0) <= 0.0 || eval(2) <= 0.0)
+      return false;
+
+    double ratio = eval(2) / eval(0);
+    return ratio < 2.0 && ratio > 0.5;
+  }
+
+  bool fallbackPcaCalibration(const Eigen::MatrixXd& s)
+  {
+    if(s.rows() < 3)
+      return false;
+
+    Eigen::Vector3d mean = s.colwise().mean();
+    Eigen::MatrixXd centered = s.rowwise() - mean.transpose();
+
+    Eigen::Matrix3d cov = (centered.adjoint() * centered) / static_cast<double>(s.rows());
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> es(cov);
+    if(es.info() != Eigen::Success)
+      return false;
+
+    Eigen::Vector3d eval = es.eigenvalues();
+    if(eval.minCoeff() <= 0.0)
+      return false;
+
+    Eigen::Matrix3d evec = es.eigenvectors();
+    Eigen::Matrix3d invSqrt = eval.array().inverse().sqrt().matrix().asDiagonal();
+
+    Eigen::Matrix3d soft = evec * invSqrt * evec.transpose();
+
+    double radiusSum = 0.0;
+    for(int i = 0; i < s.rows(); ++i)
+    {
+      Eigen::Vector3d v = soft * (s.row(i).transpose() - mean);
+      radiusSum += v.norm();
+    }
+
+    double meanRadius = radiusSum / static_cast<double>(s.rows());
+    if(meanRadius <= 0.0)
+      return false;
+
+    hardIronBias = mean;
+    softIronMatrix = (gravitationField / meanRadius) * soft;
+
+    return true;
+  }
   /**
    * Generates magnetometer calibration matrices based on saved raw dataset by fitting an ellipsoid to a set of 3D coordinates, 
    * deriving the hard-iron bias and soft-iron matrix based on  the pre-defined gravitational field.
    */
   int generateMagnetometerMatrices(std::vector<Coord3D> customRawMagData)
   {
-
     if(customRawMagData.empty())
     {
       return 0;
@@ -177,13 +303,42 @@ public:
 
     std::tie(M, n, d) = ellipsoid_fit(s.transpose());
 
-    Eigen::MatrixXd M_1 = M.inverse();
-    hardIronBias = -(M_1 * n);
+    bool success = false;
 
-    softIronMatrix
-        = (gravitationField / std::sqrt((n.transpose() * (M_1 * n) - d)) * M.sqrt());
+    if(M.rows() == 3 && M.cols() == 3 && n.size() == 3)
+    {
+      Eigen::MatrixXd M_1 = M.inverse();
+      hardIronBias = -(M_1 * n);
 
-    return 1;
+      double radiusTerm = (n.transpose() * (M_1 * n) - d);
+      if(radiusTerm > 0.0)
+      {
+        softIronMatrix = (gravitationField / std::sqrt(radiusTerm)) * M.sqrt();
+
+        if(isSphereLikeCalibration(s, softIronMatrix, hardIronBias))
+        {
+          success = true;
+        }
+      }
+    }
+
+    if(!success)
+    {
+      success = fallbackPcaCalibration(s);
+    }
+
+    if(success)
+    {
+      enforceRadialEqualization = true;
+      calibrationRadius = static_cast<double>(gravitationField);
+    }
+    else
+    {
+      enforceRadialEqualization = false;
+      calibrationRadius = 0.0;
+    }
+
+    return success ? 1 : 0;
   }
 
   void generateMagnetometerMatrices() { generateMagnetometerMatrices(rawMagData); }
