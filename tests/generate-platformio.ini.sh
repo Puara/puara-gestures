@@ -4,7 +4,7 @@
 PUARA_GESTURES_COMMIT_HASH=$1
 
 if [[ -z "$PUARA_GESTURES_PATH" ]]; then
-  PUARA_GESTURES_PATH="https://github.com/Puara/puara-gestures.git$PUARA_GESTURES_COMMIT_HASH"
+  PUARA_GESTURES_PATH="https://github.com/Puara/puara-gestures.git#$PUARA_GESTURES_COMMIT_HASH"
 fi
 
 # We'll put the temporary platformio.ini file in tests/platformio/
