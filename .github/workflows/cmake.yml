@@ -46,35 +46,6 @@ jobs:
           cd build
           ctest -V -C Release
 
-#  Arduino-Compilation-Test:    # this CI will have to be integrated with the puara-gestures-arduino repository once it's created, as the compilation test relies on the Arduino sketch being present in the repository
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Project
-#        uses: actions/checkout@v4
-#        with:
-#          submodules: recursive
-#
-#      - name: Set up Arduino CLI
-#        uses: arduino/setup-arduino-cli@v1
-#
-#      - name: Update Arduino CLI core index
-#        run: |
-#          arduino-cli core update-index
-#
-#      - name: Install Arduino esp32 board support
-#        run: |
-#          arduino-cli core install esp32:esp32
-#
-#      - name: Install required Arduino libraries
-#        run: |
-#          arduino-cli lib install "Eigen"
-#          arduino-cli lib install "boost-embedded-190"
-#
-#
-#      - name: Verify compilation for Arduino ESP32
-#        run: |
-#          arduino-cli compile -b esp32:esp32:esp32s3 tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
-#
   PlatformIO-Tests:
     runs-on: ubuntu-latest
     steps:
