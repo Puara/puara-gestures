@@ -63,6 +63,11 @@ jobs:
         run: |
           pip install platformio
 
+      - name: Generate PlatformIO configuration
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          bash tests/generate-platformio.ini.sh $COMMIT_HASH
+
       - name: Build PlatformIO project
         run: |
           cd tests/platformio
