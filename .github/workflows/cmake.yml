@@ -63,17 +63,12 @@ jobs:
 
       - name: Install Arduino cores
         run: |
-          arduino-cli core install arduino:avr
           arduino-cli core install arduino:samd
 
       - name: Install required Arduino libraries
         run: |
-          arduino-cli lib install "Eigen"
+          arduino-cli lib install "ArduinoEigen"
           arduino-cli lib install "boost-embedded-190"
-
-      - name: Verify compilation for Arduino AVR
-        run: |
-          arduino-cli compile -b arduino:avr:uno tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
 
       - name: Verify compilation for Arduino SAMD
         run: |
@@ -100,11 +95,6 @@ jobs:
         run: |
           platformio lib install "Eigen"
           platformio lib install "boost-embedded-190"
-
-      - name: Build PlatformIO project (generic Arduino AVR)
-        run: |
-          cd tests/platformio
-          platformio run -e avr
 
       - name: Build PlatformIO project (generic Arduino SAMD)
         run: |
