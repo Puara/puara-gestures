@@ -17,7 +17,7 @@
 #include <boost/circular_buffer.hpp>
 
 // Include puara-gestures headers
-#include <puara/gestures.hpp>
+#include <puara/gestures.h>
 
 void setup() {
   Serial.begin(9600);
