@@ -46,7 +46,7 @@ jobs:
           cd build
           ctest -V -C Release
 
-  PlatformIO-Tests:
+  PlatformIO-Tests-with-3rd-Party-Libraries:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
@@ -63,13 +63,43 @@ jobs:
         run: |
           pip install platformio
 
-      - name: Install PlatformIO platforms and libraries
-        run: |
-          platformio lib install "Eigen"
-          platformio lib install "boost-embedded-190"
+      - name: Get current commit hash
+        id: get_commit
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Build PlatformIO project
         run: |
           cd tests/platformio
-          platformio run -e samd
+          platformio run -e build_with_3rdparty_libs
   
+
+#  PlatformIO-Tests-with-Arduino-Librairies:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Project
+#        uses: actions/checkout@v4
+#        with:
+#          submodules: recursive
+#
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#       with:
+#          python-version: '3.11'
+#
+#      - name: Install PlatformIO
+#        run: |
+#          pip install platformio
+#
+#      - name: Install PlatformIO platforms and libraries
+#        run: |
+#          platformio lib install "Eigen"
+#          platformio lib install "boost-embedded-190"
+#
+#      - name: Get current commit hash
+#        id: get_commit
+#        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+#
+#      - name: Build PlatformIO project
+#        run: |
+#          cd tests/platformio
+#          platformio run -e esp32

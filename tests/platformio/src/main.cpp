@@ -8,17 +8,20 @@
 */
 
 #include <Arduino.h>
-#include <ArduinoEigen.h>
-#include <ArduinoEigenDense.h>
-#include <ArduinoEigenSparse.h>
-#include <boost-embedded-190.h>
+
+// Incude 3rd party libraries
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/MatrixFunctions>
+#include "IMU_Sensor_Fusion/imu_orientation.h"
+#include <boost/circular_buffer.hpp>
 
 // Include puara-gestures headers
 #include <puara/gestures.hpp>
 
 void setup() {
   Serial.begin(9600);
-  delay(2000);  // Wait for serial to stabilize
+  delay(500);  // Wait for serial to stabilize
   
   Serial.println("=== puara-gestures PlatformIO Test ===");
   
