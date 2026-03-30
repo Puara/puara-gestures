@@ -68,7 +68,7 @@ jobs:
 
       - name: Install required Arduino libraries
         run: |
-          arduino-cli lib install "ArduinoEigen"
+          arduino-cli lib install "Eigen"
           arduino-cli lib install "boost-embedded-190"
 
       - name: Verify compilation for Arduino AVR
@@ -98,7 +98,7 @@ jobs:
 
       - name: Install PlatformIO platforms and libraries
         run: |
-          platformio lib install "ArduinoEigen"
+          platformio lib install "Eigen"
           platformio lib install "boost-embedded-190"
 
       - name: Build PlatformIO project (generic Arduino AVR)
