@@ -72,7 +72,7 @@ jobs:
 
       - name: Verify compilation for Arduino SAMD
         run: |
-          arduino-cli compile -b arduino:samd:arduino_zero tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
+          arduino-cli compile -b arduino:samd:mzero tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
 
   PlatformIO-Tests:
     runs-on: ubuntu-latest
