@@ -61,18 +61,19 @@ jobs:
         run: |
           arduino-cli core update-index
 
-      - name: Install Arduino cores
+      - name: Install Arduino esp32 board support
         run: |
-          arduino-cli core install arduino:samd
+          arduino-cli core install esp32:esp32
 
       - name: Install required Arduino libraries
         run: |
           arduino-cli lib install "Eigen"
           arduino-cli lib install "boost-embedded-190"
 
-      - name: Verify compilation for Arduino SAMD
+
+      - name: Verify compilation for Arduino ESP32
         run: |
-          arduino-cli compile -b arduino:samd:mzero tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
+          arduino-cli compile -b esp32::esp32::ep32s3 tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
 
   PlatformIO-Tests:
     runs-on: ubuntu-latest
@@ -96,7 +97,7 @@ jobs:
           platformio lib install "Eigen"
           platformio lib install "boost-embedded-190"
 
-      - name: Build PlatformIO project (generic Arduino SAMD)
+      - name: Build PlatformIO project
         run: |
           cd tests/platformio
           platformio run -e samd
