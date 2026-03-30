@@ -73,7 +73,7 @@ jobs:
 
       - name: Verify compilation for Arduino ESP32
         run: |
-          arduino-cli compile -b esp32:esp32:ep32s3 tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
+          arduino-cli compile -b esp32:esp32:esp32s3 tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
 
   PlatformIO-Tests:
     runs-on: ubuntu-latest
