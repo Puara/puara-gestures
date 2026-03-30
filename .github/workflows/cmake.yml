@@ -63,10 +63,6 @@ jobs:
         run: |
           pip install platformio
 
-      - name: Get current commit hash
-        id: get_commit
-        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
       - name: Build PlatformIO project
         run: |
           cd tests/platformio
