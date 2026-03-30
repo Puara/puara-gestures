@@ -67,7 +67,7 @@ jobs:
 
       - name: Install required Arduino libraries
         run: |
-          arduino-cli lib install "ArduinoEigen"
+          arduino-cli lib install "Eigen"
           arduino-cli lib install "boost-embedded-190"
 
       - name: Verify compilation for Arduino SAMD
