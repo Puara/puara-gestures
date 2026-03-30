@@ -45,3 +45,69 @@ jobs:
         run: |
           cd build
           ctest -V -C Release
+
+  Arduino-Compilation-Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+
+      - name: Update Arduino CLI core index
+        run: |
+          arduino-cli core update-index
+
+      - name: Install Arduino cores
+        run: |
+          arduino-cli core install arduino:avr
+          arduino-cli core install arduino:samd
+
+      - name: Install required Arduino libraries
+        run: |
+          arduino-cli lib install "ArduinoEigen"
+          arduino-cli lib install "boost-embedded-190"
+
+      - name: Verify compilation for Arduino AVR
+        run: |
+          arduino-cli compile -b arduino:avr:uno tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
+
+      - name: Verify compilation for Arduino SAMD
+        run: |
+          arduino-cli compile -b arduino:samd:arduino_zero tests/arduino/arduino_sketch_test/arduino_sketch_test.ino -v
+
+  PlatformIO-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: |
+          pip install platformio
+
+      - name: Install PlatformIO platforms and libraries
+        run: |
+          platformio lib install "ArduinoEigen"
+          platformio lib install "boost-embedded-190"
+
+      - name: Build PlatformIO project (generic Arduino AVR)
+        run: |
+          cd tests/platformio
+          platformio run -e avr
+
+      - name: Build PlatformIO project (generic Arduino SAMD)
+        run: |
+          cd tests/platformio
+          platformio run -e samd
+  
