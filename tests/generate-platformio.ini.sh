@@ -11,7 +11,7 @@ fi
 OUTPUT_FILE="tests/platformio/platformio.ini"
 
 # Write the file
-cat <<'EOL' > "${OUTPUT_FILE}"
+cat <<EOL > "${OUTPUT_FILE}"
 [platformio]
 description = Embedded Compilation Tests for Puara Gestures Library
 default_envs = build_with_3rdparty_libs
