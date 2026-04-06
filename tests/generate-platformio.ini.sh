@@ -20,6 +20,7 @@ platform = https://github.com/pioarduino/platform-espressif32/releases/download/
 board = tinypico
 framework = arduino
 build_flags =
-    -I${PROJECT_LIBDEPS_DIR}/puara-gestures/3rdparty
+    -I${PROJECT_LIBDEPS_DIR}/puara-gestures/3rdparty/eigen
+    -I${PROJECT_LIBDEPS_DIR}/puara-gestures/3rdparty/IMU_Sensor_Fusion
 lib_deps = $PUARA_GESTURES_PATH
 EOL
