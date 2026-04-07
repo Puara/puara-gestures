@@ -73,6 +73,15 @@ jobs:
           cd tests/platformio
           platformio run -e build_with_3rdparty_libs
   
+      - name: Generate Wokwi config
+        run: |
+          cat > tests/platformio/wokwi.toml <<'EOF'
+          [wokwi]
+          version = 1
+          firmware = '.pio/build/build_with_arduino_libs/firmware.bin'
+          elf = '.pio/build/build_with_arduino_libs/firmware.elf'
+          EOF
+
       - name: Simulate and test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
         with:
@@ -107,7 +116,16 @@ jobs:
         run: |
           cd tests/platformio
           platformio run -e build_with_arduino_libs 
-  
+
+      - name: Generate Wokwi config
+        run: |
+          cat > tests/platformio/wokwi.toml <<'EOF'
+          [wokwi]
+          version = 1
+          firmware = '.pio/build/build_with_arduino_libs/firmware.bin'
+          elf = '.pio/build/build_with_arduino_libs/firmware.elf'
+          EOF
+
       - name: Simulate and test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
         with:
