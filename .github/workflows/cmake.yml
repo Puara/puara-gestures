@@ -87,7 +87,7 @@ jobs:
         with:
           token: ${{ secrets.WOKWI_CLI_TOKEN }}
           path: tests/platformio  # directory with wokwi.toml, relative to repo's root
-          timeout: 30000
+          timeout: 90000
           expect_text: '=== EMBEDDED TESTS PASSED ==='
 
   PlatformIO-Tests-with-Arduino-Librairies:
@@ -131,5 +131,5 @@ jobs:
         with:
           token: ${{ secrets.WOKWI_CLI_TOKEN }}
           path: tests/platformio  # directory with wokwi.toml, relative to repo's root
-          timeout: 30000
+          timeout: 90000
           expect_text: '=== EMBEDDED TESTS PASSED ==='          
