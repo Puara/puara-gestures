@@ -96,7 +96,7 @@ jobs:
                 "attrs": {}
               }
             ],
-            "connections":
+            "connections": [ 
               [
                 "esp:TX",
                 "$serialMonitor:RX",
@@ -169,7 +169,7 @@ jobs:
                 "attrs": {}
               }
             ],
-            "connections":
+            "connections": [
               [
                 "esp:TX",
                 "$serialMonitor:RX",
