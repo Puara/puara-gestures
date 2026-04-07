@@ -98,14 +98,10 @@ jobs:
         run: |
           pip install platformio
 
-      - name: Install PlatformIO platforms and libraries
+      - name: Generate PlatformIO configuration
         run: |
-          platformio lib install "Eigen"
-          platformio lib install "boost-embedded-190"
-
-      - name: Get current commit hash
-        id: get_commit
-        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          bash tests/generate-platformio.ini.sh $COMMIT_HASH
 
       - name: Build PlatformIO project
         run: |
