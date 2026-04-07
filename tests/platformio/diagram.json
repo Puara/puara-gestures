@@ -1,8 +1,0 @@
-{
-  "version": 1,
-  "author": "n.a.",
-  "editor": "wokwi",
-  "parts": [ { "type": "wokwi-tinypico", "id": "esp", "attrs": {} } ],
-  "connections": [ [ "esp:TX", "$serialMonitor:RX", "", [] ], [ "esp:RX", "$serialMonitor:TX", "", [] ] ],
-  "dependencies": {}
-}

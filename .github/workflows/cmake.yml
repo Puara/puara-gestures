@@ -78,9 +78,22 @@ jobs:
           cat > tests/platformio/wokwi.toml <<'EOF'
           [wokwi]
           version = 1
-          firmware = '.pio/build/build_with_arduino_libs/firmware.bin'
-          elf = '.pio/build/build_with_arduino_libs/firmware.elf'
+          firmware = '.pio/build/build_with_3rdparty_libs/firmware.bin'
+          elf = '.pio/build/build_with_3rdparty_libs/firmware.elf'
           EOF
+
+      - name : Generate Wokwi diagram.json
+        run: |
+          cat > tests/platformio/diagram.json <<'EOF'
+          {
+            "version": 1,
+            "author": "n.a.",
+            "editor": "wokwi",
+            "parts": [ { "type": "wokwi-tinypico", "id": "esp", "attrs": {} } ],
+            "connections": [ [ "esp:TX", "$serialMonitor:RX", "", [] ], [ "esp:RX", "$serialMonitor:TX", "", [] ] ],
+            "dependencies": {}
+          }
+          EOF          
 
       - name: Simulate and test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
@@ -124,6 +137,19 @@ jobs:
           version = 1
           firmware = '.pio/build/build_with_arduino_libs/firmware.bin'
           elf = '.pio/build/build_with_arduino_libs/firmware.elf'
+          EOF
+
+      - name : Generate Wokwi diagram.json
+        run: |
+          cat > tests/platformio/diagram.json <<'EOF'
+          {
+            "version": 1,
+            "author": "n.a.",
+            "editor": "wokwi",
+            "parts": [ { "type": "wokwi-tinypico", "id": "esp", "attrs": {} } ],
+            "connections": [ [ "esp:TX", "$serialMonitor:RX", "", [] ], [ "esp:RX", "$serialMonitor:TX", "", [] ] ],
+            "dependencies": {}
+          }
           EOF
 
       - name: Simulate and test with Wokwi
