@@ -82,23 +82,23 @@ jobs:
           elf = '.pio/build/build_with_3rdparty_libs/firmware.elf'
           EOF
 
-      - name : Generate Wokwi diagram.json
+      - name: Generate Wokwi diagram.json
         run: |
           cat > tests/platformio/diagram.json <<'EOF'
           {
             "version": 1,
             "author": "chupichupichu",
             "editor": "wokwi",
-            "parts": [ 
+            "parts": [
               {
-                "type": "wokwi-tinypico", 
-                "id": "esp", 
-                "attrs": {} 
+                "type": "wokwi-tinypico",
+                "id": "esp",
+                "attrs": {}
               }
             ],
             "connections": []
           }
-          EOF          
+          EOF
 
       - name: Simulate and test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
@@ -144,7 +144,7 @@ jobs:
           elf = '.pio/build/build_with_arduino_libs/firmware.elf'
           EOF
 
-      - name : Generate Wokwi diagram.json
+      - name: Generate Wokwi diagram.json
         run: |
           cat > tests/platformio/diagram.json <<'EOF'
           {
@@ -152,8 +152,9 @@ jobs:
             "author": "chupichupichu",
             "editor": "wokwi",
             "parts": [
-              { "type": "wokwi-tinypico", 
-                "id": "esp", 
+              {
+                "type": "wokwi-tinypico",
+                "id": "esp",
                 "attrs": {}
               }
             ],
