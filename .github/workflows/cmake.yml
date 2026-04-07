@@ -3,48 +3,48 @@ on:
   push:
 
 jobs:
-  Desktop-OS-Tests:
-    strategy:
-      matrix:
-        config:
-          - {
-              os: ubuntu-latest,
-              cmake_options: "",
-              dependencies: "sudo apt update -yqq && sudo apt -yqq install libboost-dev"
-            }
-          - {
-              os: macos-latest,
-              cmake_options: "CMAKE_PREFIX_PATH=/opt/homebrew",
-              dependencies: "brew install boost eigen && brew link boost eigen"
-            }
-          - {
-              os: windows-latest,
-              cmake_options: "Boost_INCLUDE_DIR=D:/a/puara-gestures/puara-gestures/3rdparty",
-              dependencies: "choco install eigen -y --no-progress"
-            }
+#  Desktop-OS-Tests:
+#    strategy:
+#      matrix:
+#        config:
+#          - {
+#              os: ubuntu-latest,
+#              cmake_options: "",
+#              dependencies: "sudo apt update -yqq && sudo apt -yqq install libboost-dev"
+#            }
+#          - {
+#              os: macos-latest,
+#              cmake_options: "CMAKE_PREFIX_PATH=/opt/homebrew",
+#              dependencies: "brew install boost eigen && brew link boost eigen"
+#            }
+#          - {
+#              os: windows-latest,
+#              cmake_options: "Boost_INCLUDE_DIR=D:/a/puara-gestures/puara-gestures/3rdparty",
+#              dependencies: "choco install eigen -y --no-progress"
+#            }
 
-    runs-on: ${{ matrix.config.os }}
-    steps:
-      - name: Checkout Project
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      - name: Dependencies
-        run: ${{ matrix.config.dependencies }}
-
-      - name: Configure
-        run: |
-          cmake -S tests -B build -DPUARA_GESTURES_ENABLE_STANDALONE=0 ${{ matrix.config.cmake_options }}
-
-      - name: Build
-        run: |
-          cmake --build build --config Release
-
-      - name: Run Tests
-        run: |
-          cd build
-          ctest -V -C Release
+#    runs-on: ${{ matrix.config.os }}
+#    steps:
+#      - name: Checkout Project
+#        uses: actions/checkout@v4
+#        with:
+#          submodules: recursive
+#
+#      - name: Dependencies
+#        run: ${{ matrix.config.dependencies }}
+#
+#      - name: Configure
+#        run: |
+#          cmake -S tests -B build -DPUARA_GESTURES_ENABLE_STANDALONE=0 ${{ matrix.config.cmake_options }}
+#
+#      - name: Build
+#        run: |
+#          cmake --build build --config Release
+#
+#      - name: Run Tests
+#        run: |
+#          cd build
+#          ctest -V -C Release
 
   PlatformIO-Tests-with-3rd-Party-Libraries:
     runs-on: ubuntu-latest
@@ -54,8 +54,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+     - name: Set up Python
+       uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -81,35 +81,33 @@ jobs:
 #          timeout: 30000
 #          expect_text: '=== EMBEDDED TESTS PASSED ==='
 
+  PlatformIO-Tests-with-Arduino-Librairies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-#  PlatformIO-Tests-with-Arduino-Librairies:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout Project
-#        uses: actions/checkout@v4
-#        with:
-#          submodules: recursive
-#
-#      - name: Set up Python
-#        uses: actions/setup-python@v4
-#       with:
-#          python-version: '3.11'
-#
-#      - name: Install PlatformIO
-#        run: |
-#          pip install platformio
-#
-#      - name: Install PlatformIO platforms and libraries
-#        run: |
-#          platformio lib install "Eigen"
-#          platformio lib install "boost-embedded-190"
-#
-#      - name: Get current commit hash
-#        id: get_commit
-#        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-#
-#      - name: Build PlatformIO project
-#        run: |
-#          cd tests/platformio
-#          platformio run -e esp32
+      - name: Install PlatformIO
+        run: |
+          pip install platformio
+
+      - name: Install PlatformIO platforms and libraries
+        run: |
+          platformio lib install "Eigen"
+          platformio lib install "boost-embedded-190"
+
+      - name: Get current commit hash
+        id: get_commit
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build PlatformIO project
+        run: |
+          cd tests/platformio
+          platformio run -e build_with_arduino_libs 
