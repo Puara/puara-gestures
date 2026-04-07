@@ -73,6 +73,15 @@ jobs:
           cd tests/platformio
           platformio run -e build_with_3rdparty_libs
   
+      - name: Simulate and test with Wokwi
+        uses: wokwi/wokwi-ci-action@v1
+        with:
+          token: ${{ secrets.WOKWI_CLI_TOKEN }}
+          path: tests/platformio  # directory with wokwi.toml, relative to repo's root
+          timeout: 30000
+          expect_text: '=== EMBEDDED TESTS PASSED ==='
+
+
 
 #  PlatformIO-Tests-with-Arduino-Librairies:
 #    runs-on: ubuntu-latest
