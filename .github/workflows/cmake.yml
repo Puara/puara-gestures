@@ -3,48 +3,48 @@ on:
   push:
 
 jobs:
-#  Desktop-OS-Tests:
-#    strategy:
-#      matrix:
-#        config:
-#          - {
-#              os: ubuntu-latest,
-#              cmake_options: "",
-#              dependencies: "sudo apt update -yqq && sudo apt -yqq install libboost-dev"
-#            }
-#          - {
-#              os: macos-latest,
-#              cmake_options: "CMAKE_PREFIX_PATH=/opt/homebrew",
-#              dependencies: "brew install boost eigen && brew link boost eigen"
-#            }
-#          - {
-#              os: windows-latest,
-#              cmake_options: "Boost_INCLUDE_DIR=D:/a/puara-gestures/puara-gestures/3rdparty",
-#              dependencies: "choco install eigen -y --no-progress"
-#            }
+  Desktop-OS-Tests:
+    strategy:
+      matrix:
+        config:
+          - {
+              os: ubuntu-latest,
+              cmake_options: "",
+              dependencies: "sudo apt update -yqq && sudo apt -yqq install libboost-dev"
+            }
+          - {
+              os: macos-latest,
+              cmake_options: "CMAKE_PREFIX_PATH=/opt/homebrew",
+              dependencies: "brew install boost eigen && brew link boost eigen"
+            }
+          - {
+              os: windows-latest,
+              cmake_options: "Boost_INCLUDE_DIR=D:/a/puara-gestures/puara-gestures/3rdparty",
+              dependencies: "choco install eigen -y --no-progress"
+            }
 
-#    runs-on: ${{ matrix.config.os }}
-#    steps:
-#      - name: Checkout Project
-#        uses: actions/checkout@v4
-#        with:
-#          submodules: recursive
-#
-#      - name: Dependencies
-#        run: ${{ matrix.config.dependencies }}
-#
-#      - name: Configure
-#        run: |
-#          cmake -S tests -B build -DPUARA_GESTURES_ENABLE_STANDALONE=0 ${{ matrix.config.cmake_options }}
-#
-#      - name: Build
-#        run: |
-#          cmake --build build --config Release
-#
-#      - name: Run Tests
-#        run: |
-#          cd build
-#          ctest -V -C Release
+    runs-on: ${{ matrix.config.os }}
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Dependencies
+        run: ${{ matrix.config.dependencies }}
+
+      - name: Configure
+        run: |
+          cmake -S tests -B build -DPUARA_GESTURES_ENABLE_STANDALONE=0 ${{ matrix.config.cmake_options }}
+
+      - name: Build
+        run: |
+          cmake --build build --config Release
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -V -C Release
 
   PlatformIO-Tests-with-3rd-Party-Libraries:
     runs-on: ubuntu-latest
@@ -188,6 +188,6 @@ jobs:
         uses: wokwi/wokwi-ci-action@v1
         with:
           token: ${{ secrets.WOKWI_CLI_TOKEN }}
-          path: tests/platformio  # directory with wokwi.toml, relative to repo's root
+          path: tests/platformio  
           timeout: 30000
           expect_text: '=== EMBEDDED TESTS PASSED ==='   
