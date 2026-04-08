@@ -207,6 +207,20 @@ TEST_CASE("MapRange maps and preserves values when outMin == outMax", "[utils]")
     REQUIRE(mapper.range(5) == Approx(5.0));
 }
 
+TEST_CASE("Smooth computes a rolling average and reset clears history", "[utils]")
+{
+    puara_gestures::utils::Smooth smoother(3.0);
+
+    REQUIRE(smoother.smooth(1.0) == Approx(1.0));
+    REQUIRE(smoother.smooth(2.0) == Approx(1.5));
+    REQUIRE(smoother.smooth(4.0) == Approx((1.0 + 2.0 + 4.0) / 3.0));
+    REQUIRE(smoother.smooth(5.0) == Approx((2.0 + 4.0 + 5.0) / 3.0));
+
+    smoother.clear();
+    REQUIRE(smoother.list.empty());
+    REQUIRE(smoother.smooth(10.0) == Approx(10.0));
+}
+
 TEST_CASE("RollingMinMax computes the range over a sliding window", "[utils]")
 {
     puara_gestures::utils::RollingMinMax<int> window(3);

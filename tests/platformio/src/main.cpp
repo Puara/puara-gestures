@@ -137,6 +137,22 @@ static void testMapRange() {
   logResult(ok, name);
 }
 
+static void testSmooth() {
+  const char* name = "Smooth rolling average";
+  puara_gestures::utils::Smooth smoother(3.0);
+
+  bool ok = almostEqual(smoother.smooth(1.0), 1.0);
+  ok &= almostEqual(smoother.smooth(2.0), 1.5);
+  ok &= almostEqual(smoother.smooth(4.0), (1.0 + 2.0 + 4.0) / 3.0);
+  ok &= almostEqual(smoother.smooth(5.0), (2.0 + 4.0 + 5.0) / 3.0);
+
+  smoother.clear();
+  ok &= smoother.list.empty();
+  ok &= almostEqual(smoother.smooth(10.0), 10.0);
+
+  logResult(ok, name);
+}
+
 static void testRollingMinMax() {
   const char* name = "RollingMinMax sliding range";
   puara_gestures::utils::RollingMinMax<int> window(3);
@@ -184,6 +200,7 @@ static void runEmbeddedTests() {
   testBoostCircularBuffer();
   testCircularBuffer();
   testMapRange();
+  testSmooth();
   testRollingMinMax();
   testDiscretizer();
 
