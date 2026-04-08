@@ -8,9 +8,8 @@
 
 #pragma once
 
+#include <boost/circular_buffer.hpp>
 #include <puara/structs.h>
-
-#include <deque>
 
 namespace puara_gestures::utils
 {
@@ -22,15 +21,20 @@ class CircularBuffer
 {
 public:
   std::size_t size = 10;
-  std::deque<double> buffer;
+  boost::circular_buffer<double> buffer;
+
+  CircularBuffer()
+  {
+    buffer.set_capacity(size);
+  }
 
   double add(double element)
   {
-    buffer.push_front(element);
-    if(buffer.size() > size)
+    if (buffer.capacity() != size)
     {
-      buffer.pop_back();
+      buffer.set_capacity(size);
     }
+    buffer.push_front(element);
     return element;
   }
 };
