@@ -1,21 +1,39 @@
 #pragma once
 
+#include <limits>
+#include <type_traits>
+
 namespace puara_gestures::utils
 {
 
+/**
+ * @brief Simple change detector for numeric values.
+ *
+ * This helper remembers the most recent input and reports whether a new
+ * value is different from the previous one. It does not keep a history of
+ * past values, only the current state.
+ *
+ * Example:
+ *   Discretizer<int> detector;
+ *   if (detector.isNew(reading)) {
+ *     // first reading or changed value
+ *   }
+ *
+ * This is useful when you want to ignore repeated identical sensor or event
+ * readings, and only act when the value changes.
+ *
+ * @tparam T Numeric type for the input values.
+ */
 template <typename T>
 class Discretizer {
 private:
+  static_assert(std::is_arithmetic_v<T>, "Discretizer requires an arithmetic type.");
   T latestValue;
   bool firstValue; // Flag to track if it's the first value
 
 public:
   // Constructor
-  Discretizer() : firstValue(true) {
-    // Initialize latestValue to a default value.  Important to avoid
-    // undefined behavior on the first comparison.  Using the minimum
-    // value for numeric types is usually a good choice.
-    latestValue = std::numeric_limits<T>::min(); 
+  Discretizer() : latestValue(std::numeric_limits<T>::lowest()), firstValue(true) {
   }
 
   // Method to update the value and check for difference

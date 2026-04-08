@@ -137,6 +137,42 @@ static void testMapRange() {
   logResult(ok, name);
 }
 
+static void testRollingMinMax() {
+  const char* name = "RollingMinMax sliding range";
+  puara_gestures::utils::RollingMinMax<int> window(3);
+
+  bool ok = true;
+  auto result1 = window.update(5);
+  ok &= (result1.min == 5 && result1.max == 5);
+
+  auto result2 = window.update(3);
+  ok &= (result2.min == 3 && result2.max == 5);
+
+  auto result3 = window.update(8);
+  ok &= (result3.min == 3 && result3.max == 8);
+
+  auto result4 = window.update(1);
+  ok &= (result4.min == 1 && result4.max == 8);
+
+  auto result5 = window.update(9);
+  ok &= (result5.min == 1 && result5.max == 9);
+
+  logResult(ok, name);
+}
+
+static void testDiscretizer() {
+  const char* name = "Discretizer change detection";
+  puara_gestures::utils::Discretizer<int> detector;
+
+  bool ok = detector.isNew(10) && (detector.getLatestValue() == 10);
+  ok &= !detector.isNew(10);
+  ok &= detector.isNew(20) && (detector.getLatestValue() == 20);
+  ok &= !detector.isNew(20);
+  ok &= detector.isNew(15) && (detector.getLatestValue() == 15);
+
+  logResult(ok, name);
+}
+
 static void runEmbeddedTests() {
   Serial.println("=== puara-gestures embedded sanity tests ===");
 
@@ -148,6 +184,8 @@ static void runEmbeddedTests() {
   testBoostCircularBuffer();
   testCircularBuffer();
   testMapRange();
+  testRollingMinMax();
+  testDiscretizer();
 
   Serial.print("Total checks: ");
   Serial.println(g_checks);

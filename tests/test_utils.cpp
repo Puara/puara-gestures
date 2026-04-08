@@ -206,3 +206,47 @@ TEST_CASE("MapRange maps and preserves values when outMin == outMax", "[utils]")
     mapper.outMax = 2;
     REQUIRE(mapper.range(5) == Approx(5.0));
 }
+
+TEST_CASE("RollingMinMax computes the range over a sliding window", "[utils]")
+{
+    puara_gestures::utils::RollingMinMax<int> window(3);
+
+    auto result1 = window.update(5);
+    REQUIRE(result1.min == 5);
+    REQUIRE(result1.max == 5);
+    REQUIRE(window.current_value.min == 5);
+    REQUIRE(window.current_value.max == 5);
+
+    auto result2 = window.update(3);
+    REQUIRE(result2.min == 3);
+    REQUIRE(result2.max == 5);
+
+    auto result3 = window.update(8);
+    REQUIRE(result3.min == 3);
+    REQUIRE(result3.max == 8);
+
+    auto result4 = window.update(1);
+    REQUIRE(result4.min == 1);
+    REQUIRE(result4.max == 8);
+
+    auto result5 = window.update(9);
+    REQUIRE(result5.min == 1);
+    REQUIRE(result5.max == 9);
+}
+
+TEST_CASE("Discretizer reports new values and suppresses repeats", "[utils]")
+{
+    puara_gestures::utils::Discretizer<int> detector;
+
+    REQUIRE(detector.isNew(10) == true);
+    REQUIRE(detector.getLatestValue() == 10);
+
+    REQUIRE(detector.isNew(10) == false);
+    REQUIRE(detector.getLatestValue() == 10);
+
+    REQUIRE(detector.isNew(20) == true);
+    REQUIRE(detector.getLatestValue() == 20);
+    REQUIRE(detector.isNew(20) == false);
+    REQUIRE(detector.isNew(15) == true);
+    REQUIRE(detector.getLatestValue() == 15);
+}

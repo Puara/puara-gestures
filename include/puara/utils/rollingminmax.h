@@ -8,45 +8,61 @@
 
 #pragma once
 
+#include <puara/utils/circularbuffer.h>
 #include <puara/structs.h>
-
-#include <boost/circular_buffer.hpp>
 
 namespace puara_gestures::utils
 {
 
 template <typename T>
 /**
- * @brief Calculates the minimum and maximum values of the last N updates.
- * The default N value is 10, modifiable during initialization.
- * Ported from https://github.com/celtera/avendish/blob/56b89e52e367c67213be0c313d2ed3b9fb1aac19/examples/Ports/Puara/Jab.hpp#L15
+ * @brief Tracks the min and max values over the last N updates.
+ *
+ * RollingMinMax stores at most `buffer_size` values and recomputes the
+ * minimum and maximum each time a new value is added.
+ *
+ * This is useful for sliding-window feature extraction in gesture or
+ * sensor processing, where you want the current range of recent values.
+ *
  */
 class RollingMinMax
 {
 public:
-  RollingMinMax(size_t buffer_size = 10)
+  explicit RollingMinMax(size_t buffer_size = 10)
       : buf(buffer_size)
   {
   }
 
+  /**
+   * @brief Latest computed minimum and maximum values.
+   *
+   * Always reflects the range after the most recent call to `update()`.
+   */
   puara_gestures::MinMax<T> current_value;
+
+  /**
+   * @brief Add a new sample and recompute the rolling range.
+   *
+   * @param value New sample to include in the rolling window.
+   * @return The min/max range for the current window.
+   */
   puara_gestures::MinMax<T> update(T value)
   {
     puara_gestures::MinMax<T> ret{.min = value, .max = value};
-    buf.push_back(value);
-    for(const T value : buf)
+    buf.add(value);
+    for (const T sample : buf.buffer)
     {
-      if(value < ret.min)
-        ret.min = value;
-      if(value > ret.max)
-        ret.max = value;
+      if (sample < ret.min)
+        ret.min = sample;
+      if (sample > ret.max)
+        ret.max = sample;
     }
     current_value = ret;
     return ret;
   }
 
 private:
-  boost::circular_buffer<T> buf;
+  CircularBuffer<T> buf;
 };
 
 }
