@@ -15,7 +15,27 @@ namespace puara_gestures::utils
 {
 /**
  *  Simple circular buffer.
- *  This was created to ensure compatibility with older ESP SoCs
+ *  This was created to ensure compatibility with older ESP SoCs.
+ *
+ *  Usage:
+ *    // default stores doubles
+ *    CircularBuffer<> buffer;
+ *    buffer.add(1.0);
+ *    buffer.add(2.0);
+ *
+ *    // templated for other types
+ *    CircularBuffer<int> intBuffer(4);
+ *    intBuffer.add(10);
+ *    intBuffer.add(20);
+ *
+ *  The buffer keeps a fixed capacity and automatically drops the oldest
+ *  values once capacity is exceeded.
+ *
+ *  Notes:
+ *    - The internal `buffer` is a `boost::circular_buffer<T>`.
+ *    - Accessing `buffer` out of range with `operator[]` is unchecked and
+ *      is the caller's responsibility.
+ *    - Use `buffer.at(index)` if you need bounds-checked access.
  */
 template <typename T = double>
 class CircularBuffer
