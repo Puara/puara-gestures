@@ -23,7 +23,19 @@ namespace puara_gestures::utils
 {
 
 /**
- *  Calibrates the raw magnetometer values 
+ *  @brief Magnetometer calibration helper.
+ *
+ *  This class corrects raw 3-axis magnetometer readings by removing
+ *  hard-iron bias and applying soft-iron scaling. It supports two-step
+ *  calibration:
+ *    1. Collect raw magnetometer samples with `recordRawMagData()`.
+ *    2. Estimate matrices by calling `generateMagnetometerMatrices()`.
+ *
+ *  After calibration, `applyMagnetometerCalibration()` can be used to
+ *  transform new raw IMU measurements into corrected magnetic field values.
+ *
+ *  This is useful for compass/heading sensors and orientation systems that
+ *  need consistent magnetic field data across the sensor's operating range.
  */
 class Calibration
 {
@@ -63,6 +75,15 @@ public:
   int gravitationField
       = 234; // should be 1000 by default, this was calculated for the LSM9DS1 in Montreal
 
+  /**
+   *  @brief Calibrate a raw IMU magnetometer sample in place.
+   *
+   *  Applies the current `hardIronBias` and `softIronMatrix` to the raw
+   *  sample. If `enforceRadialEqualization` is enabled, the resulting vector
+   *  is also scaled so its magnitude matches the configured `calibrationRadius`.
+   *
+   *  @param myRawIMU Raw IMU sample containing magnetometer measurements.
+   */
   void applyMagnetometerCalibration(const Imu9Axis& myRawIMU)
   {
     myCalIMU.magn.x = softIronMatrix(0, 0) * (myRawIMU.magn.x - hardIronBias(0))
@@ -97,8 +118,14 @@ public:
   }
 
   /**
-   * Records the raw magnetometer data and saves it in a vector.
-   * The user needs to call this a minimum amount of time in order to generate at least 1500 data points
+   *  @brief Record a raw magnetometer sample for calibration.
+   *
+   *  Collect raw 3D magnetometer vectors while rotating the device through
+   *  different orientations. A larger and more varied dataset produces a
+   *  better ellipsoid fit.
+   *
+   *  @param magData Raw magnetometer sample.
+   *  @return Current number of recorded samples.
    */
   int recordRawMagData(const Coord3D& magData)
   {
@@ -278,8 +305,17 @@ public:
     return true;
   }
   /**
-   * Generates magnetometer calibration matrices based on saved raw dataset by fitting an ellipsoid to a set of 3D coordinates, 
-   * deriving the hard-iron bias and soft-iron matrix based on  the pre-defined gravitational field.
+   *  @brief Generate magnetometer calibration matrices from recorded data.
+   *
+   *  This method fits an ellipsoid to the provided raw magnetometer points
+   *  and derives the hard-iron bias and soft-iron correction matrix. If the
+   *  ellipsoid fit is not reliable, it falls back to a PCA-based calibration.
+   *
+   *  After a successful calibration, `enforceRadialEqualization` is enabled
+   *  and `calibrationRadius` is set from `gravitationField`.
+   *
+   *  @param customRawMagData Vector of raw magnetometer samples.
+   *  @return 1 if calibration succeeded, 0 if it failed.
    */
   int generateMagnetometerMatrices(std::vector<Coord3D> customRawMagData)
   {

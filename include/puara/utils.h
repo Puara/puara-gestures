@@ -29,13 +29,28 @@ namespace puara_gestures::utils
 {
 
 /**
+ * @brief Utility helpers for gesture and sensor feature extraction.
+ *
+ * This header exposes a small collection of lightweight, embedded-friendly
+ * helper functions for averaging, filtering, coordinate conversion, and
+ * other common math tasks used throughout the library.
+ */
+
+/**
  * @brief Computes the average of elements in an array over a specified range.
  *
- * @tparam T The type of the elements in the array. Must be an arithmetic type (e.g., int, float, double).
- * @param array Pointer to the array of elements.
- * @param start The starting index of the range (inclusive). Must be >= 0.
- * @param end The ending index of the range (exclusive). Must be >= start.
- * @return The average of the elements in the specified range as a float. Returns 0.0 if the range is invalid or empty.
+ * This is useful for smoothing and normalization. If the requested range is
+ * empty or invalid, the function returns 0.0.
+ *
+ * Example:
+ *   const int values[] = {1, 2, 3, 4, 5};
+ *   float avg = arrayAverage(values, 1, 4); // averages 2,3,4 => 3.0
+ *
+ * @tparam T The type of elements in the array (must be arithmetic).
+ * @param array Pointer to the array of values.
+ * @param start Inclusive start index of the range.
+ * @param end Exclusive end index of the range.
+ * @return The average over [start,end), or 0.0 when the range is empty or invalid.
  */
 template <typename T>
 float arrayAverage(const T* array, int start, int end)
@@ -74,8 +89,23 @@ inline double arrayAverageWithoutZero(double* Array, int ArraySize)
 }
 
 /**
+ * @brief Computes the average of non-zero elements in an array.
+ *
+ * This is useful when zeros represent missing data or inactive sensor
+ * values that should not influence the average.
+ *
+ * Example:
+ *   double values[] = {1.0, 0.0, 3.0, 0.0, 5.0};
+ *   double avg = arrayAverageWithoutZero(values, 5); // 3.0
+ *
+ * @param Array Pointer to the array of values.
+ * @param ArraySize Number of elements in the array.
+ * @return Average of non-zero values, or 0.0 if no non-zero values exist.
+ */
+
+/**
  * @brief Legacy function used to calculate 1D blob detection in older
- * digital musical instruments. 
+ * digital musical instruments.
  */
 inline void bitShiftArrayL(int* origArray, int* shiftedArray, int arraySize, int shift)
 {

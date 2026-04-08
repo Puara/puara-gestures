@@ -27,6 +27,13 @@ namespace puara_gestures::utils
 {
 /**
  *  @brief Simple leaky integrator implementation.
+ *
+ *  This class accumulates a new input with a portion of previous state.
+ *  It acts like an attenuator: `leak` controls how much of the old value
+ *  is preserved when new readings arrive.
+ *
+ *  Typical use cases are smoothing noisy sensor values and preserving
+ *  short-term trends without allowing rapid jumps.
  */
 class LeakyIntegrator
 {
@@ -49,12 +56,15 @@ public:
   }
 
   /**
-   * @brief Call integrator
+   * @brief Integrate a new sample using the configured leak and frequency.
    *
-   * @param reading new value to add into the integrator
-   * @param custom_leak between 0 and 1
-   * @param time in microseconds
-   * @return double
+   * This behaves like an attenuator: each new reading is combined with a
+   * fraction of the previous value, controlled by `leak`.
+   *
+   * @param reading New value to add into the integrator.
+   * @param custom_leak Leak factor between 0 and 1.
+   * @param time in microseconds.
+   * @return The updated integrator output.
    */
 
   double integrate(
