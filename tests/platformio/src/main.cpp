@@ -109,6 +109,34 @@ static void testBoostCircularBuffer() {
   logResult(ok, name);
 }
 
+static void testCircularBuffer() {
+  const char* name = "CircularBuffer fixed capacity";
+  puara_gestures::utils::CircularBuffer buf;
+  buf.size = 3;
+  buf.add(1.0);
+  buf.add(2.0);
+  buf.add(3.0);
+  buf.add(4.0);
+
+  bool ok = (buf.buffer.size() == 3 && buf.buffer[0] == 4.0 && buf.buffer[1] == 3.0 && buf.buffer[2] == 2.0);
+  logResult(ok, name);
+}
+
+static void testMapRange() {
+  const char* name = "MapRange mapping behavior";
+  puara_gestures::utils::MapRange mapper;
+  mapper.inMin = 0;
+  mapper.inMax = 10;
+  mapper.outMin = 0;
+  mapper.outMax = 100;
+
+  bool ok = (mapper.range(5) == 50.0) && (mapper.range(0) == 0.0) && (mapper.range(10) == 100.0);
+  mapper.outMin = 2;
+  mapper.outMax = 2;
+  ok &= (mapper.range(5) == 5.0);
+  logResult(ok, name);
+}
+
 static void runEmbeddedTests() {
   Serial.println("=== puara-gestures embedded sanity tests ===");
 
@@ -118,6 +146,8 @@ static void runEmbeddedTests() {
   testBlobDetector();
   testStructAliases();
   testBoostCircularBuffer();
+  testCircularBuffer();
+  testMapRange();
 
   Serial.print("Total checks: ");
   Serial.println(g_checks);

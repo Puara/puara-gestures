@@ -173,3 +173,36 @@ TEST_CASE("bitShiftArrayL works as shift register with carry from next cell", "[
         REQUIRE(shifted2[i] == expected2[i]);
     }
 }
+
+TEST_CASE("CircularBuffer retains most recent values", "[utils]")
+{
+    puara_gestures::utils::CircularBuffer buf;
+    buf.size = 3;
+
+    buf.add(1.0);
+    buf.add(2.0);
+    buf.add(3.0);
+    buf.add(4.0);
+
+    REQUIRE(buf.buffer.size() == 3);
+    REQUIRE(buf.buffer[0] == Approx(4.0));
+    REQUIRE(buf.buffer[1] == Approx(3.0));
+    REQUIRE(buf.buffer[2] == Approx(2.0));
+}
+
+TEST_CASE("MapRange maps and preserves values when outMin == outMax", "[utils]")
+{
+    puara_gestures::utils::MapRange mapper;
+    mapper.inMin = 0;
+    mapper.inMax = 10;
+    mapper.outMin = 0;
+    mapper.outMax = 100;
+
+    REQUIRE(mapper.range(5) == Approx(50.0));
+    REQUIRE(mapper.range(0) == Approx(0.0));
+    REQUIRE(mapper.range(10) == Approx(100.0));
+
+    mapper.outMin = 2;
+    mapper.outMax = 2;
+    REQUIRE(mapper.range(5) == Approx(5.0));
+}

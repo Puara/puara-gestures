@@ -55,7 +55,7 @@ This document summarizes the current test coverage for `puara-gestures` based on
 - [ ] `utils::RollingMinMax` behavior in more scenarios
 - [ ] `utils::CircularBuffer` size/rotation behavior
 - [ ] `utils::Discretizer` first-value and repeated-value behavior
-- [ ] `utils::MapRange` boundary mapping and zero-span handling
+- [x] `utils::MapRange` boundary mapping and zero-span handling
 - [ ] `utils::Smooth` smoothing history and clear behavior
 - [ ] `utils::Threshold` clamp behavior at thresholds
 - [ ] `utils::Unwrap` wrap-around transitions
