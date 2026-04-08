@@ -17,18 +17,25 @@ namespace puara_gestures::utils
  *  Simple circular buffer.
  *  This was created to ensure compatibility with older ESP SoCs
  */
+template <typename T = double>
 class CircularBuffer
 {
 public:
   std::size_t size = 10;
-  boost::circular_buffer<double> buffer;
+  boost::circular_buffer<T> buffer;
 
   CircularBuffer()
+    : buffer(size)
   {
-    buffer.set_capacity(size);
   }
 
-  double add(double element)
+  explicit CircularBuffer(std::size_t capacity)
+    : size(capacity)
+    , buffer(capacity)
+  {
+  }
+
+  T add(const T& element)
   {
     if (buffer.capacity() != size)
     {
