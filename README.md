@@ -11,6 +11,40 @@ The `puara-gestures` library provides a set of tools for creating and managing h
 - **Touch (Brush/Rub)**: Extract features for 1 to 3DoF agnostic data. It is often used to interpret standard touch features (swipe/brush, rub, positional, area, etc.) based on movement input.
 - **Button**: Interaction (feature) extraction using a discrete input. It can be used for buttons or any other discrete binary data.
 
+## Utility helpers and helper functions
+
+The library also includes a set of lightweight utility headers under `include/puara/utils` for common data processing tasks and sensor helpers.
+
+### Included utility headers
+
+- `circularbuffer.h` — fixed-size circular buffer wrapper for embedded-friendly history storage
+- `discretizer.h` — detects when a value changes and suppresses repeated identical values
+- `leakyintegrator.h` — exponential smoothing / low-pass integration for sensor values
+- `maprange.h` — maps values from one numeric range to another
+- `rollingminmax.h` — computes sliding minimum and maximum over the last N values
+- `smooth.h` — simple moving-average smoother for noisy input streams
+- `threshold.h` — thresholding and range-clamping helper functions
+- `wrap.h` — angle wrapping and unwrapping utilities
+- `chrono.h` — cross platform compatible timing helpers
+- `magnetometerCalibration.h` — magnetometer calibration utilities for hard-iron and soft-iron correction
+- `blobDetector.h` — small blob detection helper for 1D binary data
+
+### Useful helper functions in `puara::utils`
+
+- `arrayAverage()` — average a range of elements
+- `arrayAverageWithoutZero()` — average non-zero elements only
+- `bitShiftArrayL()` — legacy bit-shift helper for older feature extraction code
+
+### Coordinate and unit conversion helpers
+
+The `puara::utils::convert` namespace includes:
+
+- `g_to_ms2()` / `ms2_to_g()`
+- `dps_to_rads()` / `rads_to_dps()`
+- `gauss_to_utesla()` / `utesla_to_gauss()`
+- `spheric_to_cartesian()` / `cartesian_to_spheric()`
+- `phased_cartesian_to_spheric()` / `phased_spheric_to_cartesian()`
+
 ## Example Projects
 
 A basic example of puara-gestures can be found on the [puara-module-templates](https://github.com/Puara/puara-module-templates/tree/main/basic-gestures) repository.

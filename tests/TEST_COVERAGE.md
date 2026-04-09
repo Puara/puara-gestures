@@ -44,16 +44,16 @@ This document summarizes the current test coverage for `puara-gestures` based on
 - [ ] `Imu9Axis`
 
 #### `include/puara/utils`
-- [ ] `utils::CircularBuffer`
+- [x] `utils::CircularBuffer`
 - [x] `utils::Discretizer`
-- [ ] `utils::MapRange`
-- [ ] `utils::Smooth`
+- [x] `utils::MapRange`
+- [x] `utils::Smooth`
 - [ ] `utils::Threshold`
 - [ ] `utils::Unwrap`
 - [ ] `utils::Wrap`
 - [ ] `utils::Calibration` additional branches and failure modes
-- [ ] `utils::RollingMinMax` behavior in more scenarios
-- [ ] `utils::CircularBuffer` size/rotation behavior
+- [x] `utils::RollingMinMax` behavior in more scenarios
+- [x] `utils::CircularBuffer` size/rotation behavior
 - [x] `utils::Discretizer` first-value and repeated-value behavior
 - [x] `utils::MapRange` boundary mapping and zero-span handling
 - [ ] `utils::Smooth` smoothing history and clear behavior

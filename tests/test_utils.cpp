@@ -207,6 +207,25 @@ TEST_CASE("MapRange maps and preserves values when outMin == outMax", "[utils]")
     REQUIRE(mapper.range(5) == Approx(5.0));
 }
 
+TEST_CASE("Threshold clamps values and preserves raw input", "[utils]")
+{
+    puara_gestures::utils::Threshold threshold;
+    threshold.min = -2.0;
+    threshold.max =  2.0;
+
+    REQUIRE(threshold.update(1.5) == Approx(1.5));
+    REQUIRE(threshold.current == Approx(1.5));
+
+    REQUIRE(threshold.update(3.0) == Approx(2.0));
+    REQUIRE(threshold.current == Approx(3.0));
+
+    REQUIRE(threshold.update(-4.0) == Approx(-2.0));
+    REQUIRE(threshold.current == Approx(-4.0));
+
+    REQUIRE(threshold.update(0.0) == Approx(0.0));
+    REQUIRE(threshold.current == Approx(0.0));
+}
+
 TEST_CASE("Smooth computes a rolling average and reset clears history", "[utils]")
 {
     puara_gestures::utils::Smooth smoother(3.0);
