@@ -90,6 +90,15 @@ target_include_directories(blobDetector PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME blobDetector COMMAND blobDetector)
 set_tests_properties(blobDetector PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
+add_executable(wrap
+  testing_wrap.cpp
+)
+target_compile_features(wrap PRIVATE cxx_std_20)
+target_link_libraries(wrap PRIVATE Catch2::Catch2WithMain)
+target_include_directories(wrap PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME wrap COMMAND wrap)
+set_tests_properties(wrap PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
 #add_executable(magnetometerCalibration
 #  testing_magnetometerCalibration.cpp
 #)
