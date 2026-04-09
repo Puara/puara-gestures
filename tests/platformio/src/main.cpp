@@ -139,9 +139,7 @@ static void testMapRange() {
 
 static void testThreshold() {
   const char* name = "Threshold clamp behavior";
-  puara_gestures::utils::Threshold threshold;
-  threshold.min = -2.0;
-  threshold.max = 2.0;
+  puara_gestures::utils::Threshold threshold(-2.0, 2.0);
 
   bool ok = (threshold.update(1.5) == 1.5) && (threshold.current == 1.5);
   ok &= (threshold.update(3.0) == 2.0) && (threshold.current == 3.0);

@@ -16,35 +16,57 @@ namespace puara_gestures::utils
 /**
  * @brief Clamp a numeric value to a configurable range.
  *
- * Threshold keeps a minimum and maximum bound and prevents values from
- * exceeding those limits. The most recent raw input is also stored in
- * `current` so users can inspect the last sample that was evaluated.
+ * ThresholdT is a lightweight value clamp helper. It stores a minimum and
+ * maximum boundary, applies clamping through `update()`, and keeps the last
+ * raw input in `current`.
+ *
+ * The legacy type alias `Threshold` preserves the previous double-based API.
  *
  * Example:
- *   Threshold thresh;
- *   thresh.min = -1.0;
- *   thresh.max =  1.0;
- *
+ *   Threshold thresh{-1.0, 1.0};
  *   double safe = thresh.update(1.5); // safe == 1.0
  *   double raw  = thresh.current;      // raw  == 1.5
+ *
+ *   ThresholdT<int> intThresh{-128, 127};
+ *   int safeInt = intThresh.update(200); // safeInt == 127
+ *
+ * @tparam T Numeric type for the threshold values.
  */
-class Threshold
+template <typename T = double>
+class ThresholdT
 {
 public:
   /**
    * @brief Minimum allowed output value.
    */
-  double min{-10.0};
+  T min{static_cast<T>(-10.0)};
 
   /**
    * @brief Maximum allowed output value.
    */
-  double max{10.0};
+  T max{static_cast<T>(10.0)};
 
   /**
    * @brief Most recent raw input passed to update().
    */
-  double current{};
+  T current{};
+
+  /**
+   * @brief Default constructor using legacy double-compatible defaults.
+   */
+  ThresholdT() = default;
+
+  /**
+   * @brief Construct with explicit min/max limits.
+   *
+   * @param minValue Lower bound for clamping.
+   * @param maxValue Upper bound for clamping.
+   */
+  ThresholdT(T minValue, T maxValue)
+      : min(minValue)
+      , max(maxValue)
+  {
+  }
 
   /**
    * @brief Clamp `reading` to the configured [min, max] range.
@@ -52,7 +74,7 @@ public:
    * @param reading New value to threshold.
    * @return The clamped output.
    */
-  double update(double reading)
+  T update(T reading)
   {
     current = reading;
     if (reading < min)
@@ -66,5 +88,7 @@ public:
     return reading;
   }
 };
+
+using Threshold = ThresholdT<double>;
 
 }

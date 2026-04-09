@@ -209,9 +209,7 @@ TEST_CASE("MapRange maps and preserves values when outMin == outMax", "[utils]")
 
 TEST_CASE("Threshold clamps values and preserves raw input", "[utils]")
 {
-    puara_gestures::utils::Threshold threshold;
-    threshold.min = -2.0;
-    threshold.max =  2.0;
+    puara_gestures::utils::Threshold threshold(-2.0, 2.0);
 
     REQUIRE(threshold.update(1.5) == Approx(1.5));
     REQUIRE(threshold.current == Approx(1.5));
@@ -224,6 +222,18 @@ TEST_CASE("Threshold clamps values and preserves raw input", "[utils]")
 
     REQUIRE(threshold.update(0.0) == Approx(0.0));
     REQUIRE(threshold.current == Approx(0.0));
+}
+
+TEST_CASE("ThresholdT supports other numeric types", "[utils]")
+{
+    puara_gestures::utils::ThresholdT<int> intThreshold(-2, 2);
+
+    REQUIRE(intThreshold.update(1) == 1);
+    REQUIRE(intThreshold.current == 1);
+    REQUIRE(intThreshold.update(5) == 2);
+    REQUIRE(intThreshold.current == 5);
+    REQUIRE(intThreshold.update(-10) == -2);
+    REQUIRE(intThreshold.current == -10);
 }
 
 TEST_CASE("Smooth computes a rolling average and reset clears history", "[utils]")
