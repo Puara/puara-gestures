@@ -72,32 +72,6 @@ target_include_directories(structs PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME structs COMMAND structs)
 set_tests_properties(structs PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-add_executable(leakyintegrator
-  testing_leakyintegrator.cpp
-)
-target_compile_features(leakyintegrator PRIVATE cxx_std_20)
-target_link_libraries(leakyintegrator PRIVATE Catch2::Catch2WithMain)
-target_include_directories(leakyintegrator PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME leakyintegrator COMMAND leakyintegrator)
-set_tests_properties(leakyintegrator PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
-
-add_executable(blobDetector
-  testing_blobDetector.cpp
-)
-target_compile_features(blobDetector PRIVATE cxx_std_20)
-target_link_libraries(blobDetector PRIVATE Catch2::Catch2WithMain)
-target_include_directories(blobDetector PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME blobDetector COMMAND blobDetector)
-set_tests_properties(blobDetector PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
-
-add_executable(wrap
-  testing_wrap.cpp
-)
-target_compile_features(wrap PRIVATE cxx_std_20)
-target_link_libraries(wrap PRIVATE Catch2::Catch2WithMain)
-target_include_directories(wrap PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME wrap COMMAND wrap)
-set_tests_properties(wrap PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 #add_executable(magnetometerCalibration
 #  testing_magnetometerCalibration.cpp

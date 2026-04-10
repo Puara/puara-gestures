@@ -1,15 +1,21 @@
 # Puara Gestures
 
-The `puara-gestures` library provides a set of tools for creating and managing high-level gestural descriptors using data from various sensors such as accelerometers, gyroscopes, and magnetometers. The library includes classes for handling different types of gestures, including shakes, rolls, tilts, jabs, and touches.
+The `puara-gestures` library provides lightweight gesture and feature extraction tools for motion sensors and touch inputs. It is designed for embedded and real-time applications, with a focus on high-level gesture descriptors and supporting utility helpers.
+
+## What the library includes
+
+- **Gesture descriptors** for motion and touch event detection: shakes, jabs, rolls, tilts, touch brush/rub, and button interactions.
+- **Button detection** to classify discrete press/release behavior and user interactions from a digital input.
+- **Utility helpers** for smoothing, range mapping, thresholding, wrapping, timing, and sensor fusion support.
 
 ## Gestures (descriptors) and Features
 
-- **Shake**: Detects "shake" movements. It is often used on accelerometer data, but it can be applied to any 1 to 3DoF data flow.
-- **Jab**: Detects jab movements using accelerometer data.
-- **Roll**: Measures roll gestures using 9DoF (IMU data) info from an accelerometer, gyroscope, and magnetometer.
-- **Tilt**: Measures tilt gestures using 9DoF (IMU data) info from an accelerometer, gyroscope, and magnetometer.
-- **Touch (Brush/Rub)**: Extract features for 1 to 3DoF agnostic data. It is often used to interpret standard touch features (swipe/brush, rub, positional, area, etc.) based on movement input.
-- **Button**: Interaction (feature) extraction using a discrete input. It can be used for buttons or any other discrete binary data.
+- **Shake**: Detects shake movements for accelerometer or general motion data.
+- **Jab**: Detects jab-style gestures using acceleration-based motion.
+- **Roll**: Measures roll gestures from 9DoF IMU input.
+- **Tilt**: Measures tilt gestures from 9DoF IMU input.
+- **Touch (Brush/Rub)**: Extracts features for brush/rub and swipe-style touch movement.
+- **Button**: Detects presses, releases, and other discrete button interactions.
 
 ## Utility helpers and helper functions
 
@@ -19,15 +25,15 @@ The library also includes a set of lightweight utility headers under `include/pu
 
 - `circularbuffer.h` — fixed-size circular buffer wrapper for embedded-friendly history storage
 - `discretizer.h` — detects when a value changes and suppresses repeated identical values
-- `leakyintegrator.h` — exponential smoothing / low-pass integration for sensor values
-- `maprange.h` — maps values from one numeric range to another
-- `rollingminmax.h` — computes sliding minimum and maximum over the last N values
-- `smooth.h` — simple moving-average smoother for noisy input streams
-- `threshold.h` — thresholding and range-clamping helper functions
-- `wrap.h` — angle wrapping and unwrapping utilities
-- `chrono.h` — cross platform compatible timing helpers
-- `magnetometerCalibration.h` — magnetometer calibration utilities for hard-iron and soft-iron correction
-- `blobDetector.h` — small blob detection helper for 1D binary data
+- `leakyintegrator.h` — exponential smoothing and attenuation for noisy sensor signals
+- `maprange.h` — scales values from one numeric range to another
+- `rollingminmax.h` — computes sliding minimum and maximum values over the last N samples
+- `smooth.h` — moving-average smoothing helper for noisy inputs
+- `threshold.h` — clamps values to a minimum/maximum range
+- `wrap.h` — angle wrapping and unwrapping utilities for periodic data
+- `chrono.h` — simple cross-platform timing helpers
+- `magnetometerCalibration.h` — magnetometer hard-iron and soft-iron calibration helpers
+- `blobDetector.h` — 1D blob detection helper for binary sensor streams
 
 ### Useful helper functions in `puara::utils`
 

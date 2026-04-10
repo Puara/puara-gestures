@@ -9,20 +9,22 @@
 #pragma once
 
 #include <puara/structs.h>
+#include <puara/utils/blobDetector.h>
+#include <puara/utils/calibration.h>
+#include <puara/utils/chrono.h>
 #include <puara/utils/circularbuffer.h>
+#include <puara/utils/discretizer.h>
 #include <puara/utils/leakyintegrator.h>
 #include <puara/utils/maprange.h>
 #include <puara/utils/rollingminmax.h>
 #include <puara/utils/smooth.h>
 #include <puara/utils/threshold.h>
 #include <puara/utils/wrap.h>
-#include <puara/utils/discretizer.h>
-#include <puara/utils/chrono.h>
 
 #include <cmath>
 
 #ifndef M_PI
-  #define M_PI 3.141592653589793238462643383279502984
+#define M_PI 3.141592653589793238462643383279502984
 #endif
 
 namespace puara_gestures::utils
@@ -198,8 +200,10 @@ inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 {
   Coord3D cartesianCoords;
 
-  cartesianCoords.x = polarCoords.r * cos(polarCoords.azimuth) * sin(polarCoords.elevation);
-  cartesianCoords.y = polarCoords.r * sin(polarCoords.elevation) * sin(polarCoords.azimuth);
+  cartesianCoords.x
+      = polarCoords.r * cos(polarCoords.azimuth) * sin(polarCoords.elevation);
+  cartesianCoords.y
+      = polarCoords.r * sin(polarCoords.elevation) * sin(polarCoords.azimuth);
   cartesianCoords.z = polarCoords.r * cos(polarCoords.elevation);
 
   return cartesianCoords;
@@ -218,11 +222,9 @@ inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
   Spherical sphericCoords;
 
   sphericCoords.r = sqrt(
-                      pow(cartesianCoords.x, 2)
-                    + pow(cartesianCoords.y, 2)
-                    + pow(cartesianCoords.z, 2));
+      pow(cartesianCoords.x, 2) + pow(cartesianCoords.y, 2) + pow(cartesianCoords.z, 2));
 
-  sphericCoords.elevation = acos(cartesianCoords.z / sphericCoords.r); 
+  sphericCoords.elevation = acos(cartesianCoords.z / sphericCoords.r);
 
   sphericCoords.azimuth = atan2(cartesianCoords.y, cartesianCoords.x);
 
@@ -240,15 +242,10 @@ inline Spherical phased_cartesian_to_spheric(Coord3D cartesianCoords)
   Spherical sphericCoords;
 
   sphericCoords.r = sqrt(
-                      pow(cartesianCoords.x, 2)
-                    + pow(cartesianCoords.y, 2)
-                    + pow(cartesianCoords.z, 2)
-                  );
+      pow(cartesianCoords.x, 2) + pow(cartesianCoords.y, 2) + pow(cartesianCoords.z, 2));
 
-  sphericCoords.elevation = atan2(cartesianCoords.z , sqrt(
-                                            pow(cartesianCoords.x, 2)
-                                          + pow(cartesianCoords.y, 2))
-                                        ); 
+  sphericCoords.elevation = atan2(
+      cartesianCoords.z, sqrt(pow(cartesianCoords.x, 2) + pow(cartesianCoords.y, 2)));
 
   sphericCoords.azimuth = atan2(cartesianCoords.y, cartesianCoords.x);
 
@@ -267,11 +264,13 @@ inline Coord3D phased_spheric_to_cartesian(Spherical sphericCoords)
 {
   Coord3D cartesianCoords;
 
-  cartesianCoords.x = sphericCoords.r * cos(sphericCoords.elevation) * cos(sphericCoords.azimuth);
-  cartesianCoords.y = sphericCoords.r * cos(sphericCoords.elevation) * sin(sphericCoords.azimuth);
+  cartesianCoords.x
+      = sphericCoords.r * cos(sphericCoords.elevation) * cos(sphericCoords.azimuth);
+  cartesianCoords.y
+      = sphericCoords.r * cos(sphericCoords.elevation) * sin(sphericCoords.azimuth);
   cartesianCoords.z = sphericCoords.r * sin(sphericCoords.elevation);
 
- return cartesianCoords;
+  return cartesianCoords;
 }
 
 }
