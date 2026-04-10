@@ -38,10 +38,29 @@ namespace puara_gestures::utils
 class LeakyIntegrator
 {
 public:
+  /**
+   * @brief The most recent filtered output.
+   */
   double current_value{};
+
+  /**
+   * @brief Previous integrator output used by the leak formula.
+   */
   double old_value{};
+
+  /**
+   * @brief Leak factor between 0 and 1.
+   */
   double leak{};
-  int frequency{}; // leaking frequency (Hz)
+
+  /**
+   * @brief Target update frequency in Hz. Use 0 or negative to disable timing.
+   */
+  int frequency{};
+
+  /**
+   * @brief Last update timestamp in milliseconds.
+   */
   unsigned long long timer{};
 
   explicit LeakyIntegrator(
@@ -63,7 +82,7 @@ public:
    *
    * @param reading New value to add into the integrator.
    * @param custom_leak Leak factor between 0 and 1.
-   * @param time in microseconds.
+   * @param timerValue Reference to the current timer value, in milliseconds.
    * @return The updated integrator output.
    */
 

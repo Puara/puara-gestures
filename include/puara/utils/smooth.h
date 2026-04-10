@@ -39,14 +39,14 @@ public:
   /**
    * @brief Number of recent values to average.
    */
-  double size;
+  std::size_t size;
 
   /**
    * @brief Constructor for Smooth.
    *
    * @param Size Number of previous values to include in the average.
    */
-  explicit Smooth(double Size = 50.0)
+  explicit Smooth(std::size_t Size = 50)
       : size(Size)
       , sum(0.0)
   {

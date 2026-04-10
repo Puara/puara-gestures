@@ -133,7 +133,7 @@ static void testMapRange() {
   bool ok = (mapper.range(5) == 50.0) && (mapper.range(0) == 0.0) && (mapper.range(10) == 100.0);
   mapper.outMin = 2;
   mapper.outMax = 2;
-  ok &= (mapper.range(5) == 5.0);
+  ok &= (mapper.range(5) == 2.0);
   logResult(ok, name);
 }
 

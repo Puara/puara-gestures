@@ -24,7 +24,7 @@ namespace puara_gestures::utils
  *
  * @tparam T Numeric type for the input values.
  */
-template <typename T>
+template <typename T = double>
 class Discretizer {
 private:
   static_assert(std::is_arithmetic_v<T>, "Discretizer requires an arithmetic type.");

@@ -17,6 +17,9 @@ namespace puara_gestures::utils
 
 /**
  *  @brief Simple function to get the current elapsed time in microseconds.
+ *
+ *  This helper is intended for portable use in both desktop and embedded
+ *  test code that needs a monotonic timestamp.
  */
 inline unsigned long long getCurrentTimeMicroseconds()
 {

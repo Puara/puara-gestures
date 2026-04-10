@@ -263,6 +263,21 @@ TEST_CASE("CircularBuffer retains most recent values", "[utils]")
     REQUIRE(buf.buffer[2] == Approx(2.0));
 }
 
+// discretizer.h 
+TEST_CASE("Discretizer detects changes in data flow", "[utils]")
+{
+    puara_gestures::utils::Discretizer detector;
+    detector.isNew(0.0);
+
+    REQUIRE(detector.isNew(0.0) == false);
+    REQUIRE(detector.isNew(0.0) == false);
+    REQUIRE(detector.isNew(1.0) == true);
+    REQUIRE(detector.isNew(1.0) == false);
+    REQUIRE(detector.isNew(0.0) == true);
+    REQUIRE(detector.isNew(1.0) == true);
+
+}
+
 // leakyintegrator.h
 TEST_CASE("LeakyIntegrator basic leak behavior with freq = 0", "[utils]")
 {
@@ -316,9 +331,55 @@ TEST_CASE("MapRange maps and preserves values when outMin == outMax", "[utils]")
 
     mapper.outMin = 2;
     mapper.outMax = 2;
-    REQUIRE(mapper.range(5) == Approx(5.0));
+    REQUIRE(mapper.range(5) == Approx(2.0));
 }
 
+// rollingminmax.h
+TEST_CASE("RollingMinMax tracks the min and max of a sliding window", "[utils]")
+{
+    puara_gestures::utils::RollingMinMax window(3);
+
+    auto range1 = window.update(10);
+    REQUIRE(range1.min == Approx(10));
+    REQUIRE(range1.max == Approx(10));
+
+    auto range2 = window.update(4);
+    REQUIRE(range2.min == Approx(4));
+    REQUIRE(range2.max == Approx(10));
+
+    auto range3 = window.update(7);
+    REQUIRE(range3.min == Approx(4));
+    REQUIRE(range3.max == Approx(10));
+
+    auto range4 = window.update(2);
+    REQUIRE(range4.min == Approx(2));
+    REQUIRE(range4.max == Approx(7));
+
+    auto range5 = window.update(12);
+    REQUIRE(range5.min == Approx(2));
+    REQUIRE(range5.max == Approx(12));
+}
+
+
+
+//threshold.h
+TEST_CASE("Threshold clamps values to the specified range", "[utils]")
+{
+    puara_gestures::utils::Threshold thresh{-1.0, 1.0};
+    double safe = thresh.update(1.5);
+    double raw  = thresh.current;
+
+    REQUIRE(safe == Approx(1.0));
+    REQUIRE(raw == Approx(1.5));
+
+    REQUIRE(thresh.update(-2.0) == Approx(-1.0));
+    REQUIRE(thresh.update(0.5) == Approx(0.5));
+    REQUIRE(thresh.update(-0.5) == Approx(-0.5));  
+}
+
+
+
+// wrap.h
 TEST_CASE("Wrap keeps values inside the interval and wraps values above and below", "[utils][wrap]")
 {
     Wrap w;

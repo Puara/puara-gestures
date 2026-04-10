@@ -54,7 +54,7 @@ public:
         return outMin;               // avoid divide by zero
     }
     if (outMin == outMax) {
-        return in;               // Legacy code had this return logic
+        return outMin;               // constant output range
     }
     return (in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
   }

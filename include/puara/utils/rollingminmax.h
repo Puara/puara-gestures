@@ -24,6 +24,15 @@ template <typename T>
  * This is useful for sliding-window feature extraction in gesture or
  * sensor processing, where you want the current range of recent values.
  *
+ * Example:
+ *   RollingMinMax<int> window(3);
+ *   window.update(10);
+ *   window.update(4);
+ *   auto range = window.update(7);  //update() returns MinMax struct from puara structs.h
+ * 
+ *   // range.min == 4, range.max == 10
+ *   // window.current_value holds the same range after the last update
+ *
  */
 class RollingMinMax
 {
