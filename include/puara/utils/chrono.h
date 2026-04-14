@@ -20,6 +20,14 @@ namespace puara_gestures::utils
  *
  *  This helper is intended for portable use in both desktop and embedded
  *  test code that needs a monotonic timestamp.
+ *
+ *  Example:
+ *    auto start = getCurrentTimeMicroseconds();
+ *    // ... work ...
+ *    auto end = getCurrentTimeMicroseconds();
+ *    auto elapsed = end - start;
+ *
+ *    // elapsed is the duration in microseconds
  */
 inline unsigned long long getCurrentTimeMicroseconds()
 {
