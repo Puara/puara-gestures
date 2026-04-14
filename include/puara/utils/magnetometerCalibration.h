@@ -45,13 +45,13 @@ public:
   Eigen::MatrixXd softIronMatrix;
   Eigen::VectorXd hardIronBias;
   bool enforceRadialEqualization = false;
-  double calibrationRadius = 0.0;
+  double calibrationRadius = 1.0;
 
   Calibration()
       : softIronMatrix(3, 3)
       , hardIronBias(3)
       , enforceRadialEqualization(false)
-      , calibrationRadius(0.0)
+      , calibrationRadius(1.0)
   {
     softIronMatrix << 1, 1, 1, 1, 1, 1, 1, 1, 1;
 
@@ -202,6 +202,26 @@ public:
 
     return std::make_tuple(M, n, d);
   }
+
+  static Eigen::Matrix3d symmetricMatrixSqrt(const Eigen::Matrix3d& A)
+  {
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> es(A);
+    if(es.info() != Eigen::Success)
+    {
+      return Eigen::Matrix3d::Zero();
+    }
+
+    Eigen::Vector3d eval = es.eigenvalues();
+    if((eval.array() <= 0.0).any())
+    {
+      return Eigen::Matrix3d::Zero();
+    }
+
+    Eigen::Matrix3d evec = es.eigenvectors();
+    Eigen::Matrix3d sqrtD = eval.array().sqrt().matrix().asDiagonal();
+    return evec * sqrtD * evec.transpose();
+  }
+
   bool isSphereLikeCalibration(const Eigen::MatrixXd& s, const Eigen::MatrixXd& soft, const Eigen::VectorXd& hard) const
   {
     if(s.rows() == 0 || soft.rows() != 3 || soft.cols() != 3 || hard.size() != 3)
@@ -349,11 +369,16 @@ public:
       double radiusTerm = (n.transpose() * (M_1 * n) - d);
       if(radiusTerm > 0.0)
       {
-        softIronMatrix = (gravitationField / std::sqrt(radiusTerm)) * M.sqrt();
-
-        if(isSphereLikeCalibration(s, softIronMatrix, hardIronBias))
+        Eigen::Matrix3d M3 = M;
+        Eigen::Matrix3d M_sqrt = symmetricMatrixSqrt(M3);
+        if(M_sqrt.array().abs().maxCoeff() > 0.0)
         {
-          success = true;
+          softIronMatrix = (gravitationField / std::sqrt(radiusTerm)) * M_sqrt;
+
+          if(isSphereLikeCalibration(s, softIronMatrix, hardIronBias))
+          {
+            success = true;
+          }
         }
       }
     }
