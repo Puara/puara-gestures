@@ -29,10 +29,10 @@ namespace puara_gestures::utils
  * calibration path, but avoids heavy dynamic Eigen workloads by using a
  * simplified hard-iron / soft-iron estimate and a fixed sample count.
  */
-class Calibration
+class Embedded_Calibration
 {
 public:
-  static constexpr size_t kMaxEmbeddedSamples = 512;
+  static constexpr size_t MaxSamples = 512;
 
   Imu9Axis myCalIMU;
   std::vector<Coord3D> rawMagData;
@@ -40,15 +40,33 @@ public:
   Eigen::VectorXd hardIronBias;
   bool enforceRadialEqualization = false;
   double calibrationRadius = 1.0;
+  size_t maxSamples = MaxSamples;
 
-  Calibration()
+  int gravitationField
+      = 234; // should be 1000 by default, this was calculated for the LSM9DS1 in Montreal
+
+  Embedded_Calibration()
       : rawMagData()
       , softIronMatrix(3, 3)
       , hardIronBias(3)
       , enforceRadialEqualization(false)
       , calibrationRadius(1.0)
+      , maxSamples(MaxSamples)
   {
-    rawMagData.reserve(kMaxEmbeddedSamples);
+    rawMagData.reserve(maxSamples);
+    softIronMatrix.setIdentity();
+    hardIronBias.setZero();
+  }
+
+  explicit Embedded_Calibration(size_t sampleCount)
+      : rawMagData()
+      , softIronMatrix(3, 3)
+      , hardIronBias(3)
+      , enforceRadialEqualization(false)
+      , calibrationRadius(1.0)
+      , maxSamples(sampleCount > 0 ? sampleCount : 1)
+  {
+    rawMagData.reserve(maxSamples);
     softIronMatrix.setIdentity();
     hardIronBias.setZero();
   }
@@ -88,32 +106,6 @@ public:
     }
   }
 
-  int recordRawMagData(const Coord3D& magData)
-  {
-    if(rawMagData.size() < kMaxEmbeddedSamples)
-    {
-      rawMagData.push_back(magData);
-    }
-    else
-    {
-      rawMagData.erase(rawMagData.begin());
-      rawMagData.push_back(magData);
-    }
-
-    return static_cast<int>(rawMagData.size());
-  }
-
-  int generateMagnetometerMatrices(const std::vector<Coord3D> customRawMagData)
-  {
-    if(customRawMagData.empty())
-    {
-      return 0;
-    }
-
-    const size_t sampleCount = std::min(customRawMagData.size(), kMaxEmbeddedSamples);
-    return generateMagnetometerMatrices(customRawMagData.data(), sampleCount);
-  }
-
   int generateMagnetometerMatrices(const Coord3D* samples, size_t count)
   {
     if(samples == nullptr || count == 0)
@@ -121,7 +113,7 @@ public:
       return 0;
     }
 
-    const size_t sampleCount = std::min(count, kMaxEmbeddedSamples);
+    const size_t sampleCount = std::min(count, maxSamples);
 
     Eigen::Vector3d minVals(
         std::numeric_limits<double>::infinity(),
@@ -165,17 +157,17 @@ public:
       return 0;
     }
 
-    soft *= static_cast<double>(gravitationField) / meanRadius;
+    //soft *= static_cast<double>(gravitationField) / meanRadius;
+    soft *= calibrationRadius / meanRadius;
     hardIronBias = bias;
     softIronMatrix = soft;
 
     enforceRadialEqualization = true;
-    calibrationRadius = static_cast<double>(gravitationField);
+    //calibrationRadius = static_cast<double>(gravitationField);
 
     return 1;
   }
 
-  void generateMagnetometerMatrices() { generateMagnetometerMatrices(rawMagData); }
 };
 
 }
