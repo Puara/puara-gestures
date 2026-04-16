@@ -16,3 +16,4 @@
 #include <puara/descriptors/tilt.h>
 #include <puara/descriptors/simple_tilt_roll.h>
 #include <puara/descriptors/touchArrayGestureDetector.h>
+#include <puara/descriptors/madgwickQuaternion.h>

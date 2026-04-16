@@ -18,7 +18,6 @@
  * Example:
  *
  *   #include <puara/descriptors/madgwickQuaternion.h>
- *   #include <puara/structs.h>
  *
  *   void example() {
  *       puara_gestures::MadgwickQuaternionFilter filter(0.1);
@@ -28,8 +27,7 @@
  *           {0.3, 0.0, 0.5}      // mag x/y/z
  *       };
  *
- *       double deltaSeconds = 0.01;
- *       bool success = filter.update(imu, deltaSeconds, true);
+ *       bool success = filter.update(imu, true);
  *
  *       if (success) {
  *           auto q = filter.getQuaternion();
@@ -43,7 +41,9 @@
 #define MADGWICKQUATERNION_H
 
 #include <cmath>
+#include <cstdint>
 #include <puara/structs.h>
+#include <puara/utils/chrono.h>
 
 namespace puara_gestures {
 
@@ -54,17 +54,40 @@ struct MadgwickQuaternionFilter {
     // Default is 0.1.
     double beta;
     Quaternion quaternion;
+    uint64_t lastUpdateMicros = 0;
 
     explicit MadgwickQuaternionFilter(double beta_ = 0.1)
-        : beta(beta_), quaternion{1.0, 0.0, 0.0, 0.0}
+        : beta(beta_), quaternion{1.0, 0.0, 0.0, 0.0}, lastUpdateMicros(0)
     {
     }
 
     void reset() {
         quaternion = {1.0, 0.0, 0.0, 0.0};
+        lastUpdateMicros = 0;
     }
 
-    bool update(const Imu9Axis& imu, double deltatSeconds, bool gyroDegrees = false) {
+    // Simple public entry point using the portable timer.
+    // The filter computes the elapsed interval automatically.
+    bool update(const Imu9Axis& imu, bool gyroDegrees = false) {
+        return updateWithTimestamp(imu, utils::getCurrentTimeMicroseconds(), gyroDegrees);
+    }
+
+private:
+    bool updateWithTimestamp(const Imu9Axis& imu, uint64_t currentMicros, bool gyroDegrees = false) {
+        if (currentMicros == 0) {
+            return false;
+        }
+        if (lastUpdateMicros == 0) {
+            lastUpdateMicros = currentMicros;
+            return false; // first sample only sets the baseline time.
+        }
+
+        double deltatSeconds = double(currentMicros - lastUpdateMicros) * 1.0e-6;
+        lastUpdateMicros = currentMicros;
+        return updateInternal(imu, deltatSeconds, gyroDegrees);
+    }
+
+    bool updateInternal(const Imu9Axis& imu, double deltatSeconds, bool gyroDegrees = false) {
         double gx = imu.gyro.x;
         double gy = imu.gyro.y;
         double gz = imu.gyro.z;
@@ -79,6 +102,7 @@ struct MadgwickQuaternionFilter {
                       deltatSeconds);
     }
 
+public:
     const Quaternion& getQuaternion() const {
         return quaternion;
     }
