@@ -17,7 +17,8 @@
 //   #include <ArduinoEigen.h>
 // #else
   #include <Eigen/Core>
- #include <Eigen/Dense>
+  #include <Eigen/Dense>
+  using namespace Eigen;
 // #endif
 
 namespace puara_gestures::utils
