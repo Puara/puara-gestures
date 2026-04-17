@@ -337,7 +337,7 @@ TEST_CASE("MapRange maps and preserves values when outMin == outMax", "[utils]")
 // rollingminmax.h
 TEST_CASE("RollingMinMax tracks the min and max of a sliding window", "[utils]")
 {
-    puara_gestures::utils::RollingMinMax window(3);
+    puara_gestures::utils::RollingMinMax<int> window(3);
 
     auto range1 = window.update(10);
     REQUIRE(range1.min == Approx(10));
