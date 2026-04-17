@@ -13,12 +13,12 @@
 #include <limits>
 
 
-#if defined(Arduino_h)
-  #include <ArduinoEigen.h>
-#else
- #include <Eigen/Core>
+// #if defined(Arduino_h)
+//   #include <ArduinoEigen.h>
+// #else
+  #include <Eigen/Core>
  #include <Eigen/Dense>
-#endif
+// #endif
 
 namespace puara_gestures::utils
 {
