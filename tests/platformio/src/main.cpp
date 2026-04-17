@@ -17,7 +17,6 @@
 #include <puara/utils/leakyintegrator.h>
 #include <puara/structs.h>
 
-using namespace Eigen;
 
 static int g_failures = 0;
 static int g_checks = 0;
