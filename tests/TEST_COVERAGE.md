@@ -31,8 +31,8 @@ This document summarizes the current test coverage for `puara-gestures` based on
 - [x] `utils::Calibration` hard-iron / soft-iron application behavior (`tests/testing_magnetometerCalibration.cpp`)
 
 ### Partially covered / existing but not fully exercised
-- [ ] `utils::convert` has partial coverage; only selected round-trips and unit conversions are tested
-- [ ] `utils::chrono::getCurrentTimeMicroseconds()` is covered only for monotonicity, not for edge or platform-specific behavior
+- [x] `utils::convert` has partial coverage; only selected round-trips and unit conversions are tested
+- [x] `utils::chrono::getCurrentTimeMicroseconds()` is covered only for monotonicity, not for edge or platform-specific behavior
 - [ ] `Calibration` has substantial coverage, but additional branch tests could be added for `enforceRadialEqualization` and edge-case data patterns
 
 ### Missing tests / not covered yet
@@ -48,18 +48,18 @@ This document summarizes the current test coverage for `puara-gestures` based on
 - [x] `utils::Discretizer`
 - [x] `utils::MapRange`
 - [x] `utils::Smooth`
-- [ ] `utils::Threshold`
-- [ ] `utils::Unwrap`
-- [ ] `utils::Wrap`
+- [x] `utils::Threshold`
+- [x] `utils::Unwrap`
+- [x] `utils::Wrap`
 - [ ] `utils::Calibration` additional branches and failure modes
 - [x] `utils::RollingMinMax` behavior in more scenarios
 - [x] `utils::CircularBuffer` size/rotation behavior
 - [x] `utils::Discretizer` first-value and repeated-value behavior
 - [x] `utils::MapRange` boundary mapping and zero-span handling
-- [ ] `utils::Smooth` smoothing history and clear behavior
-- [ ] `utils::Threshold` clamp behavior at thresholds
-- [ ] `utils::Unwrap` wrap-around transitions
-- [ ] `utils::Wrap` modulo and boundary handling
+- [x] `utils::Smooth` smoothing history and clear behavior
+- [x] `utils::Threshold` clamp behavior at thresholds
+- [x] `utils::Unwrap` wrap-around transitions
+- [x] `utils::Wrap` modulo and boundary handling
 
 #### `include/puara/descriptors`
 - [ ] `Button`
