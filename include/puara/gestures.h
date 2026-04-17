@@ -3,7 +3,6 @@
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 
 #pragma once

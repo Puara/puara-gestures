@@ -2,7 +2,6 @@
 // Puara Gestures - Embedded Magnetometer Calibration (.h)
 // https://github.com/Puara/puara-gestures
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca
-// Charles Bicari (2026)
 //********************************************************************************//
 
 #pragma once
