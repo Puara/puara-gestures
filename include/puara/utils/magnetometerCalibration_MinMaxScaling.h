@@ -6,20 +6,13 @@
 
 #pragma once
 
-#include <puara/structs.h>
 #include <algorithm>
 #include <array>
 #include <cmath>
 #include <limits>
+#include <puara/structs.h>
+#include <puara/utils/includeEigen.h>
 
-
-// #if defined(Arduino_h)
-//   #include <ArduinoEigen.h>
-// #else
-#include <Eigen/Core>
-#include <Eigen/Dense>
-using namespace Eigen;
-// #endif
 
 namespace puara_gestures::utils
 {

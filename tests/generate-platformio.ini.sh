@@ -22,6 +22,7 @@ framework = arduino
 build_flags =
     -I${PROJECT_LIBDEPS_DIR}/3rdparty/eigen
     -I${PROJECT_LIBDEPS_DIR}/3rdparty/IMU_Sensor_Fusion
+    -DUSE_NATIVE_EIGEN
 lib_deps = $PUARA_GESTURES_PATH
 
 [env:build_with_arduino_libs]
@@ -30,11 +31,11 @@ board = tinypico
 framework = arduino
 build_flags =
     -I${PROJECT_LIBDEPS_DIR}/3rdparty/IMU_Sensor_Fusion
+    -DUSE_ARDUINO_EIGEN
 lib_deps = 
     $PUARA_GESTURES_PATH
     https://github.com/hideakitai/ArduinoEigen.git
     https://github.com/sat-mtl/boost-embedded-190.git
     https://github.com/malloch/IMU_Sensor_Fusion.git
-
 
 EOL
