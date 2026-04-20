@@ -26,7 +26,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -123,9 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v4
-        # with:
-        #  submodules: recursive
+        uses: actions/checkout@v5
 
       - name: Set up Python
         uses: actions/setup-python@v4
