@@ -20,10 +20,9 @@ platform = https://github.com/pioarduino/platform-espressif32/releases/download/
 board = tinypico
 framework = arduino
 build_flags =
-    -I${PROJECT_LIBDEPS_DIR}/3rdparty/eigen
     -I${PROJECT_LIBDEPS_DIR}/3rdparty/IMU_Sensor_Fusion
-    -DUSE_NATIVE_EIGEN
 lib_deps = $PUARA_GESTURES_PATH
+    https://github.com/hideakitai/ArduinoEigen.git
 
 [env:build_with_arduino_libs]
 platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip
@@ -31,7 +30,6 @@ board = tinypico
 framework = arduino
 build_flags =
     -I${PROJECT_LIBDEPS_DIR}/3rdparty/IMU_Sensor_Fusion
-    -DUSE_ARDUINO_EIGEN
 lib_deps = 
     $PUARA_GESTURES_PATH
     https://github.com/hideakitai/ArduinoEigen.git
