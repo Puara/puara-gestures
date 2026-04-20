@@ -8,8 +8,9 @@
 #include <Arduino.h>
 #include <cmath>
 
-#include <Eigen/Core>
-#include <Eigen/Dense>
+#include <puara/utils/includeEigen.h>
+//#include <Eigen/Core>
+//#include <Eigen/Dense>
 #include <boost/circular_buffer.hpp>
 
 #include <puara/utils.h>
