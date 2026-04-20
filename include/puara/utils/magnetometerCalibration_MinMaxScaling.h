@@ -145,7 +145,7 @@ public:
           samples[i].y - bias(1),
           samples[i].z - bias(2),
       };
-      radiusSum += (soft * corrected).eval().norm();
+      radiusSum += (soft * corrected).norm();
     }
 
     double meanRadius = radiusSum / static_cast<double>(sampleCount);
