@@ -6,17 +6,13 @@
 */
 
 #include <Arduino.h>
-#include <cmath>
-
-#include <puara/utils/includeEigen.h>
-//#include <Eigen/Core>
-//#include <Eigen/Dense>
 #include <boost/circular_buffer.hpp>
-
+#include <cmath>
+#include <puara/structs.h>
 #include <puara/utils.h>
 #include <puara/utils/blobDetector.h>
+#include <puara/utils/includeEigen.h>
 #include <puara/utils/leakyintegrator.h>
-#include <puara/structs.h>
 
 
 static int g_failures = 0;
@@ -167,6 +163,50 @@ static void testSmooth() {
   logResult(ok, name);
 }
 
+static void testIMUFilters() {
+  const char* name = "IMU filter quaternion normalization";
+
+  puara_gestures::Imu9Axis imu{
+      {0.0, 0.0, 9.81},
+      {1.0, 2.0, 3.0},
+      {0.3, 0.0, 0.5}
+  };
+
+  bool ok = true;
+
+  puara_gestures::MadgwickQuaternionFilter madgwick(0.1);
+  ok &= (madgwick.update(imu, true) == false);
+  delay(5);
+  ok &= (madgwick.update(imu, true) == true);
+  ok &= almostEqual(madgwick.getQuaternion().w * madgwick.getQuaternion().w +
+                    madgwick.getQuaternion().x * madgwick.getQuaternion().x +
+                    madgwick.getQuaternion().y * madgwick.getQuaternion().y +
+                    madgwick.getQuaternion().z * madgwick.getQuaternion().z,
+                    1.0);
+
+  puara_gestures::MahonyQuaternionFilter mahony(1.0, 0.0);
+  ok &= (mahony.update(imu, true) == false);
+  delay(5);
+  ok &= (mahony.update(imu, true) == true);
+  ok &= almostEqual(mahony.getQuaternion().w * mahony.getQuaternion().w +
+                    mahony.getQuaternion().x * mahony.getQuaternion().x +
+                    mahony.getQuaternion().y * mahony.getQuaternion().y +
+                    mahony.getQuaternion().z * mahony.getQuaternion().z,
+                    1.0);
+
+  puara_gestures::KalmanQuaternionFilter kalman(0.001, 0.01);
+  ok &= (kalman.update(imu, true) == false);
+  delay(5);
+  ok &= (kalman.update(imu, true) == true);
+  ok &= almostEqual(kalman.getQuaternion().w * kalman.getQuaternion().w +
+                    kalman.getQuaternion().x * kalman.getQuaternion().x +
+                    kalman.getQuaternion().y * kalman.getQuaternion().y +
+                    kalman.getQuaternion().z * kalman.getQuaternion().z,
+                    1.0);
+
+  logResult(ok, name);
+}
+
 static void testRollingMinMax() {
   const char* name = "RollingMinMax sliding range";
   puara_gestures::utils::RollingMinMax<int> window(3);
@@ -216,6 +256,7 @@ static void runEmbeddedTests() {
   testMapRange();
   testThreshold();
   testSmooth();
+  testIMUFilters();
   testRollingMinMax();
   testDiscretizer();
 

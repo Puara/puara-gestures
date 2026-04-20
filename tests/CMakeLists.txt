@@ -72,6 +72,15 @@ target_include_directories(structs PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME structs COMMAND structs)
 set_tests_properties(structs PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
+add_executable(imu-filters
+ testing_IMU-filters.cpp
+)
+target_compile_features(imu-filters PRIVATE cxx_std_20)
+target_link_libraries(imu-filters PRIVATE Catch2::Catch2WithMain)
+target_include_directories(imu-filters PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME imu-filters COMMAND imu-filters)
+set_tests_properties(imu-filters PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
 
 # add_executable(magnetometerCalibration
 #   testing_magnetometerCalibration.cpp
