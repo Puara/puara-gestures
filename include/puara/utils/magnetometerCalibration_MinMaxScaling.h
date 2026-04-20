@@ -13,8 +13,6 @@
 #include <puara/structs.h>
 #include <puara/utils/includeEigen.h>
 
-//#include <Eigen/Core>
-//#include <Eigen/Dense>
 
 namespace puara_gestures::utils
 {
