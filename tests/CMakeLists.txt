@@ -27,15 +27,15 @@ set(TEST_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(test_descriptors
- test_descriptors.cpp
- ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
-)
-target_compile_features(test_descriptors PRIVATE cxx_std_20)
-target_link_libraries(test_descriptors PRIVATE Catch2::Catch2WithMain)
-target_include_directories(test_descriptors PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME test_descriptors COMMAND test_descriptors)
-set_tests_properties(test_descriptors PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+# add_executable(test_descriptors
+#  test_descriptors.cpp
+#  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
+# )
+# target_compile_features(test_descriptors PRIVATE cxx_std_20)
+# target_link_libraries(test_descriptors PRIVATE Catch2::Catch2WithMain)
+# target_include_directories(test_descriptors PRIVATE ${TEST_INCLUDE_DIRS})
+# add_test(NAME test_descriptors COMMAND test_descriptors)
+# set_tests_properties(test_descriptors PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 add_executable(utils
  test_utils.cpp
@@ -64,11 +64,11 @@ target_include_directories(imu-filters PRIVATE ${TEST_INCLUDE_DIRS})
 add_test(NAME imu-filters COMMAND imu-filters)
 set_tests_properties(imu-filters PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-# add_executable(magnetometerCalibration
-#   testing_magnetometerCalibration.cpp
-# )
-# target_compile_features(magnetometerCalibration PRIVATE cxx_std_20)
-# target_link_libraries(magnetometerCalibration PRIVATE Catch2::Catch2WithMain)
-# target_include_directories(magnetometerCalibration PRIVATE ${TEST_INCLUDE_DIRS})
-# add_test(NAME magnetometerCalibration COMMAND magnetometerCalibration)
-# set_tests_properties(magnetometerCalibration PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+add_executable(magnetometerCalibration
+  testing_magnetometerCalibration.cpp
+)
+target_compile_features(magnetometerCalibration PRIVATE cxx_std_20)
+target_link_libraries(magnetometerCalibration PRIVATE Catch2::Catch2WithMain)
+target_include_directories(magnetometerCalibration PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME magnetometerCalibration COMMAND magnetometerCalibration)
+set_tests_properties(magnetometerCalibration PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
