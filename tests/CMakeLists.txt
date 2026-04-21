@@ -27,32 +27,15 @@ set(TEST_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(roll
- testing_roll.cpp
+add_executable(test_descriptors
+ test_descriptors.cpp
  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
 )
-target_compile_features(roll PRIVATE cxx_std_20)
-target_include_directories(roll PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME roll COMMAND roll)
-set_tests_properties(roll PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
-
-add_executable(tilt
- testing_tilt.cpp
- ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
-)
-target_compile_features(tilt PRIVATE cxx_std_20)
-target_include_directories(tilt PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME tilt COMMAND tilt)
-set_tests_properties(tilt PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
-
-add_executable(touch
- testing_touch.cpp
- ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
-)
-target_compile_features(touch PRIVATE cxx_std_20)
-target_include_directories(touch PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME touch COMMAND touch)
-set_tests_properties(touch PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+target_compile_features(test_descriptors PRIVATE cxx_std_20)
+target_link_libraries(test_descriptors PRIVATE Catch2::Catch2WithMain)
+target_include_directories(test_descriptors PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME test_descriptors COMMAND test_descriptors)
+set_tests_properties(test_descriptors PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 add_executable(utils
  test_utils.cpp
