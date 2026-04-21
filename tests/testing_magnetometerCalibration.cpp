@@ -11,6 +11,10 @@ using namespace Catch;
 using namespace puara_gestures;
 using namespace puara_gestures::utils;
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // This suite validates the trusted float-recorded magnetometer file only.
 // The integer dataset is excluded from the core Catch2 validation so the
 // calibration expectations remain aligned with the desired process.
