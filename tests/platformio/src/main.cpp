@@ -11,6 +11,7 @@
 #include <puara/structs.h>
 #include <puara/utils.h>
 #include <puara/utils/blobDetector.h>
+#include <puara/utils/calibration.h>
 #include <puara/utils/includeEigen.h>
 #include <puara/utils/leakyintegrator.h>
 
@@ -207,6 +208,38 @@ static void testIMUFilters() {
   logResult(ok, name);
 }
 
+static void testEmbeddedMagnetometerCalibration() {
+  const char* name = "Embedded magnetometer calibration";
+  constexpr size_t sampleCount = 24;
+  puara_gestures::Coord3D samples[sampleCount];
+
+  for (size_t i = 0; i < sampleCount; ++i) {
+    const double longitude = 2.0 * M_PI * static_cast<double>(i) / static_cast<double>(sampleCount);
+    const double latitude = M_PI * static_cast<double>(i) / static_cast<double>(sampleCount) - M_PI / 2.0;
+    double x = std::cos(latitude) * std::cos(longitude);
+    double y = std::cos(latitude) * std::sin(longitude);
+    double z = std::sin(latitude);
+
+    x = x * 1.25 + 0.22;
+    y = y * 0.68 - 0.16;
+    z = z * 1.14 + 0.06;
+    samples[i] = {x, y, z};
+  }
+
+  puara_gestures::Embedded_Calibration calib(sampleCount);
+  bool ok = (calib.generateMagnetometerMatrices(samples, sampleCount) == 1);
+
+  for (size_t i = 0; ok && i < sampleCount; ++i) {
+    puara_gestures::Imu9Axis raw{};
+    raw.magn = samples[i];
+    calib.applyMagnetometerCalibration(raw);
+    const double r = std::sqrt(raw.magn.x * raw.magn.x + raw.magn.y * raw.magn.y + raw.magn.z * raw.magn.z);
+    ok &= almostEqual(r, 1.0, 0.25);
+  }
+
+  logResult(ok, name);
+}
+
 static void testRollingMinMax() {
   const char* name = "RollingMinMax sliding range";
   puara_gestures::utils::RollingMinMax<int> window(3);
@@ -257,6 +290,7 @@ static void runEmbeddedTests() {
   testThreshold();
   testSmooth();
   testIMUFilters();
+  testEmbeddedMagnetometerCalibration();
   testRollingMinMax();
   testDiscretizer();
 

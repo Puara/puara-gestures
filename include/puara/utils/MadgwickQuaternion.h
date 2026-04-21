@@ -146,14 +146,17 @@ private:
         }
 
         if (mx == 0.0 && my == 0.0 && mz == 0.0) {
+            // If magnetometer data is missing, fall back to the 6-DoF IMU-only update.
             return updateIMU(gx, gy, gz, ax, ay, az, deltat);
         }
 
         if ((ax == 0.0 && ay == 0.0 && az == 0.0) ||
             (mx == 0.0 && my == 0.0 && mz == 0.0)) {
+            // Invalid sensor data: either accel or magnetometer is all zeros.
             return false;
         }
 
+        // Quaternion components are used directly in the gradient descent correction.
         double q0 = quaternion.w;
         double q1 = quaternion.x;
         double q2 = quaternion.y;
@@ -234,6 +237,8 @@ private:
              + (-_2bx * q0 + _2bz * q2) * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - my)
              + _2bx * q1 * (_2bx * (q0q2 + q1q3) + _2bz * (0.5 - q1q1 - q2q2) - mz);
 
+        // The vector [s0, s1, s2, s3] is the gradient of the objective function.
+        // Normalizing it makes the correction independent of sensor magnitude.
         {
             const double sNorm = s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3;
             if (sNorm > 0.0) {
@@ -306,6 +311,8 @@ private:
         qDot3 = 0.5 * (q0 * gy - q1 * gz + q3 * gx);
         qDot4 = 0.5 * (q0 * gz + q1 * gy - q2 * gx);
 
+        // Gradient descent from the accelerometer-only objective function.
+        // This is used when magnetometer measurements are unavailable.
         s0 = _4q0 * q2q2 + _2q2 * ax + _4q0 * q1q1 - _2q1 * ay;
         s1 = _4q1 * q3q3 - _2q3 * ax + 4.0 * q0q0 * q1 - _2q0 * ay - _4q1 + _8q1 * q1q1 + _8q1 * q2q2 + _4q1 * az;
         s2 = 4.0 * q0q0 * q2 + _2q0 * ax + _4q2 * q3q3 - _2q3 * ay - _4q2 + _8q2 * q1q1 + _8q2 * q2q2 + _4q2 * az;

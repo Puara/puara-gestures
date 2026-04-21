@@ -120,6 +120,7 @@ private:
             return false;
         }
 
+        // Current quaternion state is the prior orientation estimate.
         double q0 = quaternion.w;
         double q1 = quaternion.x;
         double q2 = quaternion.y;
@@ -146,6 +147,7 @@ private:
         az *= recipNorm;
 
         if (mx == 0.0 && my == 0.0 && mz == 0.0) {
+            // Use the IMU-only path when magnetometer data is unavailable.
             return updateQuaternionIMU(gx, gy, gz, ax, ay, az, deltat);
         }
 
@@ -163,6 +165,8 @@ private:
         double bx = std::sqrt(hx * hx + hy * hy);
         double bz = mx * (q1q3 - q0q2) + my * (q2q3 + q0q1) + mz * (0.5 - q1q1 - q2q2);
 
+        // Compute the expected direction of gravity and magnetic flux in body frame
+        // as predicted by the current quaternion estimate.
         vx = 2.0 * (q1q3 - q0q2);
         vy = 2.0 * (q0q1 + q2q3);
         vz = q0q0 - q1q1 - q2q2 + q3q3;
@@ -170,11 +174,14 @@ private:
         wy = 2.0 * bx * (q1q2 - q0q3) + 2.0 * bz * (q0q1 + q2q3);
         wz = 2.0 * bx * (q0q2 + q1q3) + 2.0 * bz * (0.5 - q1q1 - q2q2);
 
+        // Compute the error between measured and estimated directions.
+        // The cross products produce a corrective feedback vector in body frame.
         ex = (ay * vz - az * vy) + (my * wz - mz * wy);
         ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
         ez = (ax * vy - ay * vx) + (mx * wy - my * wx);
 
         if (twoKi > 0.0) {
+            // Integral feedback compensates for long-term gyro drift.
             integralFB.x += twoKi * ex * deltat;
             integralFB.y += twoKi * ey * deltat;
             integralFB.z += twoKi * ez * deltat;
@@ -229,8 +236,7 @@ private:
         double ey = (az * vx - ax * vz);
         double ez = (ax * vy - ay * vx);
 
-        if (twoKi > 0.0) {
-            integralFB.x += twoKi * ex * deltat;
+        if (twoKi > 0.0) {            // Integral feedback compensates for long-term gyro drift.            integralFB.x += twoKi * ex * deltat;
             integralFB.y += twoKi * ey * deltat;
             integralFB.z += twoKi * ez * deltat;
             gx += integralFB.x;

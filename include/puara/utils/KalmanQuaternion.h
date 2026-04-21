@@ -128,6 +128,8 @@ private:
     }
 
     void predictQuaternion(double gx, double gy, double gz, double deltat) {
+        // Gyro integration step: propagate the quaternion forward using angular velocity.
+        // This is the prediction phase of the simplified Kalman-style filter.
         double q0 = quaternion.w;
         double q1 = quaternion.x;
         double q2 = quaternion.y;
@@ -153,6 +155,7 @@ private:
     static bool estimateQuaternionFromAccelMag(double ax, double ay, double az,
                                                double mx, double my, double mz,
                                                Quaternion& quaternionOut) {
+        // Normalize accelerometer data to extract the gravity direction.
         double norm = ax * ax + ay * ay + az * az;
         if (norm == 0.0) {
             return false;
@@ -162,6 +165,7 @@ private:
         ay /= norm;
         az /= norm;
 
+        // Compute roll and pitch from the gravity vector.
         double roll = std::atan2(ay, az);
         double pitch = std::atan2(-ax, std::sqrt(ay * ay + az * az));
 
@@ -170,6 +174,8 @@ private:
         double sinPitch = std::sin(pitch);
         double cosPitch = std::cos(pitch);
 
+        // Rotate the magnetometer measurements into the horizontal plane.
+        // This removes the effect of tilt and allows yaw to be computed.
         double mx2 = mx * cosPitch + my * sinPitch * sinRoll + mz * sinPitch * cosRoll;
         double my2 = my * cosRoll - mz * sinRoll;
         if (mx2 == 0.0 && my2 == 0.0) {
@@ -198,6 +204,8 @@ private:
     }
 
     static Quaternion slerp(const Quaternion& a, const Quaternion& b, double t) {
+        // Spherical linear interpolation between two quaternion orientations.
+        // This blends the predicted orientation and the measured orientation smoothly.
         double cosTheta = a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
         Quaternion target = b;
         if (cosTheta < 0.0) {
