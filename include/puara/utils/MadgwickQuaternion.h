@@ -234,11 +234,16 @@ private:
              + (-_2bx * q0 + _2bz * q2) * (_2bx * (q1q2 - q0q3) + _2bz * (q0q1 + q2q3) - my)
              + _2bx * q1 * (_2bx * (q0q2 + q1q3) + _2bz * (0.5 - q1q1 - q2q2) - mz);
 
-        recipNorm = invSqrt(s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3);
-        s0 *= recipNorm;
-        s1 *= recipNorm;
-        s2 *= recipNorm;
-        s3 *= recipNorm;
+        {
+            const double sNorm = s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3;
+            if (sNorm > 0.0) {
+                recipNorm = invSqrt(sNorm);
+                s0 *= recipNorm;
+                s1 *= recipNorm;
+                s2 *= recipNorm;
+                s3 *= recipNorm;
+            }
+        }
 
         qDot1 = 0.5 * (-q1 * gx - q2 * gy - q3 * gz) - beta * s0;
         qDot2 = 0.5 * (q0 * gx + q2 * gz - q3 * gy) - beta * s1;
@@ -306,11 +311,16 @@ private:
         s2 = 4.0 * q0q0 * q2 + _2q0 * ax + _4q2 * q3q3 - _2q3 * ay - _4q2 + _8q2 * q1q1 + _8q2 * q2q2 + _4q2 * az;
         s3 = 4.0 * q1q1 * q3 - _2q1 * ax + 4.0 * q2q2 * q3 - _2q2 * ay;
 
-        recipNorm = invSqrt(s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3);
-        s0 *= recipNorm;
-        s1 *= recipNorm;
-        s2 *= recipNorm;
-        s3 *= recipNorm;
+        {
+            const double sNorm = s0 * s0 + s1 * s1 + s2 * s2 + s3 * s3;
+            if (sNorm > 0.0) {
+                recipNorm = invSqrt(sNorm);
+                s0 *= recipNorm;
+                s1 *= recipNorm;
+                s2 *= recipNorm;
+                s3 *= recipNorm;
+            }
+        }
 
         qDot1 -= beta * s0;
         qDot2 -= beta * s1;
