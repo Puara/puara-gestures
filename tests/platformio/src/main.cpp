@@ -6,15 +6,17 @@
 */
 
 #include <Arduino.h>
+#include <algorithm>
 #include <boost/circular_buffer.hpp>
 #include <cmath>
+
+#include <puara/gestures.h>
 #include <puara/structs.h>
 #include <puara/utils.h>
 #include <puara/utils/blobDetector.h>
 #include <puara/utils/calibration.h>
 #include <puara/utils/includeEigen.h>
 #include <puara/utils/leakyintegrator.h>
-#include <puara/gestures.h>
 
 
 static int g_failures = 0;
@@ -174,13 +176,13 @@ static void testRollDescriptor() {
     {0.049012, -0.0197754, -0.0151367, 0.994385, 7.69043, 3.2959, -2.0752, -0.853516, 0.669556, 1.01416, 0.0414739}
   };
 
-  Roll test;
+  puara_gestures::Roll test;
   bool ok = true;
 
   for (auto const& s : samples) {
-    Coord3D accl{s.ax, s.ay, s.az};
-    Coord3D gyro{s.gx, s.gy, s.gz};
-    Coord3D mag{s.mx, s.my, s.mz};
+    puara_gestures::Coord3D accl{s.ax, s.ay, s.az};
+    puara_gestures::Coord3D gyro{s.gx, s.gy, s.gz};
+    puara_gestures::Coord3D mag{s.mx, s.my, s.mz};
     double measured = test.roll(accl, gyro, mag, s.timestamp);
     double diff = std::fabs(measured - s.expected);
     ok &= std::isfinite(measured);
@@ -199,13 +201,13 @@ static void testTiltDescriptor() {
     {0.020996, 0.0395508, -0.505127, 0.841797, 5.00488, 3.66211, -0.0610352, 0.582642, 0.169678, -0.46228, 0.0572487}
   };
 
-  Tilt test;
+  puara_gestures::Tilt test;
   bool ok = true;
 
   for (auto const& s : samples) {
-    Coord3D accl{s.ax, s.ay, s.az};
-    Coord3D gyro{s.gx, s.gy, s.gz};
-    Coord3D mag{s.mx, s.my, s.mz};
+    puara_gestures::Coord3D accl{s.ax, s.ay, s.az};
+    puara_gestures::Coord3D gyro{s.gx, s.gy, s.gz};
+    puara_gestures::Coord3D mag{s.mx, s.my, s.mz};
     double measured = test.tilt(accl, gyro, mag, s.timestamp);
     double diff = std::fabs(measured - s.expected);
     ok &= std::isfinite(measured);
@@ -221,7 +223,7 @@ static void testTouchDescriptor() {
   constexpr int touchSizeEdge = 4;
   constexpr int touchSize = 16;
 
-  TouchArrayGestureDetector<maxNumBlobs, touchSizeEdge> detector;
+  puara_gestures::TouchArrayGestureDetector<maxNumBlobs, touchSizeEdge> detector;
   int touchArray[touchSize] = {0};
 
   touchArray[0] = 1;
@@ -240,6 +242,23 @@ static void testTouchDescriptor() {
   ok &= almostEqual(detector.topTouchAverage, 0.25, 1e-3);
   ok &= almostEqual(detector.middleTouchAverage, 0.625, 1e-3);
   ok &= almostEqual(detector.bottomTouchAverage, 0.5, 1e-3);
+  ok &= detector.totalBrush >= 0.0f;
+  ok &= detector.totalRub >= 0.0f;
+
+  std::fill(std::begin(touchArray), std::end(touchArray), 0);
+  touchArray[1] = 1;
+  touchArray[6] = 1;
+  touchArray[7] = 1;
+  touchArray[9] = 1;
+  touchArray[10] = 1;
+  touchArray[11] = 1;
+  touchArray[15] = 1;
+
+  detector.update(touchArray, touchSize);
+  ok &= almostEqual(detector.totalTouchAverage, 0.4375, 1e-3);
+  ok &= almostEqual(detector.topTouchAverage, 0.25, 1e-3);
+  ok &= almostEqual(detector.middleTouchAverage, 0.625, 1e-3);
+  ok &= almostEqual(detector.bottomTouchAverage, 0.25, 1e-3);
   ok &= detector.totalBrush >= 0.0f;
   ok &= detector.totalRub >= 0.0f;
 
