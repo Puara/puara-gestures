@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <boost/circular_buffer.hpp>
 #include <cmath>
-#include "IMU_Sensor_Fusion/imu_orientation.h"
 
 #include <puara/gestures.h>
 #include <puara/descriptors/button.h>
