@@ -14,6 +14,7 @@
 #include <puara/utils/calibration.h>
 #include <puara/utils/includeEigen.h>
 #include <puara/utils/leakyintegrator.h>
+#include <puara/gestures.h>
 
 
 static int g_failures = 0;
@@ -164,6 +165,87 @@ static void testSmooth() {
   logResult(ok, name);
 }
 
+static void testRollDescriptor() {
+  const char* name = "Roll descriptor embedded sample";
+  struct Sample { double timestamp, ax, ay, az, gx, gy, gz, mx, my, mz, expected; };
+  const Sample samples[] = {
+    {1.4e-05, -0.0219727, -0.0134277, 0.992676, 7.01904, 3.17383, -2.01416, -0.856567, 0.672119, 1.00867, 1.71506e-06},
+    {0.059329, -0.0234375, -0.0114746, 0.989014, 7.56836, 3.2959, -1.89209, -0.858154, 0.668823, 1.01111, 0.0214476},
+    {0.049012, -0.0197754, -0.0151367, 0.994385, 7.69043, 3.2959, -2.0752, -0.853516, 0.669556, 1.01416, 0.0414739}
+  };
+
+  Roll test;
+  bool ok = true;
+
+  for (auto const& s : samples) {
+    Coord3D accl{s.ax, s.ay, s.az};
+    Coord3D gyro{s.gx, s.gy, s.gz};
+    Coord3D mag{s.mx, s.my, s.mz};
+    double measured = test.roll(accl, gyro, mag, s.timestamp);
+    double diff = std::fabs(measured - s.expected);
+    ok &= std::isfinite(measured);
+    ok &= diff < 0.35;
+  }
+
+  logResult(ok, name);
+}
+
+static void testTiltDescriptor() {
+  const char* name = "Tilt descriptor embedded sample";
+  struct Sample { double timestamp, ax, ay, az, gx, gy, gz, mx, my, mz, expected; };
+  const Sample samples[] = {
+    {1.4e-05, 0.0400391, -0.512451, 0.842529, 6.16455, 2.99072, -0.12207, 0.581909, 0.17627, -0.458496, 4.68283e-08},
+    {0.033594, 0.0383301, -0.506103, 0.843994, 5.92041, 3.54004, -0.305176, 0.584961, 0.170654, -0.455688, 0.029345},
+    {0.020996, 0.0395508, -0.505127, 0.841797, 5.00488, 3.66211, -0.0610352, 0.582642, 0.169678, -0.46228, 0.0572487}
+  };
+
+  Tilt test;
+  bool ok = true;
+
+  for (auto const& s : samples) {
+    Coord3D accl{s.ax, s.ay, s.az};
+    Coord3D gyro{s.gx, s.gy, s.gz};
+    Coord3D mag{s.mx, s.my, s.mz};
+    double measured = test.tilt(accl, gyro, mag, s.timestamp);
+    double diff = std::fabs(measured - s.expected);
+    ok &= std::isfinite(measured);
+    ok &= diff < 0.35;
+  }
+
+  logResult(ok, name);
+}
+
+static void testTouchDescriptor() {
+  const char* name = "Touch descriptor embedded sample";
+  constexpr int maxNumBlobs = 4;
+  constexpr int touchSizeEdge = 4;
+  constexpr int touchSize = 16;
+
+  TouchArrayGestureDetector<maxNumBlobs, touchSizeEdge> detector;
+  int touchArray[touchSize] = {0};
+
+  touchArray[0] = 1;
+  touchArray[5] = 1;
+  touchArray[6] = 1;
+  touchArray[8] = 1;
+  touchArray[9] = 1;
+  touchArray[10] = 1;
+  touchArray[14] = 1;
+  touchArray[15] = 1;
+
+  detector.update(touchArray, touchSize);
+
+  bool ok = true;
+  ok &= almostEqual(detector.totalTouchAverage, 0.5, 1e-3);
+  ok &= almostEqual(detector.topTouchAverage, 0.25, 1e-3);
+  ok &= almostEqual(detector.middleTouchAverage, 0.625, 1e-3);
+  ok &= almostEqual(detector.bottomTouchAverage, 0.5, 1e-3);
+  ok &= detector.totalBrush >= 0.0f;
+  ok &= detector.totalRub >= 0.0f;
+
+  logResult(ok, name);
+}
+
 static void testIMUFilters() {
   const char* name = "IMU filter quaternion normalization";
 
@@ -291,6 +373,9 @@ static void runEmbeddedTests() {
   testMapRange();
   testThreshold();
   testSmooth();
+  testRollDescriptor();
+  testTiltDescriptor();
+  testTouchDescriptor();
   testIMUFilters();
   testEmbeddedMagnetometerCalibration();
   testRollingMinMax();
