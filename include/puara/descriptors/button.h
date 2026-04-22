@@ -7,21 +7,56 @@ namespace puara_gestures
 {
 
   /**
- * @brief This class extract several features from a discrete value, e.g., a button.
- * 
- * It expects a discete value (an int with value 0 or 1).
- *
- * Button can use `tied_data`, which is an external variable that users update on their own.
- * Users can then call update() without any argumments to extract the features from the `tied_data`.
-* The usage should be:
-* setup:
-*   - user creates variable, e.g. button_data
-* user instantiates the class, e.g. puara::Button my_button(button_data)
-* loop/task:
-*   - user saves sensor value into button_data
-*   - user/task calls my_button.update()
-*   - user accesses button descriptors with my_button functions
- */
+   * @file button.h
+   * @brief Simple button descriptor helper for discrete button inputs.
+   *
+   * Example usage:
+   * @code
+   * #include <puara/descriptors/button.h>
+   *
+   * int button_data = 0;
+   * puara_gestures::Button button(button_data);
+   *
+   * void setup() {
+   *   pinMode(BUTTON_PIN, INPUT_PULLUP);
+   * }
+   *
+   * void loop() {
+   *   button_data = digitalRead(BUTTON_PIN);
+   *   button.update();
+   *
+   *   if (button.tap) {
+   *     Serial.println("Button tapped");
+   *   }
+   *   if (button.doubleTap) {
+   *     Serial.println("Button double tapped");
+   *   }
+   *   if (button.tripleTap) {
+   *     Serial.println("Button triple tapped");
+   *   }
+   *   if (button.hold) {
+   *     Serial.println("Button is held");
+   *   }
+   *
+   *   // How long the button was pressed before release.
+   *   Serial.print("Press time: ");
+   *   Serial.println(button.pressTime);
+   *
+   *   // The internal press count that drives tap/doubleTap/tripleTap logic.
+   *   Serial.print("Press count: ");
+   *   Serial.println(button.count);
+   *
+   *   // Optional tuning for how long a press must last to become a hold.
+   *   button.holdInterval = 5000; // milliseconds
+   * }
+   * @endcode
+   *
+   * This class can also be used without a tied variable by calling
+   * `button.update(value)` directly.
+   *
+   * The optional `tied_data` pointer allows the user to keep a shared
+   * integer state that is updated before each `update()` call.
+   */
 class Button
 {
 private:
