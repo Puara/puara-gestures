@@ -1,120 +1,149 @@
 # Puara Gestures
 
-The `puara-gestures` library provides lightweight gesture and feature extraction tools for motion sensors and touch inputs. It is designed for embedded and real-time applications, with a focus on high-level gesture descriptors and supporting utility helpers.
+Puara Gestures is a lightweight C++ library for turning sensor data into useful motion features.
+It is designed for embedded systems and real-time projects that need gesture-style signals from accelerometers, IMUs, touch arrays, and buttons.
 
-## What the library includes
+## What this library gives you
 
-- **Gesture descriptors** for motion and touch event detection: shakes, jabs, rolls, tilts, touch brush/rub, and button interactions.
-- **Button detection** to classify discrete press/release behavior and user interactions from a digital input.
-- **Utility helpers** for smoothing, range mapping, thresholding, wrapping, timing, and sensor fusion support.
+- `Jab`, `Jab2D`, `Jab3D` — simple motion burst detectors for 1, 2, or 3 axes.
+- `Shake`, `Shake2D`, `Shake3D` — smooth motion energy tracking for vibration and shaking.
+- `Tilt` and `Roll` — orientation signals from 9DoF IMU data.
+- `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
+- `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
+- `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
-## Gestures (descriptors) and Features
+## Why it is useful
 
-- **Shake**: Detects shake movements for accelerometer or general motion data.
-- **Jab**: Detects jab-style gestures using acceleration-based motion.
-- **Roll**: Measures roll gestures from 9DoF IMU input.
-- **Tilt**: Measures tilt gestures from 9DoF IMU input.
-- **Touch (Brush/Rub)**: Extracts features for brush/rub and swipe-style touch movement.
-- **Button**: Detects presses, releases, and other discrete button interactions.
+This library is made for people who want meaningful sensor features, not raw numbers.
+Instead of reading raw acceleration or touch values, you can get:
 
-## Utility helpers and helper functions
+- a jab intensity score
+- shake energy that grows with movement and decays smoothly
+- tilt and roll values ready for gesture use
+- touch brush/rub metrics
+- button interactions like taps and holds
 
-The library also includes a set of lightweight utility headers under `include/puara/utils` for common data processing tasks and sensor helpers.
+## Quick examples
 
-### Included utility headers
+### 1D Jab
 
-- `circularbuffer.h` — fixed-size circular buffer wrapper for embedded-friendly history storage
-- `discretizer.h` — detects when a value changes and suppresses repeated identical values
-- `leakyintegrator.h` — exponential smoothing and attenuation for noisy sensor signals
-- `maprange.h` — scales values from one numeric range to another
-- `rollingminmax.h` — computes sliding minimum and maximum values over the last N samples
-- `smooth.h` — moving-average smoothing helper for noisy inputs
-- `threshold.h` — clamps values to a minimum/maximum range
-- `wrap.h` — angle wrapping and unwrapping utilities for periodic data
-- `chrono.h` — simple cross-platform timing helpers
-- `magnetometerCalibration.h` — magnetometer hard-iron and soft-iron calibration helpers
-- `blobDetector.h` — 1D blob detection helper for binary sensor streams
+```cpp
+double accel = 0.0;
+puara_gestures::Jab jab(&accel);
+jab.threshold = 3.0;
 
-### Useful helper functions in `puara::utils`
-
-- `arrayAverage()` — average a range of elements
-- `arrayAverageWithoutZero()` — average non-zero elements only
-- `bitShiftArrayL()` — legacy bit-shift helper for older feature extraction code
-
-### Coordinate and unit conversion helpers
-
-The `puara::utils::convert` namespace includes:
-
-- `g_to_ms2()` / `ms2_to_g()`
-- `dps_to_rads()` / `rads_to_dps()`
-- `gauss_to_utesla()` / `utesla_to_gauss()`
-- `spheric_to_cartesian()` / `cartesian_to_spheric()`
-- `phased_cartesian_to_spheric()` / `phased_spheric_to_cartesian()`
-
-## Example Projects
-
-A basic example of puara-gestures can be found on the [puara-module-templates](https://github.com/Puara/puara-module-templates/tree/main/basic-gestures) repository.
-The included `exampleProjects` directory also contains example projects and is a good starting point for new users. 
-See [exampleProjects](/exampleProjects) for details.
-
-## Building the Library
-
-### Prerequisites
-
-- CMake 3.24 or higher
-- A compatible C++ compiler
-- Arduino IDE (for running the example project on hardware)
-
-### Building
-
-To build the `puara-gestures` library, follow these steps:
-
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/Puara/puara-gestures.git
-    cd puara-gestures
-    ```
-2. Configure the project using CMake:
-    ```sh
-    cmake -B build
-    ```
-3. Build the project:
-    ```sh
-    cmake --build build
-    ```
-
-## Usage in PlatformIO
-
-Puara-gestures can be easily included in PlatformIo projects. The recommended method is to manually edit the `platformio.ini` file of the project and add this repository to `lib_deps`. It is recommended to specify the puara-gestures version (in the example below, we will use version 0.2.0): 
-
-```
-lib_deps = https://github.com/Puara/puara-gestures.git#v0.2.0
+accel = readAccelerationX();
+jab.update();
+double score = jab.current_value();
 ```
 
-If planning to use the 3rd-party library for sensor fusion, it also needs to be manually added:
+### 2D Jab
 
+```cpp
+puara_gestures::Coord2D accel{0.0, 0.0};
+puara_gestures::Jab2D jab2d(&accel);
+jab2d.threshold(2.0);
+
+accel.x = readAccelerationX();
+accel.y = readAccelerationY();
+jab2d.update();
+auto score = jab2d.current_value();
+// score.x and score.y are per-axis jab values
 ```
-lib_deps = 
-	https://github.com/Puara/puara-gestures.git#v0.2.0
-	https://github.com/malloch/IMU_Sensor_Fusion.git
+
+### 3D Shake
+
+```cpp
+puara_gestures::Coord3D accel{0.0, 0.0, 0.0};
+puara_gestures::Shake3D shake3d(&accel);
+shake3d.threshold(0.2);
+shake3d.frequency(0);
+
+accel.x = readAccelerationX();
+accel.y = readAccelerationY();
+accel.z = readAccelerationZ();
+shake3d.update();
+auto energy = shake3d.current_value();
 ```
 
-When using PlatformIO, it is also important to use the **espressif32** platform and **arduino** framework if using an ESP32. 
-To use esp-idf, it is recommended to manually copy the `src` and `include` folders into your project rather than using lib_deps.
-The reason is that esp-idf will try to compile all cpp files in this project, resulting in include errors.
+### Tilt/Roll from accelerometer only
 
-## Contributing with new gestures
+```cpp
+puara_gestures::Tilt_Roll simple;
+simple.update(0.0, 0.0, 1.0);
+double roll = simple.current_roll_value();
+double tilt = simple.current_tilt_value();
+```
 
-It is easy to contribute new gestures for puara-gestures.
-Gestures are organized in single-header files that contain the feature class.
-We only need to add a class (header) in the [descriptors folder](include/puara/descriptors) and include it in [gestures.h](include/puara/gestures.h).
+### Button interaction
 
+```cpp
+puara_gestures::Button button;
+button.countInterval = 300;
+button.holdInterval = 500;
 
-## More Info on the research related to [Puara](https://github.com/Puara)
+button.update(readDigitalInput());
+if (button.tap) {
+    // tap detected
+}
+if (button.hold) {
+    // hold detected
+}
+```
 
-- [SAT](https://www.sat.qc.ca)
-- [IDMIL](https://www.idmil.org)
+## Utilities
 
-## Licensing
+The `include/puara/utils` folder contains small helpers for sensor and data processing tasks.
 
-The code in this project is licensed under the MIT license, unless otherwise specified within the file.
+- `rollingminmax.h` — sliding min/max over a short window
+- `leakyintegrator.h` — smooth decay and signal energy tracking
+- `maprange.h` — scale one numeric range into another
+- `smooth.h` — moving average smoothing
+- `threshold.h` — clamp values inside a range
+- `wrap.h` — angle wrapping utilities
+- `discretizer.h` — detect value changes
+- `circularbuffer.h` — fixed-size history storage
+
+## Build
+
+### Local build
+
+```sh
+git clone https://github.com/Puara/puara-gestures.git
+cd puara-gestures
+cmake -B build
+cmake --build build
+```
+
+### PlatformIO
+
+Add this repo to `lib_deps`:
+
+```ini
+lib_deps =
+  https://github.com/Puara/puara-gestures.git#v0.2.0
+```
+
+For IMU sensor fusion support also add:
+
+```ini
+lib_deps =
+  https://github.com/Puara/puara-gestures.git#v0.2.0
+  https://github.com/malloch/IMU_Sensor_Fusion.git
+```
+
+> For ESP32 + Arduino use `espressif32` and `arduino`.
+> ESP-IDF may require copying `src` and `include` manually.
+
+## Testing
+
+This repo includes host Catch2 tests in `tests/` and an embedded PlatformIO test runner in `tests/platformio/src/main.cpp`.
+
+## Contributing
+
+Add a new gesture header to `include/puara/descriptors` and include it from `include/puara/gestures.h`.
+
+## License
+
+MIT, unless a file says otherwise.
