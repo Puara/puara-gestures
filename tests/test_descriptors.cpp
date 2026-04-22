@@ -155,6 +155,7 @@ TEST_CASE("Jab descriptor detects motion range, ties external data, and supports
 
   puara_gestures::Coord1D tiedData{0.0};
   puara_gestures::Jab tiedJab(&tiedData);
+  tiedJab.threshold = 1;
   tiedData.x = 0.0;
   tiedJab.update();
   tiedData.x = 4.0;

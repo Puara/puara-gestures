@@ -7,12 +7,9 @@
 
 #include <Arduino.h>
 #include <algorithm>
-#include <boost/circular_buffer.hpp>
 #include <cmath>
 
 #include <puara/gestures.h>
-#include <puara/structs.h>
-#include <puara/utils.h>
 
 static int g_failures = 0;
 static int g_checks = 0;
@@ -346,6 +343,7 @@ static void testJabDescriptor() {
 
   puara_gestures::Coord1D tiedData{0.0};
   puara_gestures::Jab tiedJab(&tiedData);
+  tiedJab.threshold = 1;
   tiedData.x = 0.0;
   tiedJab.update();
   tiedData.x = 4.0;
