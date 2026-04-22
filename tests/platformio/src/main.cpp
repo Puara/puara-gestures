@@ -11,14 +11,8 @@
 #include <cmath>
 
 #include <puara/gestures.h>
-#include <puara/descriptors/button.h>
 #include <puara/structs.h>
 #include <puara/utils.h>
-#include <puara/utils/blobDetector.h>
-#include <puara/utils/calibration.h>
-#include <puara/utils/includeEigen.h>
-#include <puara/utils/leakyintegrator.h>
-
 
 static int g_failures = 0;
 static int g_checks = 0;
@@ -214,6 +208,28 @@ static void testTiltDescriptor() {
     ok &= std::isfinite(measured);
     ok &= diff < 0.35;
   }
+
+  logResult(ok, name);
+}
+
+static void testSimpleTiltRollDescriptor() {
+  const char* name = "Simple Tilt/Roll embedded sample";
+
+  puara_gestures::Tilt_Roll simple;
+  simple.update(0.0, 0.0, 1.0);
+  bool ok = true;
+  ok &= almostEqual(simple.current_roll_value(), M_PI_2, 1e-6);
+  ok &= almostEqual(simple.current_tilt_value(), 0.0, 1e-6);
+
+  simple.update(1.0, 0.0, 0.0);
+  ok &= almostEqual(simple.current_roll_value(), 0.0, 1e-6);
+  ok &= almostEqual(simple.current_tilt_value(), M_PI_2, 1e-3);
+
+  puara_gestures::Coord3D imu_data{0.0, 0.0, 1.0};
+  puara_gestures::Tilt_Roll tied(&imu_data);
+  tied.update();
+  ok &= almostEqual(tied.current_roll_value(), M_PI_2, 1e-6);
+  ok &= almostEqual(tied.current_tilt_value(), 0.0, 1e-6);
 
   logResult(ok, name);
 }
@@ -444,6 +460,7 @@ static void runEmbeddedTests() {
   testSmooth();
   testRollDescriptor();
   testTiltDescriptor();
+  testSimpleTiltRollDescriptor();
   testTouchDescriptor();
   testButtonDescriptor();
   testIMUFilters();

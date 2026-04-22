@@ -14,6 +14,7 @@
 #include <puara/utils/chrono.h>
 #include <puara/utils/circularbuffer.h>
 #include <puara/utils/discretizer.h>
+#include <puara/utils/includeEigen.h>
 #include <puara/utils/leakyintegrator.h>
 #include <puara/utils/maprange.h>
 #include <puara/utils/rollingminmax.h>

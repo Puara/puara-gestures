@@ -1,18 +1,18 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <rapidcsv.h>
-
-#include <puara/descriptors/button.h>
 #include <puara/gestures.h>
 
 #include <cmath>
+#include <rapidcsv.h>
+
+#include <chrono>
 #include <filesystem>
 #include <thread>
-#include <chrono>
 
 using namespace puara_gestures;
 
-static double readCsvDouble(const rapidcsv::Document& doc, const std::string& column, size_t row)
+static double
+readCsvDouble(const rapidcsv::Document& doc, const std::string& column, size_t row)
 {
   return doc.GetCell<double>(column, row);
 }
@@ -34,7 +34,7 @@ TEST_CASE("Roll descriptor follows reference CSV values", "[descriptors][roll]")
   Imu9Axis imu_data;
   double maxDiff = 0.0;
 
-  for (size_t r = 0; r < rowCount; ++r)
+  for(size_t r = 0; r < rowCount; ++r)
   {
     const double timestamp = readCsvDouble(doc, "timestamp", r);
     imu_data.accl.x = readCsvDouble(doc, "accl_x", r);
@@ -48,20 +48,24 @@ TEST_CASE("Roll descriptor follows reference CSV values", "[descriptors][roll]")
     imu_data.magn.z = readCsvDouble(doc, "mag_z", r);
 
     const double expectedRoll = readCsvDouble(doc, "roll", r);
-    const double measuredRoll = test.roll(imu_data.accl, imu_data.gyro, imu_data.magn, timestamp);
+    const double measuredRoll
+        = test.roll(imu_data.accl, imu_data.gyro, imu_data.magn, timestamp);
     const double diff = std::fabs(measuredRoll - expectedRoll);
 
-    if (r < 3) {
-      std::cerr << "DEBUG roll row=" << r
-                << " ts=" << timestamp
-                << " accl=" << imu_data.accl.x << "," << imu_data.accl.y << "," << imu_data.accl.z
-                << " gyro=" << imu_data.gyro.x << "," << imu_data.gyro.y << "," << imu_data.gyro.z
-                << " mag=" << imu_data.magn.x << "," << imu_data.magn.y << "," << imu_data.magn.z
-                << " expected=" << expectedRoll
+    if(r < 3)
+    {
+      std::cerr << "DEBUG roll row=" << r << " ts=" << timestamp
+                << " accl=" << imu_data.accl.x << "," << imu_data.accl.y << ","
+                << imu_data.accl.z << " gyro=" << imu_data.gyro.x << ","
+                << imu_data.gyro.y << "," << imu_data.gyro.z
+                << " mag=" << imu_data.magn.x << "," << imu_data.magn.y << ","
+                << imu_data.magn.z << " expected=" << expectedRoll
                 << " measured=" << measuredRoll << "\n";
     }
 
-    INFO("row=" << r << " timestamp=" << timestamp << " expected=" << expectedRoll << " measured=" << measuredRoll << " diff=" << diff);
+    INFO(
+        "row=" << r << " timestamp=" << timestamp << " expected=" << expectedRoll
+               << " measured=" << measuredRoll << " diff=" << diff);
     CHECK(diff < 0.35);
     maxDiff = std::max(maxDiff, diff);
   }
@@ -80,33 +84,35 @@ TEST_CASE("Tilt descriptor follows reference CSV values", "[descriptors][tilt]")
 
   double maxDiff = 0.0;
 
-  for (size_t r = 0; r < rowCount; ++r)
+  for(size_t r = 0; r < rowCount; ++r)
   {
     const double timestamp = readCsvDouble(doc, "timestamp", r);
 
     Coord3D accl{
-      readCsvDouble(doc, "accl_x", r),
-      readCsvDouble(doc, "accl_y", r),
-      readCsvDouble(doc, "accl_z", r),
+        readCsvDouble(doc, "accl_x", r),
+        readCsvDouble(doc, "accl_y", r),
+        readCsvDouble(doc, "accl_z", r),
     };
 
     Coord3D gyro{
-      readCsvDouble(doc, "gyro_x", r),
-      readCsvDouble(doc, "gyro_y", r),
-      readCsvDouble(doc, "gyro_z", r),
+        readCsvDouble(doc, "gyro_x", r),
+        readCsvDouble(doc, "gyro_y", r),
+        readCsvDouble(doc, "gyro_z", r),
     };
 
     Coord3D mag{
-      readCsvDouble(doc, "mag_x", r),
-      readCsvDouble(doc, "mag_y", r),
-      readCsvDouble(doc, "mag_z", r),
+        readCsvDouble(doc, "mag_x", r),
+        readCsvDouble(doc, "mag_y", r),
+        readCsvDouble(doc, "mag_z", r),
     };
 
     const double expectedTilt = readCsvDouble(doc, "tilt", r);
     const double measuredTilt = test.tilt(accl, gyro, mag, timestamp);
     const double diff = std::fabs(measuredTilt - expectedTilt);
 
-    INFO("row=" << r << " timestamp=" << timestamp << " expected=" << expectedTilt << " measured=" << measuredTilt << " diff=" << diff);
+    INFO(
+        "row=" << r << " timestamp=" << timestamp << " expected=" << expectedTilt
+               << " measured=" << measuredTilt << " diff=" << diff);
     CHECK(diff < 0.35);
     maxDiff = std::max(maxDiff, diff);
   }
@@ -114,7 +120,30 @@ TEST_CASE("Tilt descriptor follows reference CSV values", "[descriptors][tilt]")
   CHECK(maxDiff < 0.35);
 }
 
-TEST_CASE("Touch descriptor computes expected averages and gesture values", "[descriptors][touch]")
+TEST_CASE(
+    "Simple Tilt/Roll descriptor computes roll and tilt from accelerometer data",
+    "[descriptors][simple_tilt_roll]")
+{
+  puara_gestures::Tilt_Roll simple;
+  simple.update(0.0, 0.0, 1.0);
+
+  CHECK(simple.current_roll_value() == Catch::Approx(M_PI_2).margin(1e-6));
+  CHECK(simple.current_tilt_value() == Catch::Approx(0.0).margin(1e-6));
+
+  simple.update(1.0, 0.0, 0.0);
+  CHECK(simple.current_roll_value() == Catch::Approx(0.0).margin(1e-6));
+  CHECK(simple.current_tilt_value() == Catch::Approx(M_PI_2).margin(1e-3));
+
+  Coord3D imu_data{0.0, 0.0, 1.0};
+  Tilt_Roll tied(&imu_data);
+  tied.update();
+  CHECK(tied.current_roll_value() == Catch::Approx(M_PI_2).margin(1e-6));
+  CHECK(tied.current_tilt_value() == Catch::Approx(0.0).margin(1e-6));
+}
+
+TEST_CASE(
+    "Touch descriptor computes expected averages and gesture values",
+    "[descriptors][touch]")
 {
   constexpr int maxNumBlobs = 4;
   constexpr int touchSizeEdge = 4;
