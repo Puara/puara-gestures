@@ -7,7 +7,6 @@
     "flags": [
       "-Iinclude/",
       "-I3rdparty/"
-      "-I3rdparty/IMU_Sensor_Fusion/"
     ]
   }
 }
