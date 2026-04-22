@@ -12,9 +12,7 @@
 #include <puara/descriptors/jab.h>
 #include <puara/descriptors/roll.h>
 #include <puara/descriptors/shake.h>
-#include <puara/descriptors/tilt.h>
 #include <puara/descriptors/simple_tilt_roll.h>
+#include <puara/descriptors/tilt.h>
 #include <puara/descriptors/touchArrayGestureDetector.h>
-#include <puara/utils/MadgwickQuaternion.h>
-#include <puara/utils/MahonyQuaternion.h>
-#include <puara/utils/KalmanQuaternion.h>
+#include <puara/utils.h>

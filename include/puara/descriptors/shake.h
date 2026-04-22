@@ -1,5 +1,5 @@
 //********************************************************************************//
-// Puara Gestures - Jab (.h)                                                      //
+// Puara Gestures - Shake (.h)                                                    //
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
@@ -15,13 +15,28 @@ namespace puara_gestures
 {
 
 /**
- * @brief This class creates jab gestures using 1DoF info
+ * @brief Simple 1D shake detector.
  *
- * It expects 1 axis of a accelerometer in m/s^2, but can be used
- * with any double or float
+ * Shake turns raw acceleration energy into a slowly changing value.
+ * It is useful when you want a smooth gesture-like signal for shaking,
+ * vibration, or repeated movement on one axis.
  *
- * The frequency for the leaky integrator can be changed through
- * integrator.frequency
+ * Example:
+ *   double accel = 0.0;
+ *   puara_gestures::Shake shake(&accel);
+ *   shake.threshold = 0.2;
+ *   shake.fast_leak = 0.6;
+ *   shake.slow_leak = 0.3;
+ *
+ *   // in your sensor loop:
+ *   accel = sensor.read();
+ *   shake.update();
+ *   double energy = shake.current_value();
+ *
+ * The output grows when motion is above threshold, and it decays when the
+ * motion calms down.
+ *
+ * `Shake2D` and `Shake3D` work the same way for two or three axes.
  */
 class Shake
 {

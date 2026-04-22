@@ -331,6 +331,95 @@ static void testButtonDescriptor() {
   logResult(ok, name);
 }
 
+static void testJabDescriptor() {
+  const char* name = "Jab descriptor embedded sample";
+
+  puara_gestures::Jab jab;
+  jab.threshold = 1;
+
+  bool ok = true;
+  ok &= almostEqual(jab.update(5.516652), 0.0);
+  ok &= almostEqual(jab.update(3.8303106), 1.6863414);
+  ok &= almostEqual(jab.update(4.2335014), 1.6863414);
+  ok &= almostEqual(jab.update(-0.5012963), 6.0179487);
+  ok &= almostEqual(jab.current_value(), 6.0179487);
+
+  puara_gestures::Coord1D tiedData{0.0};
+  puara_gestures::Jab tiedJab(&tiedData);
+  tiedData.x = 0.0;
+  tiedJab.update();
+  tiedData.x = 4.0;
+  tiedJab.update();
+  ok &= almostEqual(tiedJab.current_value(), 4.0);
+
+  puara_gestures::Jab2D jab2d;
+  jab2d.threshold(1);
+  jab2d.update(0.0, 0.0);
+  jab2d.update(3.0, -3.0);
+  auto val2d = jab2d.current_value();
+  ok &= almostEqual(val2d.x, 3.0);
+  ok &= almostEqual(val2d.y, 3.0);
+
+  puara_gestures::Jab3D jab3d;
+  jab3d.threshold(1);
+  jab3d.update(0.0, 0.0, 0.0);
+  jab3d.update(3.0, -3.0, 1.5);
+  auto val3d = jab3d.current_value();
+  ok &= almostEqual(val3d.x, 3.0);
+  ok &= almostEqual(val3d.y, 3.0);
+  ok &= almostEqual(val3d.z, 1.5);
+
+  logResult(ok, name);
+}
+
+static void testShakeDescriptor() {
+  const char* name = "Shake descriptor embedded sample";
+
+  puara_gestures::Shake shake;
+  shake.threshold = 0.1;
+  shake.fast_leak = 0.6;
+  shake.slow_leak = 0.3;
+  shake.frequency(0);
+
+  bool ok = true;
+  ok &= almostEqual(shake.update(10.0), 1.0);
+  ok &= almostEqual(shake.current_value(), 1.0);
+  ok &= almostEqual(shake.update(0.0), 0.3);
+  ok &= almostEqual(shake.update(0.0), 0.09);
+  ok &= almostEqual(shake.update(0.0), 0.027);
+  ok &= almostEqual(shake.update(0.0), 0.0);
+
+  puara_gestures::Coord1D tiedData{0.0};
+  puara_gestures::Shake tiedShake(&tiedData);
+  tiedShake.threshold = 0.1;
+  tiedShake.frequency(0);
+  tiedData.x = 0.0;
+  tiedShake.update();
+  tiedData.x = 10.0;
+  tiedShake.update();
+  ok &= almostEqual(tiedShake.current_value(), 1.0);
+  ok &= almostEqual(tiedData.x, 10.0);
+
+  puara_gestures::Shake2D shake2d;
+  shake2d.threshold(0.1);
+  shake2d.frequency(0);
+  shake2d.update(10.0, 5.0);
+  auto val2d = shake2d.current_value();
+  ok &= almostEqual(val2d.x, 1.0);
+  ok &= almostEqual(val2d.y, 0.5);
+
+  puara_gestures::Shake3D shake3d;
+  shake3d.threshold(0.1);
+  shake3d.frequency(0);
+  shake3d.update(10.0, 5.0, 2.0);
+  auto val3d = shake3d.current_value();
+  ok &= almostEqual(val3d.x, 1.0);
+  ok &= almostEqual(val3d.y, 0.5);
+  ok &= almostEqual(val3d.z, 0.2);
+
+  logResult(ok, name);
+}
+
 static void testIMUFilters() {
   const char* name = "IMU filter quaternion normalization";
 
@@ -463,6 +552,8 @@ static void runEmbeddedTests() {
   testSimpleTiltRollDescriptor();
   testTouchDescriptor();
   testButtonDescriptor();
+  testJabDescriptor();
+  testShakeDescriptor();
   testIMUFilters();
   testEmbeddedMagnetometerCalibration();
   testRollingMinMax();

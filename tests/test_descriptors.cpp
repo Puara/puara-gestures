@@ -141,6 +141,90 @@ TEST_CASE(
   CHECK(tied.current_tilt_value() == Catch::Approx(0.0).margin(1e-6));
 }
 
+TEST_CASE("Jab descriptor detects motion range, ties external data, and supports 2D/3D", "[descriptors][jab]")
+{
+  puara_gestures::Jab jab;
+  jab.threshold = 1;
+
+  // Use the first x-axis values from imu_data_jab_shake.csv as realistic motion input.
+  CHECK(jab.update(5.516652) == Catch::Approx(0.0).margin(1e-6));
+  CHECK(jab.update(3.8303106) == Catch::Approx(1.6863414).margin(1e-6));
+  CHECK(jab.update(4.2335014) == Catch::Approx(1.6863414).margin(1e-6));
+  CHECK(jab.update(-0.5012963) == Catch::Approx(6.0179487).margin(1e-6));
+  CHECK(jab.current_value() == Catch::Approx(6.0179487).margin(1e-6));
+
+  puara_gestures::Coord1D tiedData{0.0};
+  puara_gestures::Jab tiedJab(&tiedData);
+  tiedData.x = 0.0;
+  tiedJab.update();
+  tiedData.x = 4.0;
+  tiedJab.update();
+  CHECK(tiedJab.current_value() == Catch::Approx(4.0).margin(1e-6));
+
+  puara_gestures::Jab2D jab2d;
+  jab2d.threshold(1);
+  jab2d.update(0.0, 0.0);
+  jab2d.update(3.0, -3.0);
+  auto values2d = jab2d.current_value();
+  CHECK(values2d.x == Catch::Approx(3.0).margin(1e-6));
+  CHECK(values2d.y == Catch::Approx(3.0).margin(1e-6));
+
+  puara_gestures::Jab3D jab3d;
+  jab3d.threshold(1);
+  jab3d.update(0.0, 0.0, 0.0);
+  jab3d.update(3.0, -3.0, 1.5);
+  auto values3d = jab3d.current_value();
+  CHECK(values3d.x == Catch::Approx(3.0).margin(1e-6));
+  CHECK(values3d.y == Catch::Approx(3.0).margin(1e-6));
+  CHECK(values3d.z == Catch::Approx(1.5).margin(1e-6));
+}
+
+TEST_CASE(
+    "Shake descriptor integrates high movement and decays when motion stops",
+    "[descriptors][shake]")
+{
+  puara_gestures::Shake shake;
+  shake.threshold = 0.1;
+  shake.fast_leak = 0.6;
+  shake.slow_leak = 0.3;
+  shake.frequency(0);
+
+  CHECK(shake.update(10.0) == Catch::Approx(1.0).margin(1e-6));
+  CHECK(shake.current_value() == Catch::Approx(1.0).margin(1e-6));
+  CHECK(shake.update(0.0) == Catch::Approx(0.3).margin(1e-6));
+  CHECK(shake.update(0.0) == Catch::Approx(0.09).margin(1e-6));
+  CHECK(shake.update(0.0) == Catch::Approx(0.027).margin(1e-6));
+  CHECK(shake.update(0.0) == Catch::Approx(0.0).margin(1e-6));
+
+  puara_gestures::Coord1D tiedData{0.0};
+  puara_gestures::Shake tiedShake(&tiedData);
+  tiedShake.threshold = 0.1;
+  tiedShake.frequency(0);
+  tiedData.x = 0.0;
+  tiedShake.update();
+  tiedData.x = 10.0;
+  tiedShake.update();
+  CHECK(tiedData.x == Catch::Approx(10.0).margin(1e-6));
+  CHECK(tiedShake.current_value() == Catch::Approx(1.0).margin(1e-6));
+
+  puara_gestures::Shake2D shake2d;
+  shake2d.threshold(0.1);
+  shake2d.frequency(0);
+  shake2d.update(10.0, 5.0);
+  auto values2d = shake2d.current_value();
+  CHECK(values2d.x == Catch::Approx(1.0).margin(1e-6));
+  CHECK(values2d.y == Catch::Approx(0.5).margin(1e-6));
+
+  puara_gestures::Shake3D shake3d;
+  shake3d.threshold(0.1);
+  shake3d.frequency(0);
+  shake3d.update(10.0, 5.0, 2.0);
+  auto values3d = shake3d.current_value();
+  CHECK(values3d.x == Catch::Approx(1.0).margin(1e-6));
+  CHECK(values3d.y == Catch::Approx(0.5).margin(1e-6));
+  CHECK(values3d.z == Catch::Approx(0.2).margin(1e-6));
+}
+
 TEST_CASE(
     "Touch descriptor computes expected averages and gesture values",
     "[descriptors][touch]")
