@@ -30,6 +30,9 @@
 #ifndef M_PI
 #define M_PI 3.141592653589793238462643383279502984
 #endif
+#ifndef M_PI_2
+#define M_PI_2 1.5707963267948966
+#endifi
 
 namespace puara_gestures::utils
 {

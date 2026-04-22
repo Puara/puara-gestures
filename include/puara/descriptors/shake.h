@@ -123,14 +123,25 @@ private:
 };
 
 /**
- * @brief This class creates jab gestures using 2DoF info
+ * @brief Simple 2D shake detector.
  *
- * It expects 2 axis of a accelerometer in m/s^2, but can be used
- * with any double or float
+ * Shake2D uses two Shake objects to track motion energy on X and Y.
+ * This lets you detect repeated motion or vibration across two axes, while
+ * still keeping the output smooth and easy to use.
  *
- * The frequency for the leaky integrator can be changed through
- * integrator.frequency individually or for all axes with
- * frequency(double freq)
+ * Example:
+ *   puara_gestures::Coord2D accel{0.0, 0.0};
+ *   puara_gestures::Shake2D shake2d(&accel);
+ *   shake2d.threshold(0.2);
+ *   shake2d.frequency(0); // deterministic update behavior for testing or simple loops
+ *
+ *   // in your loop:
+ *   accel.x = sensor.readX();
+ *   accel.y = sensor.readY();
+ *   shake2d.update();
+ *   auto energy = shake2d.current_value();
+ *
+ *   // energy.x and energy.y each report a smooth shake score.
  */
 class Shake2D
 {
@@ -194,14 +205,26 @@ public:
 };
 
 /**
- * @brief This class creates jab gestures using 3DoF info
+ * @brief Simple 3D shake detector.
  *
- * It expects 3 axis of a accelerometer in m/s^2, but can be used
- * with any double or float
+ * Shake3D tracks motion energy on X, Y and Z by combining three Shake
+ * processors. It is useful when you want a smooth, gesture-like output for
+ * full 3D accelerometer movement.
  *
- * The frequency for the leaky integrator can be changed through
- * integrator.frequency individually or for all axes with
- * frequency(double freq)
+ * Example:
+ *   puara_gestures::Coord3D accel{0.0, 0.0, 0.0};
+ *   puara_gestures::Shake3D shake3d(&accel);
+ *   shake3d.threshold(0.2);
+ *   shake3d.frequency(0);
+ *
+ *   // on each sensor sample:
+ *   accel.x = sensor.readX();
+ *   accel.y = sensor.readY();
+ *   accel.z = sensor.readZ();
+ *   shake3d.update();
+ *   auto energy = shake3d.current_value();
+ *
+ *   // energy.x, energy.y and energy.z each show a smooth shake score.
  */
 class Shake3D
 {
