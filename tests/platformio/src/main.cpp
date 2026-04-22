@@ -9,8 +9,10 @@
 #include <algorithm>
 #include <boost/circular_buffer.hpp>
 #include <cmath>
+#include "IMU_Sensor_Fusion/imu_orientation.h"
 
 #include <puara/gestures.h>
+#include <puara/descriptors/button.h>
 #include <puara/structs.h>
 #include <puara/utils.h>
 #include <puara/utils/blobDetector.h>
@@ -265,6 +267,55 @@ static void testTouchDescriptor() {
   logResult(ok, name);
 }
 
+static void testButtonDescriptor() {
+  const char* name = "Button descriptor embedded sample";
+
+  puara_gestures::Button button;
+  button.countInterval = 1;
+  button.holdInterval = 1000;
+
+  button.update(1);
+  delay(5);
+  button.update(0);
+  delay(5);
+  button.update(0);
+
+  bool ok = true;
+  ok &= (button.tap == 1);
+  ok &= (button.doubleTap == 0);
+  ok &= (button.tripleTap == 0);
+  ok &= (button.pressTime > 0);
+  ok &= (button.count == 0);
+
+  puara_gestures::Button doubleTapButton;
+  doubleTapButton.countInterval = 1;
+  doubleTapButton.holdInterval = 1000;
+
+  doubleTapButton.update(1);
+  delay(5);
+  doubleTapButton.update(0);
+  doubleTapButton.update(1);
+  delay(5);
+  doubleTapButton.update(0);
+  delay(5);
+  doubleTapButton.update(0);
+
+  ok &= (doubleTapButton.tap == 0);
+  ok &= (doubleTapButton.doubleTap == 1);
+  ok &= (doubleTapButton.tripleTap == 0);
+
+  puara_gestures::Button holdButton;
+  holdButton.countInterval = 1000;
+  holdButton.holdInterval = 5;
+
+  holdButton.update(1);
+  delay(10);
+  holdButton.update(1);
+
+  ok &= holdButton.hold;
+  logResult(ok, name);
+}
+
 static void testIMUFilters() {
   const char* name = "IMU filter quaternion normalization";
 
@@ -395,6 +446,7 @@ static void runEmbeddedTests() {
   testRollDescriptor();
   testTiltDescriptor();
   testTouchDescriptor();
+  testButtonDescriptor();
   testIMUFilters();
   testEmbeddedMagnetometerCalibration();
   testRollingMinMax();
