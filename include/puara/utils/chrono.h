@@ -45,3 +45,4 @@ inline unsigned long long getCurrentTimeMicroseconds()
 //       currentTimePoint.time_since_epoch());
 //   return duration.count();
 // }
+}
