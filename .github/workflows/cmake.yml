@@ -88,6 +88,7 @@ jobs:
           {
             "version": 1,
             "editor": "wokwi",
+            "author": "puara-gestures",
             "parts": [
               {
                 "type": "wokwi-tinypico",
@@ -158,6 +159,7 @@ jobs:
           {
             "version": 1,
             "editor": "wokwi",
+            "author": "puara-gestures",
             "parts": [
               {
                 "type": "wokwi-tinypico",
