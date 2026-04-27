@@ -87,7 +87,6 @@ jobs:
           cat > tests/platformio/diagram.json <<'EOF'
           {
             "version": 1,
-            "author": "chupichupichu",
             "editor": "wokwi",
             "parts": [
               {
@@ -158,7 +157,6 @@ jobs:
           cat > tests/platformio/diagram.json <<'EOF'
           {
             "version": 1,
-            "author": "chupichupichu",
             "editor": "wokwi",
             "parts": [
               {
