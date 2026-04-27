@@ -30,7 +30,7 @@ namespace puara_gestures::utils
  *
  *    // elapsed is the duration in microseconds
  */
-inline unsigned long long getCurrentTimeMicroseconds()
+auto getCurrentTimeMicroseconds()
 {
   auto currentTimePoint = std::chrono::steady_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
@@ -38,7 +38,7 @@ inline unsigned long long getCurrentTimeMicroseconds()
   return duration.count();
 }
 
-inline unsigned long long getCurrentTimeMilliseconds()
+auto getCurrentTimeMilliseconds()
 {
   auto currentTimePoint = std::chrono::steady_clock::now();
   auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
