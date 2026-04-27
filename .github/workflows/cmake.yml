@@ -115,10 +115,10 @@ jobs:
         uses: wokwi/wokwi-ci-action@v1
         with:
           token: ${{ secrets.WOKWI_CLI_TOKEN }}
-          path: tests/platformio  # directory with wokwi.toml, relative to repo's root
+          path: tests/platformio  
           timeout: 30000
-          expect_text: '=== EMBEDDED TESTS PASSED ==='
-
+          expect_text: '=== EMBEDDED TESTS PASSED ==='   
+          
   PlatformIO-Tests-with-Arduino-Librairies:
     runs-on: ubuntu-latest
     steps:
