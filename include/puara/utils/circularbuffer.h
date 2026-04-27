@@ -51,28 +51,18 @@ public:
    * */
   boost::circular_buffer<T> buffer;
 
-  CircularBuffer() = default;
   CircularBuffer(const CircularBuffer&) = default;
   CircularBuffer(CircularBuffer&&) noexcept = default;
   CircularBuffer& operator=(const CircularBuffer&) = default;
   CircularBuffer& operator=(CircularBuffer&&) noexcept = default;
 
-  CircularBuffer()
-    : buffer(size)
-  {
-  
-  }
+  CircularBuffer() : buffer(size) {}
 
-  explicit CircularBuffer(std::size_t capacity) 
-    : size(capacity)
-    , buffer(capacity) 
-  {
-  }
+  explicit CircularBuffer(std::size_t capacity) : size(capacity), buffer(capacity) {}
 
   T add(const T& element)
   {
-    if (buffer.capacity() != size)
-    {
+    if (buffer.capacity() != size){
       buffer.set_capacity(size);
     }
     buffer.push_front(element);
