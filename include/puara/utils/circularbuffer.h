@@ -41,21 +41,26 @@ template <typename T = double>
 class CircularBuffer
 {
 public:
-  /** @brief Requested capacity for the circular buffer. */
+  /** 
+   * @brief Requested capacity for the circular buffer. 
+   * */
   std::size_t size = 10;
 
-  /** @brief Underlying storage for circular buffer elements. */
+  /** 
+   * @brief Underlying storage for circular buffer elements. 
+   * */
   boost::circular_buffer<T> buffer;
 
-  CircularBuffer() = default;
-  CircularBuffer(const CircularBuffer&) = default;
-  CircularBuffer(CircularBuffer&&) noexcept = default;
-  CircularBuffer& operator=(const CircularBuffer&) = default;
-  CircularBuffer& operator=(CircularBuffer&&) noexcept = default;
+  CircularBuffer()
+    : buffer(size)
+  {
+  }
 
-  CircularBuffer() : buffer(size){}
-  explicit CircularBuffer(std::size_t capacity) : size(capacity), buffer(capacity) {}
-
+  explicit CircularBuffer(std::size_t capacity) 
+    : size(capacity)
+    , buffer(capacity) 
+  {
+  }
 
   T add(const T& element)
   {
