@@ -21,9 +21,9 @@
 #include <puara/utils/smooth.h>
 #include <puara/utils/threshold.h>
 #include <puara/utils/wrap.h>
-#include <puara/utils/KalmanQuaternion.h>
-#include <puara/utils/MadgwickQuaternion.h>
-#include <puara/utils/MahonyQuaternion.h>
+#include <puara/utils/kalmanQuaternion.h>
+#include <puara/utils/madgwickQuaternion.h>
+#include <puara/utils/mahonyQuaternion.h>
 
 #include <cmath>
 
