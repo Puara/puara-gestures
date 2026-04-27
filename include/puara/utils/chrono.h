@@ -38,4 +38,10 @@ inline unsigned long long getCurrentTimeMicroseconds()
   return duration.count();
 }
 
+inline unsigned long long getCurrentTimeMilliseconds()
+{
+  auto currentTimePoint = std::chrono::steady_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
+      currentTimePoint.time_since_epoch());
+  return duration.count();
 }

@@ -111,15 +111,6 @@ jobs:
           }
           EOF
       
-      - name: Install Wokwi CLI with retry
-        run: |
-          for i in 1 2 3; do
-            wget -S -O /usr/local/bin/wokwi-cli https://github.com/wokwi/wokwi-cli/releases/latest/download/wokwi-cli-linuxstatic-x64 && break
-            sleep 5
-          done
-          chmod +x /usr/local/bin/wokwi-cli
-
-
       - name: Simulate and test with Wokwi
         uses: wokwi/wokwi-ci-action@v1
         with:
