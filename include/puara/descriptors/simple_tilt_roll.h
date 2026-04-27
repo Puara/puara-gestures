@@ -15,9 +15,14 @@ namespace puara_gestures
 
 /**
  * @file simple_tilt_roll.h
- * @brief Lightweight 6DoF tilt and roll extractor for IMUs without a magnetometer.
+ * @brief Lightweight 3DoF tilt and roll extractor for IMUs without a magnetometer.
  *
- * This class computes simple tilt and roll from accelerometer and gyroscope data.
+ * This class computes tilt and roll from accelerometer data using a simple
+ * trig-based approximation. It does not perform full attitude estimation or
+ * magnetic heading correction, and it assumes the accelerometer is dominated by
+ * gravity. In dynamic motion or when linear acceleration is present, the
+ * result may be less precise than a full sensor-fusion filter.
+ *
  * It can optionally use a tied `Coord3D` pointer so the caller may update raw
  * IMU data externally and then call `update()` without parameters.
  *
@@ -26,7 +31,7 @@ namespace puara_gestures
  * #include <puara/descriptors/simple_tilt_roll.h>
  *
  * puara_gestures::Coord3D imu_data{0.0, 0.0, 0.0};
- * puara_gestures::Tilt_Roll tiltRoll(&imu_data);
+ * puara_gestures::three_dof_tilt_roll tiltRoll(&imu_data);
  *
  * void setup() {
  *   // Initialize sensors and serial output here.
@@ -136,5 +141,8 @@ private:
   double tilt = 0;
   double magnitude = 0;
 };
+
+using three_dof_tilt_roll = Tilt_Roll;
+using simple_tilt_roll = three_dof_tilt_roll;
 
 } // namespace puara_gestures
