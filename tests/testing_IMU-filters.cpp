@@ -54,3 +54,31 @@ TEST_CASE("Kalman filter updates and produces a normalized quaternion", "[imu-fi
     const auto& q = filter.getQuaternion();
     REQUIRE(isQuaternionNormalized(q));
 }
+
+TEST_CASE("IMU filters support synthetic timestamp updates", "[imu-filters]") {
+    auto imu = makeStaticImu();
+
+    {
+        puara_gestures::MadgwickQuaternionFilter filter(0.1);
+        REQUIRE(filter.updateWithTimestamp(imu, 0, true) == false);
+        REQUIRE(filter.updateWithTimestamp(imu, 1000, true) == false);
+        REQUIRE(filter.updateWithTimestamp(imu, 1500, true) == true);
+        REQUIRE(isQuaternionNormalized(filter.getQuaternion()));
+    }
+
+    {
+        puara_gestures::MahonyQuaternionFilter filter(1.0, 0.0);
+        REQUIRE(filter.updateWithTimestamp(imu, 0, true) == false);
+        REQUIRE(filter.updateWithTimestamp(imu, 1000, true) == false);
+        REQUIRE(filter.updateWithTimestamp(imu, 1500, true) == true);
+        REQUIRE(isQuaternionNormalized(filter.getQuaternion()));
+    }
+
+    {
+        puara_gestures::KalmanQuaternionFilter filter(0.001, 0.01);
+        REQUIRE(filter.updateWithTimestamp(imu, 0, true) == false);
+        REQUIRE(filter.updateWithTimestamp(imu, 1000, true) == false);
+        REQUIRE(filter.updateWithTimestamp(imu, 1500, true) == true);
+        REQUIRE(isQuaternionNormalized(filter.getQuaternion()));
+    }
+}

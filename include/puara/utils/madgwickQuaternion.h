@@ -72,7 +72,8 @@ struct MadgwickQuaternionFilter {
         return updateWithTimestamp(imu, utils::getCurrentTimeMicroseconds(), gyroDegrees);
     }
 
-private:
+    // updateWithTimestamp allows the caller to provide a synthetic timestamp for testing
+    // but user code will typically call update() with real-time data which in turn calls this function.
     bool updateWithTimestamp(const Imu9Axis& imu, uint64_t currentMicros, bool gyroDegrees = false) {
         if (currentMicros == 0) {
             return false;
@@ -87,6 +88,7 @@ private:
         return updateInternal(imu, deltatSeconds, gyroDegrees);
     }
 
+private:
     bool updateInternal(const Imu9Axis& imu, double deltatSeconds, bool gyroDegrees = false) {
         double gx = imu.gyro.x;
         double gy = imu.gyro.y;

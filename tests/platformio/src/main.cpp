@@ -438,6 +438,15 @@ static void testIMUFilters() {
                     madgwick.getQuaternion().y * madgwick.getQuaternion().y +
                     madgwick.getQuaternion().z * madgwick.getQuaternion().z,
                     1.0);
+  ok &= (madgwick.updateWithTimestamp(imu, 0, true) == false);
+  ok &= (madgwick.updateWithTimestamp(imu, 1000, true) == false);
+  ok &= (madgwick.updateWithTimestamp(imu, 1500, true) == true);
+  ok &= almostEqual(madgwick.getQuaternion().w * madgwick.getQuaternion().w +
+                    madgwick.getQuaternion().x * madgwick.getQuaternion().x +
+                    madgwick.getQuaternion().y * madgwick.getQuaternion().y +
+                    madgwick.getQuaternion().z * madgwick.getQuaternion().z,
+                    1.0);
+
 
   puara_gestures::MahonyQuaternionFilter mahony(1.0, 0.0);
   ok &= (mahony.update(imu, true) == false);
@@ -449,10 +458,29 @@ static void testIMUFilters() {
                     mahony.getQuaternion().z * mahony.getQuaternion().z,
                     1.0);
 
+  ok &= (mahony.updateWithTimestamp(imu, 0, true) == false);
+  ok &= (mahony.updateWithTimestamp(imu, 1000, true) == false);
+  ok &= (mahony.updateWithTimestamp(imu, 1500, true) == true);
+  ok &= almostEqual(mahony.getQuaternion().w * mahony.getQuaternion().w +
+                    mahony.getQuaternion().x * mahony.getQuaternion().x +
+                    mahony.getQuaternion().y * mahony.getQuaternion().y +
+                    mahony.getQuaternion().z * mahony.getQuaternion().z,
+                    1.0);
+
+
   puara_gestures::KalmanQuaternionFilter kalman(0.001, 0.01);
   ok &= (kalman.update(imu, true) == false);
   delay(5);
   ok &= (kalman.update(imu, true) == true);
+  ok &= almostEqual(kalman.getQuaternion().w * kalman.getQuaternion().w +
+                    kalman.getQuaternion().x * kalman.getQuaternion().x +
+                    kalman.getQuaternion().y * kalman.getQuaternion().y +
+                    kalman.getQuaternion().z * kalman.getQuaternion().z,
+                    1.0);
+
+  ok &= (kalman.updateWithTimestamp(imu, 0, true) == false);
+  ok &= (kalman.updateWithTimestamp(imu, 1000, true) == false);
+  ok &= (kalman.updateWithTimestamp(imu, 1500, true) == true);
   ok &= almostEqual(kalman.getQuaternion().w * kalman.getQuaternion().w +
                     kalman.getQuaternion().x * kalman.getQuaternion().x +
                     kalman.getQuaternion().y * kalman.getQuaternion().y +
