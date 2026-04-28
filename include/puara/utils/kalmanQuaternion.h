@@ -21,6 +21,8 @@
  *   bool ok = filter.update(imu, true);
  */
 
+#pragma once
+
 #ifndef KALMANQUATERNION_H
 #define KALMANQUATERNION_H
 
@@ -37,10 +39,10 @@ struct KalmanQuaternionFilter {
     // toward an accel/magnetometer-based orientation estimate.
     // A true quaternion EKF is much larger; this keeps the interface
     // compact and similar to the other AHRS filters.
-    double processNoise;
-    double measurementNoise;
-    Quaternion quaternion;
-    uint64_t lastUpdateMicros = 0;
+    double processNoise{};
+    double measurementNoise{};
+    Quaternion quaternion{};
+    uint64_t lastUpdateMicros{};
 
     explicit KalmanQuaternionFilter(double processNoise_ = 0.001, double measurementNoise_ = 0.01)
         : processNoise(processNoise_)
@@ -48,6 +50,15 @@ struct KalmanQuaternionFilter {
         , quaternion{1.0, 0.0, 0.0, 0.0}
         , lastUpdateMicros(0)
     {
+        if (processNoise < 0.0) {
+            processNoise = 0.0;
+        }
+        if (measurementNoise < 0.0) {
+            measurementNoise = 0.0;
+        }
+        if (processNoise + measurementNoise <= 0.0) {
+            measurementNoise = 1e-6;
+        }
     }
 
     void reset() {
@@ -156,7 +167,7 @@ private:
                                                double mx, double my, double mz,
                                                Quaternion& quaternionOut) {
         // Normalize accelerometer data to extract the gravity direction.
-        double norm = ax * ax + ay * ay + az * az;
+        double norm = std::hypot(ax, ay, az);
         if (norm == 0.0) {
             return false;
         }
@@ -167,7 +178,7 @@ private:
 
         // Compute roll and pitch from the gravity vector.
         double roll = std::atan2(ay, az);
-        double pitch = std::atan2(-ax, std::sqrt(ay * ay + az * az));
+        double pitch = std::atan2(-ax, std::hypot(ay, az));
 
         double sinRoll = std::sin(roll);
         double cosRoll = std::cos(roll);
@@ -241,7 +252,7 @@ private:
     }
 
     static void normalizeQuaternion(Quaternion& q) {
-        double norm = std::sqrt(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
+        double norm = std::hypot(std::hypot(q.w, q.x), std::hypot(q.y, q.z));
         if (norm == 0.0) {
             q = {1.0, 0.0, 0.0, 0.0};
             return;
