@@ -438,6 +438,13 @@ static void testIMUFilters() {
                     madgwick.getQuaternion().y * madgwick.getQuaternion().y +
                     madgwick.getQuaternion().z * madgwick.getQuaternion().z,
                     1.0);
+  madgwick.reset();
+  ok &= almostEqual(madgwick.getQuaternion().w, 1.0) &&
+        almostEqual(madgwick.getQuaternion().x, 0.0) &&
+        almostEqual(madgwick.getQuaternion().y, 0.0) &&
+        almostEqual(madgwick.getQuaternion().z, 0.0) &&
+        almostEqual(madgwick.lastUpdateMicros, 0);
+
   ok &= (madgwick.updateWithTimestamp(imu, 0, true) == false);
   ok &= (madgwick.updateWithTimestamp(imu, 1000, true) == false);
   ok &= (madgwick.updateWithTimestamp(imu, 1500, true) == true);
@@ -458,6 +465,13 @@ static void testIMUFilters() {
                     mahony.getQuaternion().z * mahony.getQuaternion().z,
                     1.0);
 
+  mahony.reset();
+  ok &= almostEqual(mahony.getQuaternion().w, 1.0) &&
+        almostEqual(mahony.getQuaternion().x, 0.0) &&
+        almostEqual(mahony.getQuaternion().y, 0.0) &&
+        almostEqual(mahony.getQuaternion().z, 0.0) &&
+        almostEqual(mahony.lastUpdateMicros, 0);                    
+
   ok &= (mahony.updateWithTimestamp(imu, 0, true) == false);
   ok &= (mahony.updateWithTimestamp(imu, 1000, true) == false);
   ok &= (mahony.updateWithTimestamp(imu, 1500, true) == true);
@@ -477,6 +491,13 @@ static void testIMUFilters() {
                     kalman.getQuaternion().y * kalman.getQuaternion().y +
                     kalman.getQuaternion().z * kalman.getQuaternion().z,
                     1.0);
+
+  kalman.reset();
+  ok &= almostEqual(kalman.getQuaternion().w, 1.0) &&
+        almostEqual(kalman.getQuaternion().x, 0.0) &&
+        almostEqual(kalman.getQuaternion().y, 0.0) && 
+        almostEqual(kalman.getQuaternion().z, 0.0) &&
+        almostEqual(kalman.lastUpdateMicros, 0);
 
   ok &= (kalman.updateWithTimestamp(imu, 0, true) == false);
   ok &= (kalman.updateWithTimestamp(imu, 1000, true) == false);
