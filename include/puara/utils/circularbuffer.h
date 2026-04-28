@@ -49,7 +49,7 @@ public:
   /** 
    * @brief Underlying storage for circular buffer elements. 
    * */
-  boost::circular_buffer<T> buffer;
+  boost::circular_buffer<T> buffer = boost::circular_buffer<T>(size);
 
   CircularBuffer(const CircularBuffer&) = default;
   CircularBuffer(CircularBuffer&&) noexcept = default;
