@@ -26,6 +26,7 @@
 #ifndef KALMANQUATERNION_H
 #define KALMANQUATERNION_H
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <puara/structs.h>
@@ -81,7 +82,7 @@ struct KalmanQuaternionFilter {
         const double z = quaternion.z;
 
         roll = std::atan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y));
-        pitch = std::asin(clamp(2.0 * (w * y - z * x), -1.0, 1.0));
+        pitch = std::asin(std::clamp(2.0 * (w * y - z * x), -1.0, 1.0));
         yaw = std::atan2(2.0 * (w * z + x * y), 1.0 - 2.0 * (y * y + z * z));
     }
 
@@ -132,7 +133,7 @@ private:
         }
 
         double gain = processNoise / (processNoise + measurementNoise);
-        gain = clamp(gain, 0.0, 1.0);
+        gain = std::clamp(gain, 0.0, 1.0);
         quaternion = slerp(quaternion, measured, gain);
         normalizeQuaternion(quaternion);
 
@@ -172,7 +173,6 @@ private:
         if (norm == 0.0) {
             return false;
         }
-        norm = std::sqrt(norm);
         ax /= norm;
         ay /= norm;
         az /= norm;
@@ -262,10 +262,6 @@ private:
         q.x /= norm;
         q.y /= norm;
         q.z /= norm;
-    }
-
-    static double clamp(double value, double lo, double hi) {
-        return value < lo ? lo : (value > hi ? hi : value);
     }
 
     static constexpr double DegToRad = 0.017453292519943295;
