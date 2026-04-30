@@ -19,6 +19,8 @@
  *   bool ok = filter.update(imu, true);
  */
 
+#pragma once
+
 #ifndef MAHONYQUATERNION_H
 #define MAHONYQUATERNION_H
 

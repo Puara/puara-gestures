@@ -18,7 +18,7 @@ namespace puara_gestures
  */
 struct Coord1D
 {
-  double x;
+  double x = 0.0;
 };
 
 /**
@@ -26,7 +26,7 @@ struct Coord1D
  */
 struct Coord2D
 {
-  double x, y;
+  double x = 0.0, y = 0.0;
 };
 
 /**
@@ -34,12 +34,12 @@ struct Coord2D
  */
 struct Coord3D
 {
-  double x, y, z;
+  double x = 0.0, y = 0.0, z = 0.0;
 };
 
 struct Simple_Orientation
 {
-  double roll, tilt, magnitude;
+  double roll = 0.0, tilt = 0.0, magnitude = 0.0;
 };
 
 /**
@@ -57,11 +57,11 @@ struct Spherical
 {
   double azimuth;
   double& yaw = azimuth;
-  double elevation;
+  double elevation = 0.0;
   double& pitch = elevation;
-  double distance;
+  double distance = 0.0;
   double& r = distance;
-  double roll;
+  double roll = 0.0;
 };
 
 /**
@@ -69,7 +69,7 @@ struct Spherical
  */
 struct Quaternion
 {
-  double w, x, y, z;
+  double w = 1.0, x = 0.0, y = 0.0, z = 0.0;
 };
 
 /**
@@ -96,10 +96,7 @@ struct Imu9Axis
 struct DiscreteArray
 {
   std::vector<int> arr;
-  DiscreteArray(int n)
-      : arr(std::vector<int>(n))
-  {
-  }
+  DiscreteArray(int n) : arr(std::vector<int>(n)) {}
 };
 
 template <typename T>
@@ -108,5 +105,4 @@ struct MinMax
   T min;
   T max;
 };
-
 }

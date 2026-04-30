@@ -37,6 +37,8 @@
  *   }
  */
 
+#pragma once
+
 #ifndef MADGWICKQUATERNION_H
 #define MADGWICKQUATERNION_H
 

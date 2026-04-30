@@ -72,7 +72,7 @@ public:
       double reading, double oldValue, double leakValue, int freq,
       unsigned long long& timerValue)
   {
-    auto current_time = utils::getCurrentTimeMicroseconds();
+    const auto current_time = utils::getCurrentTimeMicroseconds();
 
     if(freq <= 0)
     {
