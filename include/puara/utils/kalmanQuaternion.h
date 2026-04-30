@@ -27,6 +27,7 @@
 #define KALMANQUATERNION_H
 
 #include <algorithm>
+#include <boost/math/constants/constants.hpp>
 #include <cmath>
 #include <cstdint>
 #include <puara/structs.h>
@@ -264,8 +265,8 @@ private:
         q.z /= norm;
     }
 
-    static constexpr double DegToRad = 0.017453292519943295;
-    static constexpr double RadToDeg = 57.29577951308232;
+    static constexpr double DegToRad = boost::math::constants::degree<double>();
+    static constexpr double RadToDeg = boost::math::constants::radian<double>();
 };
 
 } // namespace puara_gestures
