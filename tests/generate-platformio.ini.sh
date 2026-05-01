@@ -19,12 +19,10 @@ description = Embedded Compilation Tests for Puara Gestures Library
 platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip
 board = tinypico
 framework = arduino
-build_flags =
-    -I${PROJECT_LIBDEPS_DIR}/3rdparty/IMU_Sensor_Fusion
-    -I${PROJECT_LIBDEPS_DIR}/3rdparty/Boost
 lib_deps = 
     $PUARA_GESTURES_PATH
     https://github.com/hideakitai/ArduinoEigen.git
+    https://github.com/Puara/IMU_Sensor_Fusion
 
 [env:build_with_arduino_libs]
 platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip
