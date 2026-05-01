@@ -42,6 +42,7 @@
 #ifndef MADGWICKQUATERNION_H
 #define MADGWICKQUATERNION_H
 
+#include <boost/math/constants/constants.hpp>
 #include <cmath>
 #include <cstdint>
 #include <puara/structs.h>
@@ -54,7 +55,7 @@ struct MadgwickQuaternionFilter {
     // Larger values make the filter correct drift faster,
     // while smaller values make the output smoother.
     // Default is 0.1.
-    double beta;
+    double beta{0.1};
     Quaternion quaternion;
     uint64_t lastUpdateMicros = 0;
 
@@ -71,7 +72,8 @@ struct MadgwickQuaternionFilter {
     // Simple public entry point using the portable timer.
     // The filter computes the elapsed interval automatically.
     bool update(const Imu9Axis& imu, bool gyroDegrees = false) {
-        return updateWithTimestamp(imu, utils::getCurrentTimeMicroseconds(), gyroDegrees);
+        const uint64_t currentMicros = utils::getCurrentTimeMicroseconds();
+        return updateWithTimestamp(imu, currentMicros, gyroDegrees);
     }
 
     // updateWithTimestamp allows the caller to provide a synthetic timestamp for testing
@@ -118,7 +120,7 @@ public:
         const double z = quaternion.z;
 
         roll = std::atan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y));
-        pitch = std::asin(clamp(2.0 * (w * y - z * x), -1.0, 1.0));
+        pitch = std::asin(std::clamp(2.0 * (w * y - z * x), -1.0, 1.0));
         yaw = std::atan2(2.0 * (w * z + x * y), 1.0 - 2.0 * (y * y + z * z));
     }
 
@@ -130,12 +132,8 @@ public:
     }
 
 private:
-    static constexpr double DegToRad = 0.017453292519943295;
-    static constexpr double RadToDeg = 57.29577951308232;
-
-    static double clamp(double value, double lo, double hi) {
-        return value < lo ? lo : (value > hi ? hi : value);
-    }
+    static constexpr double DegToRad = boost::math::constants::degree<double>();
+    static constexpr double RadToDeg = boost::math::constants::radian<double>();
 
     static double invSqrt(double value) {
         return 1.0 / std::sqrt(value);
@@ -166,11 +164,17 @@ private:
         double q2 = quaternion.y;
         double q3 = quaternion.z;
 
-        double recipNorm;
-        double s0, s1, s2, s3;
-        double qDot1, qDot2, qDot3, qDot4;
-        double hx, hy, _2bx, _2bz;
-        double _2q0mx, _2q0my, _2q0mz, _2q1mx;
+        // See the Madgwick paper for the detailed algorithm steps:
+        // An efficient orientation filter for inertial and inertial/magnetic sensor arrays
+        // Sebastian O.H. Madgwick
+        // April 30, 2010
+        // http://www.x-io.co.uk/open-source-imu-and-ahrs-algorithms/
+        
+        double recipNorm = 0.0;
+        double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;
+        double qDot1 = 0.0, qDot2 = 0.0, qDot3 = 0.0, qDot4 = 0.0;
+        double hx = 0.0, hy = 0.0, _2bx = 0.0, _2bz = 0.0;
+        double _2q0mx = 0.0, _2q0my = 0.0, _2q0mz = 0.0, _2q1mx = 0.0;
         double _2q0 = 2.0 * q0;
         double _2q1 = 2.0 * q1;
         double _2q2 = 2.0 * q2;
