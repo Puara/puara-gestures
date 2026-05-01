@@ -39,7 +39,7 @@ public:
   /**
    * @brief Number of recent values to average.
    */
-  std::size_t size;
+  std::size_t size = 0;
 
   /**
    * @brief Constructor for Smooth.
@@ -90,7 +90,7 @@ public:
   }
 
 private:
-  double sum;
+  double sum = 0.0;
 };
 
 }

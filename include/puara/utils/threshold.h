@@ -9,6 +9,8 @@
 #pragma once
 
 #include <puara/structs.h>
+#include <cmath>
+#include <type_traits>
 
 namespace puara_gestures::utils
 {
@@ -39,12 +41,12 @@ public:
   /**
    * @brief Minimum allowed output value.
    */
-  T min{static_cast<T>(-10.0)};
+  T min = -10. ;
 
   /**
    * @brief Maximum allowed output value.
    */
-  T max{static_cast<T>(10.0)};
+  T max = 10. ;
 
   /**
    * @brief Most recent raw input passed to update().
@@ -77,14 +79,20 @@ public:
   T update(T reading)
   {
     current = reading;
-    if (reading < min)
-    {
+    if constexpr (std::is_floating_point_v<T>) {
+      if (std::isnan(reading)) {
+        return min; // or max, or some other default for NaN inputs
+      }
+    }
+    
+    if (reading < min){
       return min;
     }
-    if (reading > max)
-    {
+
+    if (reading > max){
       return max;
     }
+
     return reading;
   }
 };

@@ -144,7 +144,7 @@ public:
     }
 
     double meanRadius = radiusSum / static_cast<double>(sampleCount);
-    if(meanRadius <= std::numeric_limits<double>::epsilon())
+    if(meanRadius <= 1e-9)
     {
       return 0;
     }
