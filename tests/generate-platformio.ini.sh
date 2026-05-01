@@ -20,7 +20,8 @@ platform = https://github.com/pioarduino/platform-espressif32/releases/download/
 board = tinypico
 framework = arduino
 build_flags =
-    -I${PROJECT_LIBDEPS_DIR}/3rdparty
+    -I${PROJECT_LIBDEPS_DIR}/3rdparty/IMU_Sensor_Fusion
+    -I${PROJECT_LIBDEPS_DIR}/3rdparty/Boost
 lib_deps = 
     $PUARA_GESTURES_PATH
     https://github.com/hideakitai/ArduinoEigen.git
@@ -36,5 +37,4 @@ lib_deps =
     https://github.com/hideakitai/ArduinoEigen.git
     https://github.com/sat-mtl/boost-embedded-190.git
     https://github.com/Puara/IMU_Sensor_Fusion
-
 EOL
