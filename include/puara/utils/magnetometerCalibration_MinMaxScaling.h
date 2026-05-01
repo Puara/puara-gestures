@@ -24,7 +24,7 @@ namespace puara_gestures::utils
  * calibration path, but avoids heavy dynamic Eigen workloads by using a
  * simplified hard-iron / soft-iron estimate and a fixed sample count.
  */
-class Embedded_Calibration
+class Embedded_Magnetometer_Calibration
 {
 public:
   static constexpr size_t MaxSamples = 512;
@@ -37,10 +37,7 @@ public:
   double calibrationRadius = 1.0;
   size_t maxSamples = MaxSamples;
 
-  int gravitationField
-      = 234; // should be 1000 by default, this was calculated for the LSM9DS1 in Montreal
-
-  Embedded_Calibration()
+  Embedded_Magnetometer_Calibration()
       : rawMagData()
       , softIronMatrix(3, 3)
       , hardIronBias(3)
@@ -53,7 +50,7 @@ public:
     hardIronBias.setZero();
   }
 
-  explicit Embedded_Calibration(size_t sampleCount)
+  explicit Embedded_Magnetometer_Calibration(size_t sampleCount)
       : rawMagData()
       , softIronMatrix(3, 3)
       , hardIronBias(3)
@@ -152,13 +149,11 @@ public:
       return 0;
     }
 
-    //soft *= static_cast<double>(gravitationField) / meanRadius;
     soft *= calibrationRadius / meanRadius;
     hardIronBias = bias;
     softIronMatrix = soft;
 
     enforceRadialEqualization = true;
-    //calibrationRadius = static_cast<double>(gravitationField);
 
     return 1;
   }

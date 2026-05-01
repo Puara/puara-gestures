@@ -59,7 +59,7 @@ static std::vector<Coord3D> makeBiasedScaledSphere(size_t count)
 
 TEST_CASE("Calibration: generateMagnetometerMatrices returns 0 on empty input", "[calibration]")
 {
-    Embedded_Calibration calib;
+    Embedded_Magnetometer_Calibration calib;
     auto result = calib.generateMagnetometerMatrices(nullptr, 0);
     REQUIRE(result == 0);
 }
@@ -67,7 +67,7 @@ TEST_CASE("Calibration: generateMagnetometerMatrices returns 0 on empty input", 
 TEST_CASE("Calibration: generateMagnetometerMatrices finds bias and scale on synthetic ellipsoid data", "[calibration]")
 {
     auto samples = makeBiasedScaledSphere(48);
-    Embedded_Calibration calib(samples.size());
+    Embedded_Magnetometer_Calibration calib(samples.size());
 
     auto result = calib.generateMagnetometerMatrices(samples.data(), samples.size());
     REQUIRE(result == 1);
@@ -99,7 +99,7 @@ TEST_CASE("Calibration: generateMagnetometerMatrices finds bias and scale on syn
 
 TEST_CASE("Calibration: applyMagnetometerCalibration removes hard-iron bias", "[calibration]")
 {
-    Embedded_Calibration calib;
+    Embedded_Magnetometer_Calibration calib;
     calib.softIronMatrix = Eigen::MatrixXd::Identity(3, 3);
     calib.hardIronBias << 0.5, -0.5, 1.0;
 
@@ -113,7 +113,7 @@ TEST_CASE("Calibration: applyMagnetometerCalibration removes hard-iron bias", "[
     REQUIRE(calib.myCalIMU.magn.z == Approx(1.0));
 }
 
-static void verifySphereLikeCalibration(Embedded_Calibration& calib, std::vector<Coord3D> const& samples)
+static void verifySphereLikeCalibration(Embedded_Magnetometer_Calibration& calib, std::vector<Coord3D> const& samples)
 {
     std::vector<Eigen::Vector3d> calibratedPoints;
     calibratedPoints.reserve(samples.size());
@@ -160,7 +160,7 @@ TEST_CASE("Calibration: generateMagnetometerMatrices with magnetometer_raw_float
     auto samples = loadMagnetometerCsv(csvPath);
     REQUIRE(samples.size() > 100);
 
-    Embedded_Calibration calib(samples.size());
+    Embedded_Magnetometer_Calibration calib(samples.size());
     REQUIRE(calib.generateMagnetometerMatrices(samples.data(), samples.size()) == 1);
     REQUIRE(calib.enforceRadialEqualization == true);
     verifySphereLikeCalibration(calib, samples);

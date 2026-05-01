@@ -529,7 +529,7 @@ static void testEmbeddedMagnetometerCalibration() {
     samples[i] = {x, y, z};
   }
 
-  puara_gestures::utils::Embedded_Calibration calib(sampleCount);
+  puara_gestures::utils::Embedded_Magnetometer_Calibration calib(sampleCount);
   bool ok = (calib.generateMagnetometerMatrices(samples, sampleCount) == 1);
 
   for (size_t i = 0; ok && i < sampleCount; ++i) {
