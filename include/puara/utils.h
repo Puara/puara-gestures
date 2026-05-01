@@ -75,10 +75,26 @@ float arrayAverage(const T* array, int start, int end)
 }
 
 /**
- * @brief Function used to reduce feature arrays into single values.
+
+ /**
+ * @brief Computes the average of non-zero elements in an array.
+ *
+ * This is useful when zeros represent missing data or inactive sensor
+ * values that should not influence the average.
+ *
+ * Example:
+ *   double values[] = {1.0, 0.0, 3.0, 0.0, 5.0};
+ *   double avg = arrayAverageWithoutZero(values, 5); // 3.0
+ *
+ * @param Array Pointer to the array of values.
+ * @param ArraySize Number of elements in the array.
+ * @return Average of non-zero values, or 0.0 if no non-zero values exist.
+ * 
+ * This function is used to reduce feature arrays into single values.
  * E.g., brush uses it to reduce multiBrush instances. Any value in
  * the passed Array that is == 0 is ignored in the average calculation.
  */
+
 inline double arrayAverageWithoutZero(double* Array, int ArraySize)
 {
   double sum = 0;
@@ -98,21 +114,6 @@ inline double arrayAverageWithoutZero(double* Array, int ArraySize)
   }
   return output;
 }
-
-/**
- * @brief Computes the average of non-zero elements in an array.
- *
- * This is useful when zeros represent missing data or inactive sensor
- * values that should not influence the average.
- *
- * Example:
- *   double values[] = {1.0, 0.0, 3.0, 0.0, 5.0};
- *   double avg = arrayAverageWithoutZero(values, 5); // 3.0
- *
- * @param Array Pointer to the array of values.
- * @param ArraySize Number of elements in the array.
- * @return Average of non-zero values, or 0.0 if no non-zero values exist.
- */
 
 /**
  * @brief Legacy function used to calculate 1D blob detection in older
