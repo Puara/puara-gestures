@@ -56,7 +56,7 @@ public:
   /**
    * @brief Default constructor using legacy double-compatible defaults.
    */
-  ThresholdT() = default;
+  ThresholdT() noexcept = default;
 
   /**
    * @brief Construct with explicit min/max limits.
@@ -64,7 +64,7 @@ public:
    * @param minValue Lower bound for clamping.
    * @param maxValue Upper bound for clamping.
    */
-  ThresholdT(T minValue, T maxValue)
+  ThresholdT(T minValue, T maxValue) noexcept(std::is_nothrow_copy_constructible_v<T>)
       : min(minValue)
       , max(maxValue)
   {
@@ -76,7 +76,10 @@ public:
    * @param reading New value to threshold.
    * @return The clamped output.
    */
-  T update(T reading)
+  T update(T reading) noexcept(
+      noexcept(current = reading) &&
+      noexcept(reading < min) &&
+      noexcept(reading > max))
   {
     current = reading;
     if constexpr (std::is_floating_point_v<T>) {

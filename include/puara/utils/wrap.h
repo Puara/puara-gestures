@@ -9,8 +9,10 @@
 #pragma once
 
 #include <cmath>
+#include <boost/math/constants/constants.hpp>
+
 #ifndef M_PI
-#define M_PI 3.141592653589793238462643383279502984
+#define M_PI boost::math::constants::pi<double>()
 #endif
 
 namespace puara_gestures::utils

@@ -4,6 +4,7 @@
 #include <rapidcsv.h>
 #include <string>
 #include <vector>
+#include <boost/math/constants/constants.hpp>
 
 #include <puara/utils/calibration.h>
 
@@ -12,7 +13,7 @@ using namespace puara_gestures;
 using namespace puara_gestures::utils;
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+#define M_PI boost::math::constants::pi<double>()
 #endif
 
 // This suite validates the trusted float-recorded magnetometer file only.

@@ -26,12 +26,14 @@
 #include <puara/utils/mahonyQuaternion.h>
 
 #include <cmath>
+#include <boost/math/constants/constants.hpp>
+
 
 #ifndef M_PI
-#define M_PI 3.141592653589793238462643383279502984
+#define M_PI boost::math::constants::pi<double>()
 #endif
 #ifndef M_PI_2
-#define M_PI_2 1.5707963267948966
+#define M_PI_2 boost::math::constants::half_pi<double>()
 #endif
 
 namespace puara_gestures::utils
