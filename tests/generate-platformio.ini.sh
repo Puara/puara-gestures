@@ -3,7 +3,7 @@
 # Variables
 PUARA_GESTURES_COMMIT_HASH=$1
 
-if [[ -z "$PUARA_GESTURES_PATH" ]]; then
+if [[ -z "${PUARA_GESTURES_PATH:-}" ]]; then
   PUARA_GESTURES_PATH="https://github.com/Puara/puara-gestures.git#$PUARA_GESTURES_COMMIT_HASH"
 fi
 
