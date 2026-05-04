@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef PUARA_GESTURES_CALIBRATION_H
+#define PUARA_GESTURES_CALIBRATION_H
+
 // Puara Gestures - Magnetometer Calibration
 
 // Min/Max Scaling Calibration 
@@ -23,3 +26,4 @@
 // release as an optional calibration method for users who want more accuracy 
 // and are less constrained by embedded resources
 
+#endif // PUARA_GESTURES_CALIBRATION_H

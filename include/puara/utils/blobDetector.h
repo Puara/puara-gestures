@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef PUARA_GESTURES_BLOBDETECTOR_H
+#define PUARA_GESTURES_BLOBDETECTOR_H
+
 namespace puara_gestures
 {
 
@@ -94,3 +97,4 @@ public:
   }
 };
 }
+#endif // PUARA_GESTURES_BLOBDETECTOR_H

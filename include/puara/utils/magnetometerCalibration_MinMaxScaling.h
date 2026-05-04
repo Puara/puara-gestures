@@ -6,6 +6,9 @@
 
 #pragma once
 
+#ifndef MAGNETOMETER_CALIBRATION_MINMAXSCALING_H
+#define MAGNETOMETER_CALIBRATION_MINMAXSCALING_H
+
 #include <algorithm>
 #include <array>
 #include <cmath>
@@ -161,3 +164,5 @@ public:
 };
 
 }
+
+#endif // MAGNETOMETER_CALIBRATION_MINMAXSCALING_H

@@ -1,5 +1,6 @@
-
 #pragma once
+#ifndef PUARA_BUTTON_H
+#define PUARA_BUTTON_H
 
 #include <puara/utils.h>
 
@@ -152,3 +153,5 @@ public:
   }
 };
 }
+
+#endif // PUARA_BUTTON_H

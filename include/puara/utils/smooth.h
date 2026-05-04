@@ -8,6 +8,9 @@
 
 #pragma once
 
+#ifndef SMOOTH_H
+#define SMOOTH_H
+
 #include <puara/structs.h>
 
 #include <list>
@@ -94,3 +97,4 @@ private:
 };
 
 }
+#endif // SMOOTH_H

@@ -1,3 +1,7 @@
+#pragma once
+#ifndef PUARA_BRUSHRUB_H
+#define PUARA_BRUSHRUB_H
+
 #include <puara/utils.h>
 #include <puara/utils/leakyintegrator.h>
 
@@ -203,3 +207,4 @@ public:
 };
 
 }
+#endif // PUARA_BRUSHRUB_H
