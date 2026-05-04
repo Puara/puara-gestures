@@ -72,8 +72,8 @@ TEST_CASE("unit conversion helpers", "[utils]")
     REQUIRE(dps_to_rads(180.0) == Approx(M_PI));
     REQUIRE(rads_to_dps(M_PI) == Approx(180.0));
 
-    REQUIRE(gauss_to_utesla(10000.0) == Approx(1.0));
-    REQUIRE(utesla_to_gauss(1.0) == Approx(10000.0));
+    REQUIRE(gauss_to_tesla(10000.0) == Approx(1.0));
+    REQUIRE(tesla_to_gauss(1.0) == Approx(10000.0));
 }
 
 TEST_CASE("polar_to_cartesian and cartesian_to_polar round trip", "[utils]")

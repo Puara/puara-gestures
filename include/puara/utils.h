@@ -181,10 +181,10 @@ inline double rads_to_dps(double reading)
 }
 
 /**
- * @brief Convert Gauss to uTesla
+ * @brief Convert Gauss to Tesla
  *
  */
-inline double gauss_to_utesla(double reading)
+inline double gauss_to_tesla(double reading)
 {
   return reading / 10000;
 }
@@ -193,7 +193,7 @@ inline double gauss_to_utesla(double reading)
  * @brief Convert uTesla to Gauss
  *
  */
-inline double utesla_to_gauss(double reading)
+inline double tesla_to_gauss(double reading)
 {
   return reading * 10000;
 }

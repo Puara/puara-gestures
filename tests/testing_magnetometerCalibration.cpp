@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
 
 #include <filesystem>
+#include <limits>
 #include <rapidcsv.h>
 #include <string>
 #include <vector>
