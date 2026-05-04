@@ -3,6 +3,10 @@
 // the platform and available libraries. It ensures that the project can use
 // Eigen for linear algebra operations while maintaining compatibility with 
 // both Arduino and native C++ environments. 
+#pragma once
+
+#ifndef INCLUDE_EIGEN_H
+#define INCLUDE_EIGEN_H
 
 #if __has_include(<ArduinoEigen.h>)
   #include <ArduinoEigen.h>
@@ -10,3 +14,5 @@
   #include <Eigen/Core>
   #include <Eigen/Dense>
 #endif
+
+#endif // INCLUDE_EIGEN_H

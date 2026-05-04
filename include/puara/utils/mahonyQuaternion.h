@@ -145,7 +145,11 @@ private:
         double q2q3 = q2 * q3;
         double q3q3 = q3 * q3;
 
-        recipNorm = invSqrt(ax * ax + ay * ay + az * az);
+        double accelNormSq = ax * ax + ay * ay + az * az;
+         if (accelNormSq <= 0.0) {
+             return false;
+         }
+        recipNorm = invSqrt(accelNormSq);
         ax *= recipNorm;
         ay *= recipNorm;
         az *= recipNorm;
@@ -240,7 +244,9 @@ private:
         double ey = (az * vx - ax * vz);
         double ez = (ax * vy - ay * vx);
 
-        if (twoKi > 0.0) {            // Integral feedback compensates for long-term gyro drift.            integralFB.x += twoKi * ex * deltat;
+        if (twoKi > 0.0) {
+            // Integral feedback compensates for long-term gyro drift.
+            integralFB.x += twoKi * ex * deltat;
             integralFB.y += twoKi * ey * deltat;
             integralFB.z += twoKi * ez * deltat;
             gx += integralFB.x;

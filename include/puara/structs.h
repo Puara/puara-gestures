@@ -55,7 +55,7 @@ struct Simple_Orientation
  */
 struct Spherical
 {
-  double azimuth;
+  double azimuth = 0.0;
   double& yaw = azimuth;
   double elevation = 0.0;
   double& pitch = elevation;

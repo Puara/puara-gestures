@@ -5,6 +5,7 @@
 #include <cmath>
 #include <rapidcsv.h>
 
+#include <algorithm>
 #include <chrono>
 #include <filesystem>
 #include <thread>
@@ -141,7 +142,9 @@ TEST_CASE(
   CHECK(tied.current_tilt_value() == Catch::Approx(0.0).margin(1e-6));
 }
 
-TEST_CASE("Jab descriptor detects motion range, ties external data, and supports 2D/3D", "[descriptors][jab]")
+TEST_CASE(
+    "Jab descriptor detects motion range, ties external data, and supports 2D/3D",
+    "[descriptors][jab]")
 {
   puara_gestures::Jab jab;
   jab.threshold = 1;
