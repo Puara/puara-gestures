@@ -27,7 +27,7 @@ jobs:
    needs: generate-arduino-library
    steps:
      - name: lint generated arduino library 
-       uses: puara/actions/lint-arduino-library@main
+       uses: puara/actions/puara-gestures/lint-arduino-library@main
 
 #  compile-arduino-library:
 #    runs-on: ubuntu-latest
