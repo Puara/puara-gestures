@@ -20,7 +20,7 @@ jobs:
       - name: generate arduino lib from puara gestures  
         uses: puara/actions/puara-gestures/generate-arduino-library@main
         with:
-          puara-arduino-repo-token: ${{ secrets.PUARA_GESTURES_ARDUINO_REPO_TOKEN }}
+          puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
 
   lint-arduino-library:
    runs-on: ubuntu-latest
