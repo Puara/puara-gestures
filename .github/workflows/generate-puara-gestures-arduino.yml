@@ -36,13 +36,12 @@ jobs:
 #      - name: generate
 #        uses: puara/actions/compile-arduino-library@main
 
-#   push-arduino-library:
-#     runs-on: ubuntu-latest
-#     # only runs this when we push on main
-#    needs: compile-arduino-library
-#     if: github.ref == 'refs/heads/main'
-#     steps:
-#       - name: generate
-#         uses: puara/actions/puara-gestures/push-arduino-library@main
-#         with:
-#   puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
+  push-arduino-library:
+    runs-on: ubuntu-latest
+    # only runs this when we push on main --this is temporarily false to test the workflow, but it should be re-enabled before merging
+#   needs: compile-arduino-library
+    steps:
+      - name: push generated arduino library to puara-arduino repository
+        uses: puara/actions/puara-gestures/push-arduino-library@main
+        with: 
+          puara-arduino-repo-token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
