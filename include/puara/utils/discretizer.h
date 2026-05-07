@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef DISCRETIZER_H
-#define DISCRETIZER_H
 
 #include <limits>
 #include <type_traits>
@@ -67,4 +65,3 @@ public:
 };
 
 }
-#endif // DISCRETIZER_H

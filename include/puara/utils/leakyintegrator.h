@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef LEAKYINTEGRATOR_H
-#define LEAKYINTEGRATOR_H
 
 #include <puara/utils/chrono.h>
 
@@ -113,4 +111,3 @@ public:
 
 }
 
-#endif // LEAKYINTEGRATOR_H

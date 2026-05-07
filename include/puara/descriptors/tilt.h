@@ -8,8 +8,6 @@
 //********************************************************************************//
 
 #pragma once
-#ifndef PUARA_TILT_H
-#define PUARA_TILT_H
 
 #include "IMU_Sensor_Fusion/imu_orientation.h"
 #include <puara/structs.h>
@@ -81,4 +79,3 @@ public:
   void clear_smooth() { clear(); }
 };
 }
-#endif // PUARA_TILT_H

@@ -6,8 +6,6 @@
 // Edu Meneses (2025) - https://www.edumeneses.com                                //
 //********************************************************************************//
 #pragma once
-#ifndef PUARA_SIMPLE_TILT_ROLL_H 
-#define PUARA_SIMPLE_TILT_ROLL_H
 
 #include <puara/structs.h>
 #include <puara/utils.h>
@@ -148,4 +146,3 @@ using three_dof_tilt_roll = Tilt_Roll;
 using simple_tilt_roll = three_dof_tilt_roll;
 
 } // namespace puara_gestures
-#endif // PUARA_SIMPLE_TILT_ROLL_H

@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef PUARA_STRUCTS_H
-#define PUARA_STRUCTS_H
-
 #include <vector>
 
 namespace puara_gestures
@@ -109,4 +106,3 @@ struct MinMax
   T max;
 };
 }
-#endif // PUARA_STRUCTS_H

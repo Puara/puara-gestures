@@ -8,8 +8,6 @@
 
 #pragma once
 
-#ifndef ROLLINGMINMAX_H
-#define ROLLINGMINMAX_H
 
 #include <puara/utils/circularbuffer.h>
 #include <puara/structs.h>
@@ -78,4 +76,3 @@ private:
 };
 
 }
-#endif // ROLLINGMINMAX_H

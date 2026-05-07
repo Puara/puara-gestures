@@ -7,8 +7,6 @@
 //********************************************************************************//
 
 #pragma once
-#ifndef PUARA_SHAKE_H
-#define PUARA_SHAKE_H
 
 #include <puara/structs.h>
 #include <puara/utils.h>
@@ -296,4 +294,3 @@ public:
 };
 
 }
-#endif // PUARA_SHAKE_H

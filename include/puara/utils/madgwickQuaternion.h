@@ -39,8 +39,6 @@
 
 #pragma once
 
-#ifndef MADGWICKQUATERNION_H
-#define MADGWICKQUATERNION_H
 
 #include <algorithm>
 #include <boost/math/constants/constants.hpp>
@@ -359,5 +357,3 @@ private:
 };
 
 } // namespace puara_gestures
-
-#endif

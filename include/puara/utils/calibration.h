@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PUARA_GESTURES_CALIBRATION_H
-#define PUARA_GESTURES_CALIBRATION_H
 
 // Puara Gestures - Magnetometer Calibration
 
@@ -25,5 +23,3 @@
 // still needs proper testing and reworking details will be added back in next 
 // release as an optional calibration method for users who want more accuracy 
 // and are less constrained by embedded resources
-
-#endif // PUARA_GESTURES_CALIBRATION_H

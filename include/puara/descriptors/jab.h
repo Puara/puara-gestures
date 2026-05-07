@@ -6,8 +6,6 @@
 // Edu Meneses (2024) - https://www.edumeneses.com                                //
 //********************************************************************************//
 #pragma once
-#ifndef PUARA_JAB_H
-#define PUARA_JAB_H
 
 #include <puara/structs.h>
 #include <puara/utils.h>
@@ -280,4 +278,3 @@ public:
   };
 };
 }
-#endif // PUARA_JAB_H

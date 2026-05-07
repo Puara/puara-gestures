@@ -7,8 +7,6 @@
 //********************************************************************************//
 
 #pragma once
-#ifndef PUARA_UTILS_H
-#define PUARA_UTILS_H
 
 #include <puara/structs.h>
 #include <puara/utils/blobDetector.h>
@@ -301,4 +299,3 @@ inline Coord3D phased_spheric_to_cartesian(Spherical sphericCoords)
 
 }
 }
-#endif // PUARA_UTILS_H

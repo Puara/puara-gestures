@@ -10,8 +10,6 @@
 
 #pragma once
 
-#ifndef PUARA_GESTURES_CHRONO_H
-#define PUARA_GESTURES_CHRONO_H
 
 #include <chrono>
 
@@ -49,5 +47,3 @@ inline unsigned long long getCurrentTimeMilliseconds()
   return duration.count();
 }
 }
-
-#endif // PUARA_GESTURES_CHRONO_H

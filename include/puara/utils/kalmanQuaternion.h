@@ -23,8 +23,6 @@
 
 #pragma once
 
-#ifndef KALMANQUATERNION_H
-#define KALMANQUATERNION_H
 
 #include <algorithm>
 #include <boost/math/constants/constants.hpp>
@@ -271,4 +269,3 @@ private:
 
 } // namespace puara_gestures
 
-#endif

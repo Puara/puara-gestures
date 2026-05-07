@@ -5,8 +5,6 @@
 // both Arduino and native C++ environments. 
 #pragma once
 
-#ifndef INCLUDE_EIGEN_H
-#define INCLUDE_EIGEN_H
 
 #if __has_include(<ArduinoEigen.h>)
   #include <ArduinoEigen.h>
@@ -14,5 +12,3 @@
   #include <Eigen/Core>
   #include <Eigen/Dense>
 #endif
-
-#endif // INCLUDE_EIGEN_H

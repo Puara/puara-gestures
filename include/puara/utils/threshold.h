@@ -8,8 +8,6 @@
 
 #pragma once
 
-#ifndef THRESHOLD_H
-#define THRESHOLD_H
 
 #include <puara/structs.h>
 #include <cmath>
@@ -107,4 +105,3 @@ using Threshold = ThresholdT<double>;
 
 }
 
-#endif // THRESHOLD_H

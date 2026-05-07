@@ -8,8 +8,6 @@
 //********************************************************************************//
 
 #pragma once
-#ifndef PUARA_ROLL_H
-#define PUARA_ROLL_H
 
 #include "IMU_Sensor_Fusion/imu_orientation.h"
 #include <puara/structs.h>
@@ -136,5 +134,3 @@ public:
   void clear_smooth() { smoother.clear(); }
 };
 }
-
-#endif // PUARA_ROLL_H

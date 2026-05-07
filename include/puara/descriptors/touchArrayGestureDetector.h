@@ -1,7 +1,5 @@
 #pragma once
 
-#ifndef PUARA_TOUCHARRAYGESTUREDETECTOR_H
-#define PUARA_TOUCHARRAYGESTUREDETECTOR_H
 
 #include <puara/utils/blobDetector.h>
 
@@ -115,4 +113,3 @@ private:
   }
 };
 }
-#endif // PUARA_TOUCHARRAYGESTUREDETECTOR_H

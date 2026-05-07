@@ -8,8 +8,6 @@
 
 #pragma once
 
-#ifndef PUARA_WRAP_H
-#define PUARA_WRAP_H
 
 #include <cmath>
 #include <boost/math/constants/constants.hpp>
@@ -167,4 +165,3 @@ public:
 
 }
 
-#endif // PUARA_WRAP_H

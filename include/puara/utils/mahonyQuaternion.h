@@ -21,8 +21,6 @@
 
 #pragma once
 
-#ifndef MAHONYQUATERNION_H
-#define MAHONYQUATERNION_H
 
 #include <cmath>
 #include <cstdint>
@@ -293,4 +291,3 @@ private:
 
 } // namespace puara_gestures
 
-#endif

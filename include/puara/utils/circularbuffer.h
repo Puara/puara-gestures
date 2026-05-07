@@ -8,8 +8,6 @@
 
 #pragma once
 
-#ifndef PUARA_GESTURES_CIRCULARBUFFER_H
-#define PUARA_GESTURES_CIRCULARBUFFER_H
 
 #include <boost/circular_buffer.hpp>
 #include <puara/structs.h>
@@ -74,5 +72,3 @@ public:
 };
 
 }
-
-#endif // PUARA_GESTURES_CIRCULARBUFFER_H
