@@ -1,0 +1,32 @@
+name: Doxygen Documentation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install Doxygen
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y doxygen graphviz
+
+      - name: Generate documentation
+        run: |
+          doxygen Doxyfile
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: doxygen-html
+          path: docs/doxygen/html

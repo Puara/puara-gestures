@@ -1,0 +1,68 @@
+# Doxygen configuration file for puara-gestures
+
+PROJECT_NAME           = "puara-gestures"
+PROJECT_BRIEF          = "Gesture and sensor feature extraction library for embedded systems."
+PROJECT_NUMBER         = "0.1.0"
+OUTPUT_DIRECTORY       = docs/doxygen
+CREATE_SUBDIRS         = YES
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+OPTIMIZE_FOR_FORTRAN   = NO
+OPTIMIZE_OUTPUT_VHDL   = NO
+BUILTIN_STL_SUPPORT    = YES
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_METHODS  = NO
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+QUIET                  = NO
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_XML           = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_TREEVIEW      = YES
+FULL_PATH_NAMES        = NO
+STRIP_FROM_PATH        = ${PWD}
+INPUT                  = include src
+FILE_PATTERNS          = *.h *.hpp *.c *.cpp
+RECURSIVE              = YES
+EXCLUDE                = 3rdparty
+INCLUDE_PATH           = include
+INPUT_ENCODING         = UTF-8
+JAVADOC_AUTOBRIEF      = YES
+MULTILINE_CPP_IS_BRIEF = YES
+ENABLED_SECTIONS       = 
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = NO
+SKIP_FUNCTION_MACROS   = YES
+
+# Doxygen parser options
+SOURCE_BROWSER         = NO
+INLINE_SOURCES         = NO
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+
+# HTML
+HTML_OUTPUT            = html
+HTML_FILE_EXTENSION    = .html
+HTML_TIMESTAMP         = YES
+HTML_DYNAMIC_SECTIONS  = NO
+
+# Dot/Graphviz
+HAVE_DOT               = NO
+DOT_PATH               = 
+DOTFILE_DIRS           = 
+INTERACTIVE_SVG        = NO
+
+# Misc
+GENERATE_TAGFILE       = 
+GENERATE_PDF           = NO
+
+# Optional project logo or resources
+PROJECT_LOGO           = 
