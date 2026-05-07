@@ -1,6 +1,6 @@
 /**
 * @file touchArrayGestureDetector.h
-* @brief Puara Gestures - Touch Array Gesture Detector (.h)                             
+* @brief Detects brush and rub features from touch array data using leaky integration. 
 * @see https://github.com/Puara/puara-gestures                                        
 * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
 * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 

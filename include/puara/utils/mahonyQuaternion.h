@@ -1,4 +1,11 @@
 /**
+* @file mahonyQuaternion.h
+* @brief Mahony AHRS filter for 9-DoF IMU orientation estimation.
+* @see https://github.com/Puara/puara-gestures                                        
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
+*/
+
+/**
  * @brief MahonyQuaternionFilter for 9-DoF IMU orientation estimation.
  *
  * A lightweight Mahony AHRS filter for 9-DoF IMU data. This implementation

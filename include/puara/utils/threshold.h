@@ -1,16 +1,15 @@
-//********************************************************************************//
-// Puara Gestures - Utilities (.h)                                                //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
-
+/**
+* @file threshold.h
+* @brief Clamp a numeric value to a configurable range. 
+* @see https://github.com/Puara/puara-gestures                                        
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
+* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+*/
 #pragma once
 
-
-#include <puara/structs.h>
 #include <cmath>
+#include <puara/structs.h>
 #include <type_traits>
 
 namespace puara_gestures::utils
@@ -20,10 +19,9 @@ namespace puara_gestures::utils
  * @class ThresholdT
  * @brief Clamp a numeric value to a configurable range.
  *
- * ThresholdT is a lightweight value clamp helper. It stores a minimum and
+ * @details ThresholdT is a lightweight value clamp helper. It stores a minimum and
  * maximum boundary, applies clamping through `update()`, and keeps the last
- * raw input in `current`.
- *
+ * raw input in `current`. 
  * The legacy type alias `Threshold` preserves the previous double-based API.
  *
  * Example:
@@ -34,6 +32,7 @@ namespace puara_gestures::utils
  *
  *   puara_gestures::utils::ThresholdT<int> intThresh{-128, 127};
  *   int safeInt = intThresh.update(200); // safeInt == 127
+ *   int rawInt  = intThresh.current;     // rawInt  == 200
  * @endcode
  *
  * @tparam T Numeric type for the threshold values.

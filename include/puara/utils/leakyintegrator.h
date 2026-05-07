@@ -7,16 +7,18 @@
 namespace puara_gestures::utils
 {
 /**
- *  @brief Simple leaky integrator implementation.
+ * @class LeakyIntegrator
+ * @brief Simple leaky integrator implementation.
  *
- *  This class combines the current reading with a fraction of the previous
- *  output, so the signal changes more smoothly over time.
+ * This class combines the current reading with a fraction of the previous
+ * output, so the signal changes more smoothly over time.
  *
- *  Example:
+ * Example:
  * @code
  *   puara_gestures::utils::LeakyIntegrator integrator(0.0, 0.0, 0.5, 0, 0);
  *   double out1 = integrator.integrate(10.0); // out1 == 10.0
  *   double out2 = integrator.integrate(17.0); // out2 == 22.0, because 17 + 10*0.5
+ *   double out3 = integrator.integrate(5.0);  // out3 == 16.0, because 5 + 22*0.5
  * @endcode
  *
  *  In this example the integrator keeps half of the previous output on each step.
