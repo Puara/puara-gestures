@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <puara/utils/blobDetector.h>
 
 #include "brushRub.h"
@@ -8,14 +9,50 @@ namespace puara_gestures
 {
 /**
  * @class TouchArrayGestureDetector
- * @brief A class to detect gestures on a touch-array device.
+ * @brief Detects touch gestures on a 1D touch sensor array.
  *
- * This class is designed to detect various gestures on a touch-array device by analyzing touch data.
- * It detects blobs (contiguous touched stripes in the touch array), and for each blob, it calculates
- * the amount of "brushing" and "rubbing" gestures using a BrushRubDetector.
+ * This class computes average touch values for the entire array and for the top,
+ * middle and bottom regions. It also detects contiguous touch blobs and tracks
+ * simple brush/rub motion for each blob.
  *
- * @tparam maxNumBlobs The maximum number of blobs that the blob detector can detect at once on the touch array.
- * @tparam touchSizeEdge The number of stripes for the top and bottom portions of the touch array.
+ * Example usage:
+ * @code{.cpp}
+ * #include <puara/descriptors/touchArrayGestureDetector.h>
+ *
+ * constexpr int maxNumBlobs = 4;
+ * constexpr int touchSizeEdge = 4;
+ * constexpr int touchSize = 16;
+ * int touchArray[touchSize] = {0};
+ *
+ * // Fill the touch array with 1 for touched stripes and 0 for untouched stripes.
+ * touchArray[0] = 1;
+ * touchArray[5] = 1;
+ * touchArray[6] = 1;
+ * touchArray[8] = 1;
+ * touchArray[9] = 1;
+ * touchArray[10] = 1;
+ * touchArray[14] = 1;
+ * touchArray[15] = 1;
+ *
+ * puara_gestures::TouchArrayGestureDetector<maxNumBlobs, touchSizeEdge> detector;
+ * detector.update(touchArray, touchSize);
+ *
+ * float total = detector.totalTouchAverage;
+ * float top = detector.topTouchAverage;
+ * float middle = detector.middleTouchAverage;
+ * float bottom = detector.bottomTouchAverage;
+ *
+ * // 'totalBrush' and 'totalRub' are updated automatically after each update().
+ * float brush = detector.totalBrush;
+ * float rub = detector.totalRub;
+ * @endcode
+ *
+ * The detector expects a flat integer array of size `touchSize`, where each
+ * element is either 1 (touch present) or 0 (no touch). After `update()` it
+ * computes region averages and gesture motion values.
+ *
+ * @tparam maxNumBlobs The maximum number of touch blobs that can be detected.
+ * @tparam touchSizeEdge The number of stripes reserved for the top and bottom regions.
  */
 template <int maxNumBlobs, int touchSizeEdge>
 class TouchArrayGestureDetector
@@ -71,8 +108,8 @@ private:
       rubs[i] = brushRubDetector[i].rub.value;
     }
 
-    totalBrush = utils::arrayAverageZero(brushes, maxNumBlobs);
-    totalRub = utils::arrayAverageZero(rubs, maxNumBlobs);
+    totalBrush = utils::arrayAverageWithoutZero(brushes, maxNumBlobs);
+    totalRub = utils::arrayAverageWithoutZero(rubs, maxNumBlobs);
   }
 };
 }

@@ -1,5 +1,5 @@
 //********************************************************************************//
-// Puara Gestures - Roll (.h)                                                     //
+// Puara Gestures - Tilt (.h)                                                     //
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
@@ -19,8 +19,33 @@ namespace puara_gestures
 {
 
 /**
- * @brief This class measures tilt gestures using 3DoF info from an accelerometer,
- * gyroscope, and magnetometer
+ * @file tilt.h
+ * @brief Tilt estimator using accelerometer, gyroscope, and magnetometer data.
+ *
+ * This class wraps the IMU_Sensor_Fusion orientation filter and returns a
+ * filtered tilt value in radians.
+ *
+ * Example:
+ * @code
+ * #include <puara/descriptors/tilt.h>
+ *
+ * puara_gestures::Coord3D accel{0.0, 0.0, 1.0};
+ * puara_gestures::Coord3D gyro{0.0, 0.0, 0.0};
+ * puara_gestures::Coord3D mag{0.3, 0.0, 0.5};
+ * puara_gestures::Tilt tilt;
+ *
+ * void setup() {
+ *   // sensor and serial initialization
+ * }
+ *
+ * void loop() {
+ *   // Read your IMU sensors into accel, gyro, mag
+ *   double period = 0.01; // seconds since last sample
+ *   double tiltValue = tilt.tilt(accel, gyro, mag, period);
+ *   Serial.print("tilt=");
+ *   Serial.println(tiltValue);
+ * }
+ * @endcode
  */
 class Tilt : public utils::Smooth
 {

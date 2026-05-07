@@ -1,6 +1,19 @@
 cmake_minimum_required(VERSION 3.24)
 project(puara_gestures_tests LANGUAGES CXX)
 
+
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.8.1
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+
+
 # Validate the executables return success.
 
 enable_testing()
@@ -9,33 +22,53 @@ enable_testing()
 set(TEST_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}/../include
   ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty
+  ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/eigen
   ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(roll
-  testing_roll.cpp
-  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
+add_executable(test_descriptors
+ test_descriptors.cpp
+ ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
 )
-target_compile_features(roll PRIVATE cxx_std_20)
-target_include_directories(roll PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME roll COMMAND roll)
-set_tests_properties(roll PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+target_compile_features(test_descriptors PRIVATE cxx_std_20)
+target_link_libraries(test_descriptors PRIVATE Catch2::Catch2WithMain)
+target_include_directories(test_descriptors PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME test_descriptors COMMAND test_descriptors)
+set_tests_properties(test_descriptors PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-add_executable(tilt
-  testing_tilt.cpp
-  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
+add_executable(utils
+ test_utils.cpp
 )
-target_compile_features(tilt PRIVATE cxx_std_20)
-target_include_directories(tilt PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME tilt COMMAND tilt)
-set_tests_properties(tilt PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+target_compile_features(utils PRIVATE cxx_std_20)
+target_link_libraries(utils PRIVATE Catch2::Catch2WithMain)
+target_include_directories(utils PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME utils COMMAND utils)
+set_tests_properties(utils PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
-add_executable(touch
-  testing_touch.cpp
-  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
+add_executable(structs
+ testing_structs.cpp
 )
-target_compile_features(touch PRIVATE cxx_std_20)
-target_include_directories(touch PRIVATE ${TEST_INCLUDE_DIRS})
-add_test(NAME touch COMMAND touch)
-set_tests_properties(touch PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+target_compile_features(structs PRIVATE cxx_std_20)
+target_link_libraries(structs PRIVATE Catch2::Catch2WithMain)
+target_include_directories(structs PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME structs COMMAND structs)
+set_tests_properties(structs PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+add_executable(imu-filters
+ testing_IMU-filters.cpp
+)
+target_compile_features(imu-filters PRIVATE cxx_std_20)
+target_link_libraries(imu-filters PRIVATE Catch2::Catch2WithMain)
+target_include_directories(imu-filters PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME imu-filters COMMAND imu-filters)
+set_tests_properties(imu-filters PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+add_executable(magnetometerCalibration
+  testing_magnetometerCalibration.cpp
+)
+target_compile_features(magnetometerCalibration PRIVATE cxx_std_20)
+target_link_libraries(magnetometerCalibration PRIVATE Catch2::Catch2WithMain)
+target_include_directories(magnetometerCalibration PRIVATE ${TEST_INCLUDE_DIRS})
+add_test(NAME magnetometerCalibration COMMAND magnetometerCalibration)
+set_tests_properties(magnetometerCalibration PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/..)

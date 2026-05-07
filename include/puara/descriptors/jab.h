@@ -14,21 +14,26 @@ namespace puara_gestures
 {
 
 /**
- * @brief This class creates jab gestures using 1DoF info.
- * 
- * It expects 1 axis of a accelerometer in m/s^2, but can be used
- * with any double or float.
+ * @brief Simple 1D jab detector.
  *
- * Jab can use `tied_data`, which is an external variable that users update on their own.
- * Users can then call update() without any argumments to extract the features from the `tied_data`.
-* The usage should be:
-* setup:
-*   - user creates variable, e.g. sensor_data
-* user instantiates the class, e.g. puara::jab my_jab(sensor_data)
-* loop/task:
-*   - user saves sensor value into sensor_data
-*   - user/task calls my_jab.update()
-*   - user accesses jab value with my_jab.current_value()
+ * Use Jab to watch one acceleration axis and turn a quick change into a
+ * compact score. This is not a full gesture recognizer; it is a low-cost
+ * feature extractor that reports the size of a recent jab movement.
+ *
+ * Example:
+ *   double accel = 0.0;
+ *   puara_gestures::Jab jab(&accel);
+ *   jab.threshold = 3; // choose how strong the motion must be
+ *
+ *   // in your sensor loop:
+ *   accel = sensor.read();
+ *   jab.update();
+ *   double score = jab.current_value();
+ *
+ *   // score grows when acceleration swings exceed the threshold.
+ *
+ * You can also use update(data) directly if you do not want to tie an external
+ * variable. `Jab2D` and `Jab3D` follow the same pattern for 2D and 3D axes.
  */
 class Jab
 {
@@ -119,10 +124,23 @@ private:
 };
 
 /**
- * @brief This class creates jab gestures using 2DoF info.
- * 
- * It expects 2 axis of a accelerometer in m/s^2, but can be used
- * with any double or float.
+ * @brief Simple 2D jab detector.
+ *
+ * Jab2D combines two Jab detectors to report jab-like motion on X and Y.
+ * It is useful when your sensor has two acceleration axes and you want a
+ * compact per-axis motion score instead of raw accelerometer values.
+ *
+ * Example:
+ *   puara_gestures::Coord2D accel{0.0, 0.0};
+ *   puara_gestures::Jab2D jab2d(&accel);
+ *   jab2d.threshold(2);
+ *
+ *   // in your loop:
+ *   accel.x = sensor.readX();
+ *   accel.y = sensor.readY();
+ *   jab2d.update();
+ *   auto result = jab2d.current_value();
+ *   // result.x and result.y contain the latest jab scores.
  */
 class Jab2D
 {
@@ -179,6 +197,26 @@ public:
   }
 };
 
+/**
+ * @brief Simple 3D jab detector.
+ *
+ * Jab3D combines three Jab detectors to watch X, Y and Z separately.
+ * It is useful when you want a lightweight motion score for full 3D
+ * accelerometer motion.
+ *
+ * Example:
+ *   puara_gestures::Coord3D accel{0.0, 0.0, 0.0};
+ *   puara_gestures::Jab3D jab3d(&accel);
+ *   jab3d.threshold(2);
+ *
+ *   // in your loop:
+ *   accel.x = sensor.readX();
+ *   accel.y = sensor.readY();
+ *   accel.z = sensor.readZ();
+ *   jab3d.update();
+ *   auto result = jab3d.current_value();
+ *   // result.x, result.y and result.z hold jab intensities.
+ */
 class Jab3D
 {
 public:

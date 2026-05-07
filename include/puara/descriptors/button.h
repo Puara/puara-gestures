@@ -1,33 +1,52 @@
-
 #pragma once
 
 #include <puara/utils.h>
 
 namespace puara_gestures
 {
-
   /**
- * @brief This class extract several features from a discrete value, e.g., a button.
- * 
- * It expects a discete value (an int with value 0 or 1).
- *
- * Button can use `tied_data`, which is an external variable that users update on their own.
- * Users can then call update() without any argumments to extract the features from the `tied_data`.
-* The usage should be:
-* setup:
-*   - user creates variable, e.g. button_data
-* user instantiates the class, e.g. puara::Button my_button(button_data)
-* loop/task:
-*   - user saves sensor value into button_data
-*   - user/task calls my_button.update()
-*   - user accesses button descriptors with my_button functions
- */
+   * @file button.h
+   * @brief Simple helper for discrete button inputs to identify taps, double 
+   * taps, triple taps, counts and holds.
+   *
+   * Example usage with tied data:
+   * @code
+   * #include <puara/descriptors/button.h>
+   *
+   * int button_data = 0;
+   * puara_gestures::Button button(&button_data); // Tied to external button_data variable
+   *
+   * void setup() {
+   *   pinMode(BUTTON_PIN, INPUT_PULLUP);
+   * }
+   *
+   * void loop() {
+   *   button_data = digitalRead(BUTTON_PIN);
+   *   button.update(); // Reads from tied button_data automatically
+   *
+   *   Serial.print("tap: %u ", button.tap);
+   *   Serial.print("doubleTap: %u ", button.doubleTap);
+   *   Serial.print("tripleTap: %u ", button.tripleTap);
+   *   Serial.print("hold: %u ", button.hold);
+   *   Serial.print("pressTime: %u ", button.pressTime);
+   *   Serial.print("count: %u\n", button.count);
+   * }
+   * @endcode
+   *
+   * The optional `tied_data` pointer lets the button instance read its
+   * input value from an external integer each time `update()` is called.
+   * In this example, `button_data` is updated before `button.update()` and
+   * the button object uses the latest value automatically.
+   *
+   * If you prefer not to use `tied_data`, call `button.update(value)`
+   * directly with the input value.
+   */
 class Button
 {
 private:
   // long long getCurrentTimeMicroseconds();
   long timer = 0;
-  const int* tied_data = 0;
+  const int* tied_data{};
 
 public:
   Button() noexcept
@@ -58,7 +77,7 @@ public:
 
   void update(int value)
   {
-    long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 999LL;
+    long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 1000LL;
     value = value;
     if(value >= threshold)
     {
