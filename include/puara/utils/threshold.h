@@ -17,6 +17,7 @@ namespace puara_gestures::utils
 {
 
 /**
+ * @class ThresholdT
  * @brief Clamp a numeric value to a configurable range.
  *
  * ThresholdT is a lightweight value clamp helper. It stores a minimum and
@@ -26,12 +27,14 @@ namespace puara_gestures::utils
  * The legacy type alias `Threshold` preserves the previous double-based API.
  *
  * Example:
- *   Threshold thresh{-1.0, 1.0};
+ * @code
+ *   puara_gestures::utils::Threshold thresh{-1.0, 1.0};
  *   double safe = thresh.update(1.5); // safe == 1.0
- *   double raw  = thresh.current;      // raw  == 1.5
+ *   double raw  = thresh.current;     // raw  == 1.5
  *
- *   ThresholdT<int> intThresh{-128, 127};
+ *   puara_gestures::utils::ThresholdT<int> intThresh{-128, 127};
  *   int safeInt = intThresh.update(200); // safeInt == 127
+ * @endcode
  *
  * @tparam T Numeric type for the threshold values.
  */

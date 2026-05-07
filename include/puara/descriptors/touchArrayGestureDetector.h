@@ -1,8 +1,14 @@
+/**
+* @file touchArrayGestureDetector.h
+* @brief Puara Gestures - Touch Array Gesture Detector (.h)                             
+* @see https://github.com/Puara/puara-gestures                                        
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
+* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+*/
 #pragma once
 
-
 #include <puara/utils/blobDetector.h>
-
 #include "brushRub.h"
 
 namespace puara_gestures
@@ -11,9 +17,9 @@ namespace puara_gestures
  * @class TouchArrayGestureDetector
  * @brief Detects touch gestures on a 1D touch sensor array.
  *
- * This class computes average touch values for the entire array and for the top,
- * middle and bottom regions. It also detects contiguous touch blobs and tracks
- * simple brush/rub motion for each blob.
+ * @details This class computes average touch values for the entire array and 
+ * for the top, middle and bottom regions. It also detects contiguous touch 
+ * blobs and tracks simple brush/rub motion for each blob.
  *
  * Example usage:
  * @code{.cpp}
@@ -47,6 +53,7 @@ namespace puara_gestures
  * float rub = detector.totalRub;
  * @endcode
  *
+ * @details
  * The detector expects a flat integer array of size `touchSize`, where each
  * element is either 1 (touch present) or 0 (no touch). After `update()` it
  * computes region averages and gesture motion values.

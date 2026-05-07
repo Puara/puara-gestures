@@ -1,31 +1,32 @@
-//********************************************************************************//
-// Puara Gestures - Roll (.h)                                                     //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-// Maggie Needham (2024)                                                          //
-//********************************************************************************//
-
+/**
+* @file roll.h
+* @brief Measure roll gestures using 3DoF data from accelerometer, gyroscope, and magnetometer. 
+* @see https://github.com/Puara/puara-gestures                                        
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
+* @author Edu Meneses (2024) - https://www.edumeneses.com                               
+* @author Maggie Needham (2024)                                                           
+*/
 #pragma once
 
+#include <cmath>
 #include "IMU_Sensor_Fusion/imu_orientation.h"
 #include <puara/structs.h>
 #include <puara/utils.h>
 
-#include <cmath>
 
 namespace puara_gestures
 {
 
 /**
+ * @class Roll
  * @brief Measure roll gestures using 3DoF data from accelerometer, gyroscope, and magnetometer.
  *
- * This class wraps an IMU orientation filter and provides optional unwrap,
+ * @details This class wraps an IMU orientation filter and provides optional unwrap,
  * smoothing, and wrapping helpers for roll values.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * #include <puara/descriptors/roll.h>
  *
  * puara_gestures::Coord3D accel{0.0, 0.0, 1.0};

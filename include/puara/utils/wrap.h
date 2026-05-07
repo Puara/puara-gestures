@@ -26,30 +26,60 @@ namespace puara_gestures::utils
  * across the wrap boundary.
  *
  * For example, if your input goes:
+ * @code
  *   3.0, 3.1, -3.0, -2.9
+ * @endcode
  * then the reported unwrapped values should be:
+ * @code
  *   3.0, 3.1, 3.283..., 3.383...
+ * @endcode
  *
  * This class uses a simple threshold-based strategy: if the jump between
  * the new reading and the previous reading is larger than half the interval,
  * it assumes a wrap crossing occurred.
+ *
+ * Example use-case:
+ * @code
+ * puara_gestures::utils::Unwrap unwrap(-M_PI, M_PI);
+ * double angle = 3.0;
+ * double value = unwrap.unwrap(angle);
+ * angle = -3.0;
+ * value = unwrap.unwrap(angle); // 3.283... instead of -3.0
+ * @endcode
  */
 class Unwrap
 {
 public:
+  /**
+   * @brief Previous wrapped angle value from the last `unwrap()` call.
+   */
   double prev_angle{};
+
+  /**
+   * @brief Accumulated integer wrap offset.
+   */
   double accum{};
+
+  /**
+   * @brief Width of the wrapped interval.
+   */
   double range{};
+
+  /**
+   * @brief True when no previous value has been unwrapped yet.
+   */
   bool empty{};
 
   /**
    * @brief Construct an Unwrap helper.
    *
-   * @param Min lower bound of the wrapped range.
-   * @param Max upper bound of the wrapped range.
+   * @param Min Lower bound of the wrapped range.
+   * @param Max Upper bound of the wrapped range.
    *
    * Example for typical angle data:
+   * @code
    *   Unwrap u(-M_PI, M_PI);
+   * @endcode
    */
   Unwrap(double Min, double Max)
       : accum(0)
@@ -62,12 +92,12 @@ public:
    * @brief Convert the next wrapped reading into an unwrapped value.
    *
    * @param reading New wrapped measurement.
-   * @return Continuous angle value.
+   * @return Continuous unwrapped angle value.
    *
    * Notes:
    *   - The first call returns the raw input.
-   *   - Later calls compare the new reading to the previous one and adjust
-   *     by whole-range steps when the jump crosses the boundary.
+   *   - Later calls compare with the previous reading and adjust by whole-range
+   *     steps when the jump crosses the boundary.
    */
   double unwrap(double reading)
   {
@@ -118,9 +148,11 @@ public:
  * point where wrapping occurs.
  *
  * Example:
+ * @code
  *   Wrap w(-M_PI, M_PI);
  *   w.wrap(3.5);      // returns approximately -2.783 (wraps above +pi)
  *   w.wrap(-3.5);     // returns approximately 2.783 (wraps below -pi)
+ * @endcode
  *
  * The implementation uses `std::fmod` and normalizes negatives so that the
  * result always lies inside the interval.
@@ -128,7 +160,14 @@ public:
 class Wrap
 {
 public:
+  /**
+   * @brief Inclusive lower bound of the wrapped interval.
+   */
   double min{};
+
+  /**
+   * @brief Exclusive upper bound of the wrapped interval.
+   */
   double max{};
 
   /**
@@ -143,6 +182,12 @@ public:
   {
   }
 
+  /**
+   * @brief Wrap a value into the interval [min, max).
+   *
+   * @param reading Value to normalize.
+   * @return Wrapped value in [min, max).
+   */
   /**
    * @brief Wrap a value into the interval [min, max).
    *

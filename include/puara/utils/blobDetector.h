@@ -9,15 +9,17 @@ namespace puara_gestures
  * @brief Detects contiguous runs of `1` values in a 1D binary array.
  *
  * Example:
- *   puara_gestures::BlobDetector<4> detector;
- *   int data[] = {1, 1, 0, 1, 1, 1, 0};
- *   detector.detect1D(data, 7);
+ * @code
+ * puara_gestures::BlobDetector<4> detector;
+ * int data[] = {1, 1, 0, 1, 1, 1, 0};
+ * detector.detect1D(data, 7);
  *
- *   // detector.blobCount == 2
- *   // detector.blobStartPos[0] == 0
- *   // detector.blobSize[0] == 2
- *   // detector.blobStartPos[1] == 3
- *   // detector.blobSize[1] == 3
+ * // detector.blobCount == 2
+ * // detector.blobStartPos[0] == 0
+ * // detector.blobSize[0] == 2
+ * // detector.blobStartPos[1] == 3
+ * // detector.blobSize[1] == 3
+ * @endcode
  *
  * This class records the start index, length, and center index for each
  * contiguous group of `1` values, up to `maxNumBlobs` results.
@@ -29,33 +31,48 @@ template <int maxNumBlobs>
 class BlobDetector
 {
 public:
-  /** The start index of detected blobs. */
+  /**
+   * @brief The start index of detected blobs.
+   *
+   * This stores the first array index for each detected blob.
+   */
   int blobStartPos[maxNumBlobs]{};
 
-  /** The cached start index of detected blobs, from the previous time detect1D was called. */
+  /**
+   * @brief Start index of blobs from the previous detect1D call.
+   */
   int prevBlobStartPos[maxNumBlobs]{};
 
-  /** size (amount of stripes) of each blob */
+  /**
+   * @brief Size of each detected blob.
+   *
+   * This is the count of consecutive `1` values in the blob.
+   */
   int blobSize[maxNumBlobs]{};
 
-  /** shows the "center"(index)of each blob */
+  /**
+   * @brief Center index of each detected blob.
+   *
+   * This is computed as the midpoint of the blob.
+   */
   float blobCenter[maxNumBlobs]{};
 
-  /** number of detected blobs */
+  /**
+   * @brief Number of detected blobs.
+   */
   int blobCount{};
 
   /**
-    * @brief Detects contiguous regions (blobs) of `1`s in a 1D binary array.
-    *
-    * This function identifies blobs in the input binary array `touchArray` and calculates their start
-    * positions, sizes, and centers.
-    *
-    * @param touchArray Pointer to the 1D binary array representing touch data. Each element is expected to be 0 or 1.
-    *        An element that is `1` indicates a touch sensor is activated, while `0` indicates it is not.
-    * @param touchArraySize The size of the `touchArray`, representing the number of touch sensor in the array.
-    *        This is expected to be larger than maxNumBlobs, which by definition will be a portion of the number
-    *        of sensors, or at most equal to the number of sensors.
-    */
+   * @brief Detect contiguous regions (blobs) of `1`s in a 1D binary array.
+   *
+   * This function identifies blobs in the input binary array `touchArray` and
+   * calculates their start positions, sizes, and center indices.
+   *
+   * @param touchArray Pointer to the 1D binary array representing touch data.
+   *        Each element should be 0 or 1.
+   * @param touchArraySize Number of elements in the touch array.
+   * @note Additional blobs beyond `maxNumBlobs` are ignored.
+   */
   void detect1D(const int* const touchArray, const int touchArraySize)
   {
     blobCount = 0;

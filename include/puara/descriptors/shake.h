@@ -1,11 +1,11 @@
-//********************************************************************************//
-// Puara Gestures - Shake (.h)                                                    //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
-
+/**
+* @file shake.h
+* @brief Simple 1D shake detector using a leaky integrator on acceleration energy. 
+* @see https://github.com/Puara/puara-gestures                                        
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
+* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+*/
 #pragma once
 
 #include <puara/structs.h>
@@ -15,14 +15,15 @@ namespace puara_gestures
 {
 
 /**
+ * @class Shake
  * @brief Simple 1D shake detector.
  *
- * Shake turns raw acceleration energy into a slowly changing value.
+ * @details Shake turns raw acceleration energy into a slowly changing value.
  * It is useful when you want a smooth gesture-like signal for shaking,
  * vibration, or repeated movement on one axis.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * double accel = 0.0;
  * puara_gestures::Shake shake(&accel);
  * shake.threshold = 0.2;
@@ -175,14 +176,15 @@ private:
 };
 
 /**
+ * @class Shake2D
  * @brief Simple 2D shake detector.
  *
- * Shake2D uses two Shake objects to track motion energy on X and Y.
+ * @details Shake2D uses two Shake objects to track motion energy on X and Y.
  * This lets you detect repeated motion or vibration across two axes, while
  * still keeping the output smooth and easy to use.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * puara_gestures::Coord2D accel{0.0, 0.0};
  * puara_gestures::Shake2D shake2d(&accel);
  * shake2d.threshold(0.2);
@@ -289,14 +291,15 @@ public:
 };
 
 /**
+ * @class Shake3D
  * @brief Simple 3D shake detector.
  *
- * Shake3D tracks motion energy on X, Y and Z by combining three Shake
+ * @details Shake3D tracks motion energy on X, Y and Z by combining three Shake
  * processors. It is useful when you want a smooth, gesture-like output for
  * full 3D accelerometer movement.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * puara_gestures::Coord3D accel{0.0, 0.0, 0.0};
  * puara_gestures::Shake3D shake3d(&accel);
  * shake3d.threshold(0.2);

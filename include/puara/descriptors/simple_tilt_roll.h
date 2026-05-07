@@ -1,10 +1,11 @@
-//********************************************************************************//
-// Puara Gestures - Simple Tilt / Roll (.h)                                       //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2025) - https://www.edumeneses.com                                //
-//********************************************************************************//
+/**
+ * @file simple_tilt_roll.h
+ * @brief Lightweight 3DoF tilt and roll extractor for IMUs without a magnetometer.
+ * @see https://github.com/Puara/puara-gestures 
+ * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+ * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
+ * @author Edu Meneses (2025) - https://www.edumeneses.com 
+ */
 #pragma once
 
 #include <puara/structs.h>
@@ -14,10 +15,10 @@ namespace puara_gestures
 {
 
 /**
- * @file simple_tilt_roll.h
+ * @class three_dof_tilt_roll
  * @brief Lightweight 3DoF tilt and roll extractor for IMUs without a magnetometer.
  *
- * This class computes tilt and roll from accelerometer data using a simple
+ * @details This class computes tilt and roll from accelerometer data using a simple
  * trig-based approximation. It does not perform full attitude estimation or
  * magnetic heading correction, and it assumes the accelerometer is dominated by
  * gravity. In dynamic motion or when linear acceleration is present, the
@@ -27,7 +28,7 @@ namespace puara_gestures
  * IMU data externally and then call `update()` without parameters.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * #include <puara/descriptors/simple_tilt_roll.h>
  *
  * puara_gestures::Coord3D imu_data{0.0, 0.0, 0.0};

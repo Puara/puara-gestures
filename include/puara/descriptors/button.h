@@ -1,3 +1,13 @@
+/**
+* @file button.h
+* @brief Helper to identify taps, double taps, triple taps, counts and holds from discrete button inputs. 
+* @see https://github.com/Puara/puara-gestures                                        
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
+* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+*/
+
+
 #pragma once
 
 #include <puara/utils.h>
@@ -5,7 +15,7 @@
 namespace puara_gestures
 {
   /**
-   * @file button.h
+   * @class Button
    * @brief Simple helper for discrete button inputs to identify taps, double 
    * taps, triple taps, counts and holds.
    *
@@ -44,7 +54,6 @@ namespace puara_gestures
 class Button
 {
 private:
-  // long long getCurrentTimeMicroseconds();
   long timer = 0;
   const int* tied_data{};
 

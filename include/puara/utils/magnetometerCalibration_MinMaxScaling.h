@@ -24,6 +24,25 @@ namespace puara_gestures::utils
  * This implementation preserves the same public API as the desktop
  * calibration path, but avoids heavy dynamic Eigen workloads by using a
  * simplified hard-iron / soft-iron estimate and a fixed sample count.
+ *
+ * Example:
+ * @code
+ *   puara_gestures::utils::Embedded_Magnetometer_Calibration calibrator(100);
+ *   std::vector<puara_gestures::Coord3D> samples;
+ *
+ *   // fill samples with raw magnetometer readings collected during motion
+ *   // e.g. from a 3-axis magnetometer on a wearable sensor.
+ *   samples.push_back({0.3, 0.1, 0.5});
+ *   samples.push_back({-0.2, 0.4, 0.6});
+ *   // ... collect more samples until you have enough data
+ *
+ *   if (calibrator.generateMagnetometerMatrices(samples.data(), samples.size())) {
+ *       puara_gestures::Imu9Axis imu;
+ *       imu.magn = samples[0];
+ *       calibrator.applyMagnetometerCalibration(imu);
+ *       // imu.magn now contains calibrated magnetometer values
+ *   }
+ * @endcode
  */
 class Embedded_Magnetometer_Calibration
 {

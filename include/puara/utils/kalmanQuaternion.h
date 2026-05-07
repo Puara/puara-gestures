@@ -1,24 +1,32 @@
-/*
- * KalmanQuaternionFilter
- * -----------------------
+/**
+ * @brief Simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
  *
- * A simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
  * This implementation performs gyro-based quaternion prediction and then
  * blends toward an accel/magnetometer-based orientation measurement.
- *
- * It is intentionally compact and similar in usage style to the Madgwick
- * and Mahony filters in this project.
+ * It is intentionally compact and similar in usage style to the Madgwick and
+ * Mahony filters in this project.
  *
  * Usage:
- *   - The class stores orientation as `puara_gestures::Quaternion`.
- *   - Input data is accepted through `puara_gestures::Imu9Axis`.
- *   - Gyroscope values are assumed to be in radians/sec by default.
- *   - Use `gyroDegrees = true` when gyro values are in degrees/sec.
+ * @li The class stores orientation as `puara_gestures::Quaternion`.
+ * @li Input data is accepted through `puara_gestures::Imu9Axis`.
+ * @li Gyroscope values are assumed to be in radians/sec by default.
+ * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
  *
  * Example:
+ * @code
  *   puara_gestures::KalmanQuaternionFilter filter(0.001, 0.01);
- *   puara_gestures::Imu9Axis imu{ {0.0, 0.0, 9.81}, {1.0, 2.0, 3.0}, {0.3, 0.0, 0.5} };
+ *   puara_gestures::Imu9Axis imu{
+ *       {0.0, 0.0, 9.81},
+ *       {1.0, 2.0, 3.0},
+ *       {0.3, 0.0, 0.5}
+ *   };
  *   bool ok = filter.update(imu, true);
+ *   if (ok) {
+ *       auto q = filter.getQuaternion();
+ *       double roll, pitch, yaw;
+ *       filter.getEulerDegrees(roll, pitch, yaw);
+ *   }
+ * @endcode
  */
 
 #pragma once

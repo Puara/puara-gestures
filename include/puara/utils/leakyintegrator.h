@@ -13,11 +13,14 @@ namespace puara_gestures::utils
  *  output, so the signal changes more smoothly over time.
  *
  *  Example:
- *    puara_gestures::utils::LeakyIntegrator integrator(0.0, 0.0, 0.5, 0, 0);
- *    double out1 = integrator.integrate(10.0); // 10.0
- *    double out2 = integrator.integrate(17.0); // 17.0 + 10.0 * 0.5 = 22.0
+ * @code
+ *   puara_gestures::utils::LeakyIntegrator integrator(0.0, 0.0, 0.5, 0, 0);
+ *   double out1 = integrator.integrate(10.0); // out1 == 10.0
+ *   double out2 = integrator.integrate(17.0); // out2 == 22.0, because 17 + 10*0.5
+ * @endcode
  *
- *  `leak` controls memory: 0.0 ignores history, 1.0 fully retains it.
+ *  In this example the integrator keeps half of the previous output on each step.
+ *  A `leak` of 0.0 ignores history, and 1.0 fully retains it.
  */
 class LeakyIntegrator
 {

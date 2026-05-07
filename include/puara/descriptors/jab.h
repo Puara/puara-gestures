@@ -16,12 +16,13 @@ namespace puara_gestures
 /**
  * @brief Simple 1D jab detector.
  *
+ * @details
  * Use Jab to watch one acceleration axis and turn a quick change into a
  * compact score. This is not a full gesture recognizer; it is a low-cost
  * feature extractor that reports the size of a recent jab movement.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * double accel = 0.0;
  * puara_gestures::Jab jab(&accel);
  * jab.threshold = 3; // choose how strong the motion must be
@@ -171,7 +172,7 @@ private:
  * compact per-axis motion score instead of raw accelerometer values.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * puara_gestures::Coord2D accel{0.0, 0.0};
  * puara_gestures::Jab2D jab2d(&accel);
  * jab2d.threshold(2);
@@ -277,7 +278,7 @@ public:
  * accelerometer motion.
  *
  * Example:
- * @code
+ * @code{.cpp}
  * puara_gestures::Coord3D accel{0.0, 0.0, 0.0};
  * puara_gestures::Jab3D jab3d(&accel);
  * jab3d.threshold(2);

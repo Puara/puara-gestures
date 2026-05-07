@@ -1,22 +1,32 @@
-/*
- * MahonyQuaternionFilter
- * ----------------------
+/**
+ * @brief MahonyQuaternionFilter for 9-DoF IMU orientation estimation.
  *
- * A lightweight Mahony AHRS filter for 9-DoF IMU data.
- * This implementation uses accelerometer, gyroscope, and magnetometer
- * data to maintain an orientation quaternion. The filter blends gyroscope
- * integration with feedback from accelerometer/magnetometer errors.
+ * A lightweight Mahony AHRS filter for 9-DoF IMU data. This implementation
+ * uses accelerometer, gyroscope, and magnetometer data to maintain an
+ * orientation quaternion. The filter blends gyroscope integration with
+ * feedback from accelerometer/magnetometer error.
  *
  * Usage:
- *   - The class stores orientation as `puara_gestures::Quaternion`.
- *   - Input data is accepted through `puara_gestures::Imu9Axis`.
- *   - Gyroscope values are assumed to be in radians/sec by default.
- *   - Use `gyroDegrees = true` when gyro values are in degrees/sec.
+ * @li The class stores orientation as `puara_gestures::Quaternion`.
+ * @li Input data is accepted through `puara_gestures::Imu9Axis`.
+ * @li Gyroscope values are assumed to be in radians/sec by default.
+ * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
  *
  * Example:
+ * @code
  *   puara_gestures::MahonyQuaternionFilter filter(1.0, 0.0);
- *   puara_gestures::Imu9Axis imu{ {0.0, 0.0, 9.81}, {1.0, 2.0, 3.0}, {0.3, 0.0, 0.5} };
- *   bool ok = filter.update(imu, true);
+ *   puara_gestures::Imu9Axis imu{
+ *       {0.0, 0.0, 9.81},
+ *       {1.0, 2.0, 3.0},
+ *       {0.3, 0.0, 0.5}
+ *   };
+ *
+ *   if (filter.update(imu, true)) {
+ *       double roll, pitch, yaw;
+ *       filter.getEulerDegrees(roll, pitch, yaw);
+ *       // use roll/pitch/yaw values for control, visualization, or gesture detection
+ *   }
+ * @endcode
  */
 
 #pragma once

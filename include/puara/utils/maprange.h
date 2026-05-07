@@ -20,13 +20,15 @@ namespace puara_gestures::utils
  *  or converting between coordinate ranges.
  *
  *  Example usage:
- *    MapRange mapper;
- *    mapper.inMin = 0;
- *    mapper.inMax = 1023;
- *    mapper.outMin = 0;
- *    mapper.outMax = 1;
+ * @code
+ *   puara_gestures::utils::MapRange mapper;
+ *   mapper.inMin = 0;
+ *   mapper.inMax = 1023;
+ *   mapper.outMin = 0;
+ *   mapper.outMax = 1;
  *
- *    double normalized = mapper.range(512); // ~0.5
+ *   double normalized = mapper.range(512); // ~0.5
+ * @endcode
  *
  *  Notes:
  *    - `inMin` / `inMax` defines the input range.
@@ -41,12 +43,37 @@ namespace puara_gestures::utils
 class MapRange
 {
 public:
+  /**
+   * @brief Last input value that was remapped.
+   */
   double current_in = 0;
+
+  /**
+   * @brief Minimum value of the input range.
+   */
   double inMin = 0;
+
+  /**
+   * @brief Maximum value of the input range.
+   */
   double inMax = 0;
+
+  /**
+   * @brief Minimum value of the output range.
+   */
   double outMin = 0;
+
+  /**
+   * @brief Maximum value of the output range.
+   */
   double outMax = 0;
 
+  /**
+   * @brief Remap a double input from the configured input range to the output range.
+   *
+   * @param in Input value to remap.
+   * @return Mapped value in the configured output range.
+   */
   double range(double in)
   {
     current_in = in;
@@ -59,12 +86,24 @@ public:
     return (in - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
   }
 
+  /**
+   * @brief Remap a float input from the configured input range to the output range.
+   *
+   * @param in Float input value to remap.
+   * @return Mapped value in the configured output range.
+   */
   float range(float in)
   {
     double casted_in = static_cast<double>(in);
     return static_cast<float>(range(casted_in));
   }
 
+  /**
+   * @brief Remap an integer input from the configured input range to the output range.
+   *
+   * @param in Integer input value to remap.
+   * @return Mapped value in the configured output range.
+   */
   int range(int in)
   {
     double casted_in = static_cast<double>(in);

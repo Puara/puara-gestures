@@ -1,6 +1,5 @@
-/*
- * MadgwickQuaternionFilter
- * ------------------------
+/**
+ * @brief MadgwickQuaternionFilter for 9-DoF IMU orientation estimation.
  *
  * This header defines a lightweight Madgwick AHRS filter that consumes 9-DoF
  * IMU readings and produces a normalized quaternion representing orientation.
@@ -10,13 +9,13 @@
  * gyroscope and magnetometer data to fuse a stable quaternion estimate.
  *
  * Usage:
- *   - The class stores orientation as `puara_gestures::Quaternion`.
- *   - Input data is accepted through `puara_gestures::Imu9Axis`.
- *   - By default, gyroscope data is expected in radians/sec.
- *   - Use `gyroDegrees = true` when gyro values are in degrees/sec.
+ * @li The class stores orientation as `puara_gestures::Quaternion`.
+ * @li Input data is accepted through `puara_gestures::Imu9Axis`.
+ * @li By default, gyroscope data is expected in radians/sec.
+ * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
  *
  * Example:
- *
+ * @code
  *   #include <puara/descriptors/madgwickQuaternion.h>
  *
  *   void example() {
@@ -35,6 +34,7 @@
  *           filter.getEulerDegrees(roll, pitch, yaw);
  *       }
  *   }
+ * @endcode
  */
 
 #pragma once

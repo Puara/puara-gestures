@@ -23,8 +23,13 @@ namespace puara_gestures::utils
  * intended for stabilizing noisy sensor readings in a small moving window.
  *
  * Example:
- *   Smooth smoother(5.0);
- *   double filtered = smoother.smooth(rawValue);
+ * @code
+ *   puara_gestures::utils::Smooth smoother(5);
+ *   double raw = 0.7;
+ *   double filtered = smoother.smooth(raw);
+ *   raw = 1.3;
+ *   filtered = smoother.smooth(raw);
+ * @endcode
  *
  * The public field `size` defines how many values are kept. When the window
  * is full, the oldest reading is dropped as a new value arrives.
