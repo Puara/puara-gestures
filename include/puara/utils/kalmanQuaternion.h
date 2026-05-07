@@ -99,7 +99,7 @@ struct KalmanQuaternionFilter {
         pitch *= RadToDeg;
         yaw *= RadToDeg;
     }
-  // updateWithTimestamp is exposed for testing with synthetic timestamps, but 
+  // updateWithTimestamp is exposed for testing with synthetic timestamps, but
   // typical usage is to call update() with real-time data.
     bool updateWithTimestamp(const Imu9Axis& imu, uint64_t currentMicros, bool gyroDegrees) {
         if (currentMicros == 0) {

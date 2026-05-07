@@ -1,10 +1,10 @@
 /**
 * @file shake.h
-* @brief Simple 1D shake detector using a leaky integrator on acceleration energy. 
-* @see https://github.com/Puara/puara-gestures                                        
-* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
-* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
-* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+* @brief Simple 1D shake detector using a leaky integrator on acceleration energy.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
 */
 #pragma once
 

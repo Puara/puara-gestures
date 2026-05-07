@@ -1,10 +1,10 @@
 /**
 * @file touchArrayGestureDetector.h
-* @brief Detects brush and rub features from touch array data using leaky integration. 
-* @see https://github.com/Puara/puara-gestures                                        
-* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
-* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
-* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+* @brief Detects brush and rub features from touch array data using leaky integration.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
 */
 #pragma once
 
@@ -17,8 +17,8 @@ namespace puara_gestures
  * @class TouchArrayGestureDetector
  * @brief Detects touch gestures on a 1D touch sensor array.
  *
- * @details This class computes average touch values for the entire array and 
- * for the top, middle and bottom regions. It also detects contiguous touch 
+ * @details This class computes average touch values for the entire array and
+ * for the top, middle and bottom regions. It also detects contiguous touch
  * blobs and tracks simple brush/rub motion for each blob.
  *
  * Example usage:

@@ -1,10 +1,10 @@
 /**
 * @file brushRub.h
 * @brief Simple "brush" and "rub" touch features based on movement input.
-* @see https://github.com/Puara/puara-gestures                                        
-* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
-* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
-* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
 */
 #pragma once
 
@@ -150,8 +150,8 @@ private:
  * @class Brush
  * @brief "Brush" touch feature that integrates directional movement input.
  * @details The brush feature value increases with movement in a specific direction,
- * making it ideal for detecting directional gestures like swipes or strokes. 
- * 
+ * making it ideal for detecting directional gestures like swipes or strokes.
+ *
  * @code
  * Brush brush;
  * brush.update(0.7);
@@ -190,8 +190,8 @@ private:
  * @class Rub
  * @brief "Rub" touch feature that integrates bidirectional movement input.
  *
- * @details The rub feature value is based on the absolute value of movement. 
- * This increases as the sensors are rubbed in any direction, making it ideal 
+ * @details The rub feature value is based on the absolute value of movement.
+ * This increases as the sensors are rubbed in any direction, making it ideal
  * for detecting bidirectional or multidirectional gestures.
  *
  * Example:

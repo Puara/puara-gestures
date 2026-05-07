@@ -3,7 +3,7 @@
 // https://github.com/Puara/puara-gestures                                        //
 // Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
 // Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-//                                                                                // 
+//                                                                                //
 // This file provides utility functions for high-resolution time measurements     //
 // function both on desktop and embedded platforms.                               //
 //********************************************************************************//

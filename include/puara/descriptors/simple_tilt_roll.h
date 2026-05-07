@@ -1,10 +1,10 @@
 /**
  * @file simple_tilt_roll.h
  * @brief Lightweight 3DoF tilt and roll extractor for IMUs without a magnetometer.
- * @see https://github.com/Puara/puara-gestures 
+ * @see https://github.com/Puara/puara-gestures
  * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
- * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
- * @author Edu Meneses (2025) - https://www.edumeneses.com 
+ * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+ * @author Edu Meneses (2025) - https://www.edumeneses.com
  */
 #pragma once
 
@@ -174,7 +174,7 @@ public:
     tied_x = &(new_tie->x);
     tied_y = &(new_tie->y);
     tied_z = &(new_tie->z);
-    
+
     return 1;
   }
 

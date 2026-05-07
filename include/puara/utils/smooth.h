@@ -1,10 +1,10 @@
 /**
 * @file smooth.h
-* @brief Simple rolling average smoother for recent numeric values. 
-* @see https://github.com/Puara/puara-gestures                                        
-* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
-* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
-* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+* @brief Simple rolling average smoother for recent numeric values.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
 */
 #pragma once
 

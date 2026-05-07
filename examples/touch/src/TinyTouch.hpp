@@ -77,7 +77,7 @@ public:
    * @brief Draws rectangles on the screen.
    *
    * This function divides the screen into a series of rectangles and draws them. These
-   * discrete rectangles will simulate stripes in a touch array, which will be used 
+   * discrete rectangles will simulate stripes in a touch array, which will be used
    * by the TouchArrayGestureDetector to calculate various gestures.
    */
   void drawRectangles()

@@ -89,7 +89,7 @@ float arrayAverage(const T* array, int start, int end)
  * @param Array Pointer to the array of values.
  * @param ArraySize Number of elements in the array.
  * @return Average of non-zero values, or 0.0 if no non-zero values exist.
- * 
+ *
  * This function is used to reduce feature arrays into single values.
  * E.g., brush uses it to reduce multiBrush instances. Any value in
  * the passed Array that is == 0 is ignored in the average calculation.
@@ -213,10 +213,10 @@ inline double utesla_to_gauss(double reading)
 }
 
 /**
- * @brief Convert spheric coordinates to cartesian coordinates using 
- * the ISO convention and mathematical approach. Phi and Theta debate is 
+ * @brief Convert spheric coordinates to cartesian coordinates using
+ * the ISO convention and mathematical approach. Phi and Theta debate is
  * replaced by azimuth and elevation to reduce confusion between conventions.
- * In these conventions, the default "pointing" direction is along the 
+ * In these conventions, the default "pointing" direction is along the
  * positive z-axis.
  * See : https://en.wikipedia.org/wiki/Spherical_coordinate_system
  */
@@ -234,10 +234,10 @@ inline Coord3D spheric_to_cartesian(Spherical polarCoords)
 }
 
 /**
- * @brief Convert cartesian coordinates to spherical coordinates using 
- * the ISO convention and mathematical approach. Phi and Theta debate is 
+ * @brief Convert cartesian coordinates to spherical coordinates using
+ * the ISO convention and mathematical approach. Phi and Theta debate is
  * replaced by azimuth and elevation to reduce confusion between conventions.
- * In these conventions, the default "pointing" direction is along the 
+ * In these conventions, the default "pointing" direction is along the
  * positive z-axis.
  * See : https://en.wikipedia.org/wiki/Spherical_coordinate_system
  */
@@ -256,8 +256,8 @@ inline Spherical cartesian_to_spheric(Coord3D cartesianCoords)
 }
 
 /**
- * @brief Convert rectangular coordinates to spherical coordinates using 
- * Matlab's phased convention where default "pointing" direction is along 
+ * @brief Convert rectangular coordinates to spherical coordinates using
+ * Matlab's phased convention where default "pointing" direction is along
  * the positive x-axis rather than the positive z-axis.
  * See : https://www.mathworks.com/help/phased/ug/spherical-coordinates.html
  */
@@ -279,8 +279,8 @@ inline Spherical phased_cartesian_to_spheric(Coord3D cartesianCoords)
 }
 
 /**
- * @brief Convert spherical coordinates to rectangular coordinates using 
- * Matlab's phased convention where default "pointing" direction is along 
+ * @brief Convert spherical coordinates to rectangular coordinates using
+ * Matlab's phased convention where default "pointing" direction is along
  * the positive x-axis rather than the positive z-axis.
  * See : https://www.mathworks.com/help/phased/ug/spherical-coordinates.html
  */

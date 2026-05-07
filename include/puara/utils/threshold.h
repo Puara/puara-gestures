@@ -1,10 +1,10 @@
 /**
 * @file threshold.h
-* @brief Clamp a numeric value to a configurable range. 
-* @see https://github.com/Puara/puara-gestures                                        
-* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
-* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
-* @author Edu Meneses (2024) - https://www.edumeneses.com                                
+* @brief Clamp a numeric value to a configurable range.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
 */
 #pragma once
 
@@ -21,7 +21,7 @@ namespace puara_gestures::utils
  *
  * @details ThresholdT is a lightweight value clamp helper. It stores a minimum and
  * maximum boundary, applies clamping through `update()`, and keeps the last
- * raw input in `current`. 
+ * raw input in `current`.
  * The legacy type alias `Threshold` preserves the previous double-based API.
  *
  * Example:
@@ -90,7 +90,7 @@ public:
         return min; // or max, or some other default for NaN inputs
       }
     }
-    
+
     if (reading < min){
       return min;
     }

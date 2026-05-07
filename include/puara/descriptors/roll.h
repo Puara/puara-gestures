@@ -1,11 +1,11 @@
 /**
 * @file roll.h
-* @brief Measure roll gestures using 3DoF data from accelerometer, gyroscope, and magnetometer. 
-* @see https://github.com/Puara/puara-gestures                                        
-* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca                      
-* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org 
-* @author Edu Meneses (2024) - https://www.edumeneses.com                               
-* @author Maggie Needham (2024)                                                           
+* @brief Measure roll gestures using 3DoF data from accelerometer, gyroscope, and magnetometer.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+* @author Maggie Needham (2024)
 */
 #pragma once
 

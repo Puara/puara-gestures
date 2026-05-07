@@ -42,13 +42,13 @@ template <typename T = double>
 class CircularBuffer
 {
 public:
-  /** 
-   * @brief Requested capacity for the circular buffer. 
+  /**
+   * @brief Requested capacity for the circular buffer.
    * */
   std::size_t size = 10;
 
-  /** 
-   * @brief Underlying storage for circular buffer elements. 
+  /**
+   * @brief Underlying storage for circular buffer elements.
    * */
   boost::circular_buffer<T> buffer = boost::circular_buffer<T>(size);
 

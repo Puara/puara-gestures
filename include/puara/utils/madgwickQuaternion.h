@@ -168,7 +168,7 @@ private:
         // Sebastian O.H. Madgwick
         // April 30, 2010
         // http://www.x-io.co.uk/open-source-imu-and-ahrs-algorithms/
-        
+
         double recipNorm = 0.0;
         double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;
         double qDot1 = 0.0, qDot2 = 0.0, qDot3 = 0.0, qDot4 = 0.0;
