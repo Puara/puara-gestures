@@ -1,13 +1,13 @@
-//********************************************************************************//
-// Puara Gestures - Utilities (.h)                                                //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
+/**
+* @file circularbuffer.h
+* @brief Simple circular buffer implementation.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
 
 #pragma once
-
 
 #include <boost/circular_buffer.hpp>
 #include <puara/structs.h>
@@ -15,28 +15,29 @@
 namespace puara_gestures::utils
 {
 /**
- *  Simple circular buffer.
- *  This was created to ensure compatibility with older ESP SoCs.
+ * @class CircularBuffer
+ * @brief Simple circular buffer wrapper for fixed-size element storage.
  *
- *  Usage:
- *    // default stores doubles
- *    CircularBuffer<> buffer;
- *    buffer.add(1.0);
- *    buffer.add(2.0);
+ * @details
+ * CircularBuffer stores a fixed number of values and automatically drops the
+ * oldest element when new values are added beyond capacity. It is intended for
+ * lightweight buffering on platforms where the Boost circular buffer is used
+ * as the underlying container.
  *
- *    // templated for other types
- *    CircularBuffer<int> intBuffer(4);
- *    intBuffer.add(10);
- *    intBuffer.add(20);
+ * Example:
+ * @code{.cpp}
+ *   // default stores doubles
+ *   puara_gestures::utils::CircularBuffer<> buffer;
+ *   buffer.add(1.0);
+ *   buffer.add(2.0);
  *
- *  The buffer keeps a fixed capacity and automatically drops the oldest
- *  values once capacity is exceeded.
+ *   // templated for other types
+ *   puara_gestures::utils::CircularBuffer<int> intBuffer(4);
+ *   intBuffer.add(10);
+ *   intBuffer.add(20);
+ * @endcode
  *
- *  Notes:
- *    - The internal `buffer` is a `boost::circular_buffer<T>`.
- *    - Accessing `buffer` out of range with `operator[]` is unchecked and
- *      is the caller's responsibility.
- *    - Use `buffer.at(index)` if you need bounds-checked access.
+ * @tparam T Value type stored in the buffer.
  */
 template <typename T = double>
 class CircularBuffer
@@ -57,10 +58,24 @@ public:
   CircularBuffer& operator=(const CircularBuffer&) = default;
   CircularBuffer& operator=(CircularBuffer&&) noexcept = default;
 
+  /**
+   * @brief Construct a circular buffer with the default capacity.
+   */
   CircularBuffer() : buffer(size) {}
 
+  /**
+   * @brief Construct a circular buffer with a custom capacity.
+   *
+   * @param capacity Number of elements to retain in the buffer.
+   */
   explicit CircularBuffer(std::size_t capacity) : size(capacity), buffer(capacity) {}
 
+  /**
+   * @brief Add an element to the circular buffer.
+   *
+   * @param element The value to push into the buffer.
+   * @return T The same element that was added.
+   */
   T add(const T& element)
   {
     if (buffer.capacity() != size){

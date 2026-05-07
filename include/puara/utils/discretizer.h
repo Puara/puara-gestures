@@ -1,5 +1,11 @@
-#pragma once
+/**
+* @file discretizer.h
+* @brief Evaluates whether a new numeric value is different from the previous one from continuous input. 
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+*/
 
+#pragma once
 
 #include <limits>
 #include <type_traits>
@@ -8,20 +14,30 @@ namespace puara_gestures::utils
 {
 
 /**
- * @brief Simple change detector for numeric values.
+ * @class Discretizer
+ * @brief Detects when a numeric input value changes.
  *
- * This helper remembers the most recent input and reports whether a new
- * value is different from the previous one. It does not keep a history of
- * past values, only the current state.
+ * @details
+ * Discretizer stores the most recent input and reports whether a new value is
+ * different from the previous one. It is useful for debouncing repeated identical
+ * sensor or event values and only acting on actual changes.
  *
  * Example:
- *   Discretizer<int> detector;
- *   if (detector.isNew(reading)) {
- *     // first reading or changed value
+ * @code{.cpp}
+ *   puara_gestures::utils::Discretizer<int> detector;
+ *
+ *   if (detector.isNew(10)) {
+ *     // first value or changed value
  *   }
  *
- * This is useful when you want to ignore repeated identical sensor or event
- * readings, and only act when the value changes.
+ *   if (detector.isNew(10)) {
+ *     // same value, returns false
+ *   }
+ *
+ *   if (detector.isNew(15)) {
+ *     // value changed, returns true
+ *   }
+ * @endcode
  *
  * @tparam T Numeric type for the input values.
  */
@@ -33,11 +49,21 @@ private:
   bool firstValue; // Flag to track if it's the first value
 
 public:
-  // Constructor
+  /**
+   * @brief Construct a new Discretizer.
+   *
+   * @note The first value passed to `isNew()` is always considered new.
+   */
   Discretizer() : latestValue(std::numeric_limits<T>::lowest()), firstValue(true) {
   }
 
-  // Method to update the value and check for difference
+  /**
+   * @brief Update the detector and check whether the input changed.
+   *
+   * @param newValue The latest sampled value to compare against the previous one.
+   * @return true if this is the first value or if the value differs from the last one.
+   * @return false if the value is equal to the previous value.
+   */
   bool isNew(const T& newValue) {
     if (firstValue) {
       latestValue = newValue;
@@ -53,12 +79,20 @@ public:
     }
   }
 
-  // Method to get the latest value (const version)
+  /**
+   * @brief Get the most recently accepted value.
+   *
+   * @return const T& The latest input value stored by the detector.
+   */
   const T& getLatestValue() const {
     return latestValue;
   }
 
-  // Method to get the latest value (non-const version)
+  /**
+   * @brief Get a mutable reference to the most recently accepted value.
+   *
+   * @return T& The latest input value stored by the detector.
+   */
   T& getLatestValue() {
     return latestValue;
   }

@@ -1,9 +1,23 @@
 /**
+* @file madgwickQuaternion.h
+* @brief Madgwick AHRS filter for 9-DoF IMU orientation estimation.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+*/
+#pragma once
+
+#include <algorithm>
+#include <boost/math/constants/constants.hpp>
+#include <cmath>
+#include <cstdint>
+#include <puara/structs.h>
+#include <puara/utils/chrono.h>
+
+/**
  * @brief MadgwickQuaternionFilter for 9-DoF IMU orientation estimation.
  *
- * This header defines a lightweight Madgwick AHRS filter that consumes 9-DoF
+ * @details This header defines a lightweight Madgwick AHRS filter that consumes 9-DoF
  * IMU readings and produces a normalized quaternion representing orientation.
- *
  * It is based on the Madgwick AHRS algorithm implementation from the
  * x-io.co.uk open-source IMU/AHRS code. The filter uses accelerometer,
  * gyroscope and magnetometer data to fuse a stable quaternion estimate.
@@ -15,7 +29,7 @@
  * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
  *
  * Example:
- * @code
+ * @code{.cpp}
  *   #include <puara/descriptors/madgwickQuaternion.h>
  *
  *   void example() {
@@ -36,16 +50,6 @@
  *   }
  * @endcode
  */
-
-#pragma once
-
-
-#include <algorithm>
-#include <boost/math/constants/constants.hpp>
-#include <cmath>
-#include <cstdint>
-#include <puara/structs.h>
-#include <puara/utils/chrono.h>
 
 namespace puara_gestures {
 

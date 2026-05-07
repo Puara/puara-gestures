@@ -4,14 +4,21 @@
 * @see https://github.com/Puara/puara-gestures
 * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
 */
+#pragma once
+
+#include <cmath>
+#include <cstdint>
+#include <puara/structs.h>
+#include <puara/utils/chrono.h>
 
 /**
+ * 
  * @brief MahonyQuaternionFilter for 9-DoF IMU orientation estimation.
  *
- * A lightweight Mahony AHRS filter for 9-DoF IMU data. This implementation
- * uses accelerometer, gyroscope, and magnetometer data to maintain an
- * orientation quaternion. The filter blends gyroscope integration with
- * feedback from accelerometer/magnetometer error.
+ * @details A lightweight Mahony AHRS filter for 9-DoF IMU data. This 
+ * implementation uses accelerometer, gyroscope, and magnetometer data 
+ * to maintain an orientation quaternion. The filter blends gyroscope 
+ * integration with feedback from accelerometer/magnetometer error.
  *
  * Usage:
  * @li The class stores orientation as `puara_gestures::Quaternion`.
@@ -20,7 +27,7 @@
  * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
  *
  * Example:
- * @code
+ * @code{.cpp}
  *   puara_gestures::MahonyQuaternionFilter filter(1.0, 0.0);
  *   puara_gestures::Imu9Axis imu{
  *       {0.0, 0.0, 9.81},
@@ -35,14 +42,6 @@
  *   }
  * @endcode
  */
-
-#pragma once
-
-
-#include <cmath>
-#include <cstdint>
-#include <puara/structs.h>
-#include <puara/utils/chrono.h>
 
 namespace puara_gestures {
 

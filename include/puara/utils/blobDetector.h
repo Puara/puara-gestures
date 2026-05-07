@@ -1,5 +1,12 @@
+/**
+* @file blobDetector.h
+* @brief Detects contiguous runs of `1` values in a 1D binary array.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
 #pragma once
-
 
 namespace puara_gestures
 {
@@ -8,8 +15,13 @@ namespace puara_gestures
  * @class BlobDetector
  * @brief Detects contiguous runs of `1` values in a 1D binary array.
  *
+ * @details 
+ * This class records the start index, length, and center index for each
+ * contiguous group of `1` values, up to `maxNumBlobs` results.
+ * Additional blobs beyond the limit are ignored.
+ * 
  * Example:
- * @code
+ * @code{.cpp}
  * puara_gestures::BlobDetector<4> detector;
  * int data[] = {1, 1, 0, 1, 1, 1, 0};
  * detector.detect1D(data, 7);
@@ -20,10 +32,6 @@ namespace puara_gestures
  * // detector.blobStartPos[1] == 3
  * // detector.blobSize[1] == 3
  * @endcode
- *
- * This class records the start index, length, and center index for each
- * contiguous group of `1` values, up to `maxNumBlobs` results.
- * Additional blobs beyond the limit are ignored.
  *
  * @tparam maxNumBlobs Maximum number of blobs the detector will store.
  */

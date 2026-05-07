@@ -1,15 +1,13 @@
-//********************************************************************************//
-// Puara Gestures - Utilities - Chrono (.h)                                       //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-//                                                                                //
-// This file provides utility functions for high-resolution time measurements     //
-// function both on desktop and embedded platforms.                               //
-//********************************************************************************//
-
+/**
+ * @file chrono.h
+ * @brief High-resolution time measurement utilities for cross-platform use.
+ * @details
+ * This header defines portable helpers for monotonic timestamps in both
+ * native and embedded environments.
+ * @see https://github.com/Puara/puara-gestures
+ * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+ */
 #pragma once
-
 
 #include <chrono>
 
@@ -17,19 +15,22 @@ namespace puara_gestures::utils
 {
 
 /**
- *  @brief Simple function to get the current elapsed time in microseconds.
+ * @brief Get the current elapsed time in microseconds.
  *
- *  This helper is intended for portable use in both desktop and embedded
- *  test code that needs a monotonic timestamp. It returns the time since an
- *  arbitrary epoch and is not intended to represent "wall-clock" time.
+ * @details
+ * This helper is intended for portable use in both desktop and embedded
+ * test code that needs a monotonic timestamp. It returns the time since an
+ * arbitrary epoch and is not intended to represent "wall-clock" time.
  *
- *  Example:
- *    auto start = getCurrentTimeMicroseconds();
- *    // ... work ...
- *    auto end = getCurrentTimeMicroseconds();
- *    auto elapsed = end - start;
+ * Example:
+ * @code{.cpp}
+ *   auto start = puara_gestures::utils::getCurrentTimeMicroseconds();
+ *   // ... work ...
+ *   auto end = puara_gestures::utils::getCurrentTimeMicroseconds();
+ *   auto elapsed = end - start;
+ * @endcode
  *
- *    // elapsed is the duration in microseconds
+ * @return unsigned long long The current time in microseconds.
  */
 inline unsigned long long getCurrentTimeMicroseconds()
 {
@@ -39,6 +40,16 @@ inline unsigned long long getCurrentTimeMicroseconds()
   return duration.count();
 }
 
+/**
+ * @brief Get the current elapsed time in milliseconds.
+ *
+ * @details
+ * This helper is intended for portable use in both desktop and embedded
+ * test code that needs a monotonic timestamp. It returns the time since an
+ * arbitrary epoch and is not intended to represent "wall-clock" time.
+ *
+ * @return unsigned long long The current time in milliseconds.
+ */
 inline unsigned long long getCurrentTimeMilliseconds()
 {
   auto currentTimePoint = std::chrono::steady_clock::now();
