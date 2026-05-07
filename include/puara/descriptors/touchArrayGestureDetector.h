@@ -58,20 +58,50 @@ template <int maxNumBlobs, int touchSizeEdge>
 class TouchArrayGestureDetector
 {
 public:
-  //these four values are the average amount of touch for the entire touch array, as well as the top, middle and bottom parts.
-  float totalTouchAverage{};  // f, 0--1
-  float topTouchAverage{};    // f, 0--1
-  float middleTouchAverage{}; // f, 0--1
-  float bottomTouchAverage{}; // f, 0--1
+  /**
+   * @brief Average touch coverage over the entire touch array.
+   *
+   * Value is normalized between 0 and 1.
+   */
+  float totalTouchAverage{};
 
-  /** total amount of "brushing" gesture for all detected blobs on the touch array, in ~cm/s (distance between stripes = ~1.5cm) */
+  /**
+   * @brief Average touch coverage in the top region of the touch array.
+   */
+  float topTouchAverage{};
+
+  /**
+   * @brief Average touch coverage in the middle region of the touch array.
+   */
+  float middleTouchAverage{};
+
+  /**
+   * @brief Average touch coverage in the bottom region of the touch array.
+   */
+  float bottomTouchAverage{};
+
+  /**
+   * @brief Total amount of brush gesture motion across all detected blobs.
+   *
+   * Value is reported in approximate cm/s based on the array stripe spacing.
+   */
   float totalBrush{};
 
-  /** total amount of "rubbing" gesture for all detected blobs on the touch array, in ~cm/s (distance between stripes = ~1.5cm) */
+  /**
+   * @brief Total amount of rub gesture motion across all detected blobs.
+   *
+   * Value is reported in approximate cm/s based on the array stripe spacing.
+   */
   float totalRub{};
 
-  /** Expects an array of ints representing whether each discrete stripe in a touch array
-   *  is currently touched (==1) or not (==0), as well as the size of the touch array.
+  /**
+   * @brief Update the touch array detector with a new touch sample.
+   *
+   * This method computes average touch values for the full array and each
+   * region, detects contiguous blobs, and updates brush/rub motion values.
+   *
+   * @param touchArray Array of touch values where 1 means touched and 0 means not touched.
+   * @param touchSize Number of elements in the touch array.
    */
   void update(int* touchArray, int touchSize)
   {
@@ -97,6 +127,12 @@ private:
   BlobDetector<maxNumBlobs> blobDetector;
   BrushRubDetector brushRubDetector[maxNumBlobs];
 
+  /**
+   * @brief Recalculate the aggregated brush and rub totals for active blobs.
+   *
+   * This helper ignores zero-valued blobs so that only active motion
+   * contributes to the final totals.
+   */
   void updateTotalBrushAndRub()
   {
     // Calculate total brush and rub values

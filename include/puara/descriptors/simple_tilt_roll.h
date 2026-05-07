@@ -70,6 +70,10 @@ public:
   Tilt_Roll& operator=(const Tilt_Roll&) noexcept = default;
   Tilt_Roll& operator=(Tilt_Roll&&) noexcept = default;
 
+  /**
+   * @brief Construct a tilt/roll extractor tied to an external IMU sample.
+   * @param tied Pointer to a `Coord3D` containing accelerometer data.
+   */
   explicit Tilt_Roll(Coord3D* tied)
     : tied_x(&(tied->x))
     , tied_y(&(tied->y))
@@ -77,6 +81,14 @@ public:
   {
   }
 
+  /**
+   * @brief Update tilt and roll using raw accelerometer axes.
+   *
+   * @param accelx Accelerometer X axis value.
+   * @param accely Accelerometer Y axis value.
+   * @param accelz Accelerometer Z axis value.
+   * @return 1 when the update is processed.
+   */
   int update(double accelx, double accely, double accelz)
   {
     // calculate polar representation of accelerometer data
@@ -89,12 +101,24 @@ public:
     return 1;
   }
 
+  /**
+   * @brief Update tilt and roll from a `Coord3D` accelerometer sample.
+   * @param imu_data Accelerometer sample containing X, Y, and Z values.
+   * @return 1 when the update is processed.
+   */
   int update(Coord3D imu_data)
   {
     update(imu_data.x, imu_data.y, imu_data.z);
     return 1;
   }
 
+  /**
+   * @brief Update tilt and roll from the tied external IMU sample.
+   *
+   * This overload reads the current accelerometer values from the tied
+   * `Coord3D` pointers and computes the current orientation.
+   * @return 1 when the update is processed; 0 if no tied data is available.
+   */
   int update()
   {
     if(tied_x != nullptr || tied_y != nullptr || tied_z != nullptr)
@@ -109,21 +133,41 @@ public:
     }
   }
 
+  /**
+   * @brief Get the current tilt/roll orientation values.
+   * @return A `Simple_Orientation` containing roll, tilt, and magnitude.
+   */
   Simple_Orientation current_value() const
   {
     return Simple_Orientation{roll, tilt, magnitude};
   }
 
+  /**
+   * @brief Get the current roll value.
+   * @return Roll measurement in radians.
+   */
   double current_roll_value() const
   {
     return roll;
   }
 
+  /**
+   * @brief Get the current tilt value.
+   * @return Tilt measurement in radians.
+   */
   double current_tilt_value() const
   {
     return tilt;
   }
 
+  /**
+   * @brief Tie this object to external accelerometer data.
+   *
+   * After calling this, `update()` without parameters will read from
+   * the tied `Coord3D` source.
+   * @param new_tie Pointer to the external accelerometer coordinate source.
+   * @return 1 when the tie succeeds.
+   */
   int tie(Coord3D* new_tie)
   {
     tied_x = &(new_tie->x);

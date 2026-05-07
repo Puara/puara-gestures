@@ -21,25 +21,36 @@ namespace puara_gestures
  * feature extractor that reports the size of a recent jab movement.
  *
  * Example:
- *   double accel = 0.0;
- *   puara_gestures::Jab jab(&accel);
- *   jab.threshold = 3; // choose how strong the motion must be
+ * @code
+ * double accel = 0.0;
+ * puara_gestures::Jab jab(&accel);
+ * jab.threshold = 3; // choose how strong the motion must be
  *
- *   // in your sensor loop:
- *   accel = sensor.read();
- *   jab.update();
- *   double score = jab.current_value();
+ * // in your sensor loop:
+ * accel = sensor.read();
+ * jab.update();
+ * double score = jab.current_value();
+ * @endcode
  *
- *   // score grows when acceleration swings exceed the threshold.
- *
- * You can also use update(data) directly if you do not want to tie an external
- * variable. `Jab2D` and `Jab3D` follow the same pattern for 2D and 3D axes.
+ * You can also use `update(data)` directly if you do not want to tie an
+ * external variable. `Jab2D` and `Jab3D` follow the same pattern for 2D and 3D axes.
  */
 class Jab
 {
 public:
+  /**
+   * @brief Threshold for detected jab motion.
+   *
+   * A jab is reported when the difference between the monitored maximum and
+   * minimum values exceeds this threshold.
+   */
   int threshold{};
 
+  /**
+   * @brief Default constructor.
+   *
+   * Initializes the threshold to 5 and leaves the tied data pointer empty.
+   */
   Jab() noexcept
       : threshold(5)
       , tied_data(nullptr)
@@ -63,6 +74,15 @@ public:
   {
   }
 
+  /**
+   * @brief Update the jab detector using a direct input sample.
+   *
+   * The detector tracks recent minimum and maximum values and produces a
+   * compact intensity score when the axis motion exceeds the threshold.
+   *
+   * @param data Current value on the monitored axis.
+   * @return Computed jab score after update.
+   */
   double update(double data)
   {
     minmax.update(data);
@@ -87,12 +107,23 @@ public:
     return value;
   }
 
+  /**
+   * @brief Update the detector from a `Coord1D` sample.
+   * @param reading The sampled coordinate containing the X axis value.
+   * @return 1 when the update is processed.
+   */
   int update(Coord1D reading)
   {
     Jab::update(reading.x);
     return 1;
   }
 
+  /**
+   * @brief Update the detector using the tied external input value.
+   *
+   * @return 1 if the tied value exists and the update was processed;
+   *         0 otherwise.
+   */
   int update()
   {
     if(tied_data != nullptr)
@@ -107,8 +138,17 @@ public:
     }
   }
 
+  /**
+   * @brief Get the current jab score.
+   * @return The latest computed jab intensity value.
+   */
   double current_value() const { return value; }
 
+  /**
+   * @brief Connect the detector to an external `Coord1D` source.
+   * @param new_tie Pointer to the external coordinate struct.
+   * @return 1 when the tie succeeds.
+   */
   int tie(Coord1D* new_tie)
   {
     tied_data = &(new_tie->x);
@@ -131,16 +171,18 @@ private:
  * compact per-axis motion score instead of raw accelerometer values.
  *
  * Example:
- *   puara_gestures::Coord2D accel{0.0, 0.0};
- *   puara_gestures::Jab2D jab2d(&accel);
- *   jab2d.threshold(2);
+ * @code
+ * puara_gestures::Coord2D accel{0.0, 0.0};
+ * puara_gestures::Jab2D jab2d(&accel);
+ * jab2d.threshold(2);
  *
- *   // in your loop:
- *   accel.x = sensor.readX();
- *   accel.y = sensor.readY();
- *   jab2d.update();
- *   auto result = jab2d.current_value();
- *   // result.x and result.y contain the latest jab scores.
+ * // in your loop:
+ * accel.x = sensor.readX();
+ * accel.y = sensor.readY();
+ * jab2d.update();
+ * auto result = jab2d.current_value();
+ * // result.x and result.y contain the latest jab scores.
+ * @endcode
  */
 class Jab2D
 {
@@ -159,6 +201,12 @@ public:
   {
   }
 
+  /**
+   * @brief Update both X and Y jab detectors using direct input values.
+   * @param readingX X-axis acceleration reading.
+   * @param readingY Y-axis acceleration reading.
+   * @return 1 when the update is processed.
+   */
   int update(double readingX, double readingY)
   {
     x.update(readingX);
@@ -166,6 +214,11 @@ public:
     return 1;
   }
 
+  /**
+   * @brief Update both X and Y jab detectors from a coordinate sample.
+   * @param reading The sampled 2D coordinate.
+   * @return 1 when the update is processed.
+   */
   int update(Coord2D reading)
   {
     x.update(reading.x);
@@ -173,6 +226,10 @@ public:
     return 1;
   }
 
+  /**
+   * @brief Update both X and Y detectors using tied external input values.
+   * @return 1 when the update is processed.
+   */
   int update()
   {
     x.update();
@@ -180,7 +237,17 @@ public:
     return 1;
   }
 
+  /**
+   * @brief Adjust the detector frequency or smoothing behavior.
+   * @param freq Frequency value to apply.
+   * @return The frequency value that was set.
+   */
   double frequency(double freq);
+
+  /**
+   * @brief Get the current per-axis jab score.
+   * @return The current 2D jab values for X and Y.
+   */
   Coord2D current_value() const
   {
     Coord2D answer;
@@ -189,6 +256,11 @@ public:
     return answer;
   }
 
+  /**
+   * @brief Set a common threshold for both X and Y detectors.
+   * @param new_threshold Threshold value to apply.
+   * @return The threshold value that was set.
+   */
   double threshold(double new_threshold)
   {
     x.threshold = new_threshold;
@@ -205,17 +277,19 @@ public:
  * accelerometer motion.
  *
  * Example:
- *   puara_gestures::Coord3D accel{0.0, 0.0, 0.0};
- *   puara_gestures::Jab3D jab3d(&accel);
- *   jab3d.threshold(2);
+ * @code
+ * puara_gestures::Coord3D accel{0.0, 0.0, 0.0};
+ * puara_gestures::Jab3D jab3d(&accel);
+ * jab3d.threshold(2);
  *
- *   // in your loop:
- *   accel.x = sensor.readX();
- *   accel.y = sensor.readY();
- *   accel.z = sensor.readZ();
- *   jab3d.update();
- *   auto result = jab3d.current_value();
- *   // result.x, result.y and result.z hold jab intensities.
+ * // in your loop:
+ * accel.x = sensor.readX();
+ * accel.y = sensor.readY();
+ * accel.z = sensor.readZ();
+ * jab3d.update();
+ * auto result = jab3d.current_value();
+ * // result.x, result.y and result.z hold jab intensities.
+ * @endcode
  */
 class Jab3D
 {
@@ -235,6 +309,13 @@ public:
   {
   }
 
+  /**
+   * @brief Update the detectors using direct X/Y/Z input values.
+   * @param readingX X-axis acceleration reading.
+   * @param readingY Y-axis acceleration reading.
+   * @param readingZ Z-axis acceleration reading.
+   * @return 1 when the update is processed.
+   */
   int update(double readingX, double readingY, double readingZ)
   {
     x.update(readingX);
@@ -243,6 +324,11 @@ public:
     return 1;
   }
 
+  /**
+   * @brief Update the detectors from a 3D coordinate sample.
+   * @param reading The sampled 3D coordinate.
+   * @return 1 when the update is processed.
+   */
   int update(Coord3D reading)
   {
     x.update(reading.x);
@@ -251,6 +337,10 @@ public:
     return 1;
   }
 
+  /**
+   * @brief Update the detectors using tied external input values.
+   * @return 1 when the update is processed.
+   */
   int update()
   {
     x.update();
@@ -259,7 +349,17 @@ public:
     return 1;
   }
 
+  /**
+   * @brief Adjust the detector frequency or smoothing behavior.
+   * @param freq Frequency value to apply.
+   * @return The frequency value that was set.
+   */
   double frequency(double freq);
+
+  /**
+   * @brief Get the current 3D jab score.
+   * @return The latest computed jab values for X, Y, and Z.
+   */
   Coord3D current_value() const
   {
     Coord3D answer;
@@ -269,6 +369,11 @@ public:
     return answer;
   }
 
+  /**
+   * @brief Set a common threshold for X, Y, and Z jab detectors.
+   * @param new_threshold Threshold value to apply.
+   * @return The threshold value that was set.
+   */
   double threshold(double new_threshold)
   {
     x.threshold = new_threshold;

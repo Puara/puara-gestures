@@ -10,9 +10,16 @@ namespace puara_gestures
 
 /**
  * @brief Base class representing a generic touch feature.
+ *
  * This class provides a framework for interpreting touch features based on
  * movement input. It uses a leaky integrator for smoothing and allows derived
  * classes to define specific integration behavior.
+ *
+ * Example:
+ * @code
+ * Brush brush;
+ * brush.update(0.5);
+ * @endcode
  */
 class ValueIntegrator
 {
@@ -41,6 +48,11 @@ public:
   void reset() { value = 0; }
 
   double prevValue{};
+
+  /**
+   * @brief Update the feature with a new raw input value.
+   * @param newValue The new input sample used to compute the integrated value.
+   */
   void update(double newValue)
   {
     const auto delta = newValue - prevValue;
@@ -126,8 +138,15 @@ private:
 
 /**
  * @brief Derived class implementing the "brush" touch feature.
- * The feature value is a signed value that increases or
- * decreases based on the brush movement direction.
+ *
+ * The feature value is a signed value that increases or decreases based on the
+ * brush movement direction.
+ *
+ * Example:
+ * @code
+ * Brush brush;
+ * brush.update(0.7);
+ * @endcode
  */
 class Brush : public ValueIntegrator
 {
@@ -159,9 +178,16 @@ private:
 
 /**
  * @brief Derived class implementing the "rub" touch feature.
+ *
  * The feature value is based on the absolute value of movement. This increases
  * as the sensors are rubbed in any direction, making it ideal for detecting
  * bidirectional or multidirectional gestures.
+ *
+ * Example:
+ * @code
+ * Rub rub;
+ * rub.update(0.7);
+ * @endcode
  */
 class Rub : public ValueIntegrator
 {
@@ -191,12 +217,28 @@ private:
 
 //======================================================================
 
+/**
+ * @brief Detector that updates both brush and rub features.
+ *
+ * This class aggregates both `Brush` and `Rub` detectors and forwards a
+ * shared input value to each one.
+ *
+ * Example:
+ * @code
+ * BrushRubDetector detector;
+ * detector.update(0.5);
+ * @endcode
+ */
 class BrushRubDetector
 {
 public:
   Brush brush;
   Rub rub;
 
+  /**
+   * @brief Update both brush and rub features from a shared input.
+   * @param newData The new input value used by each detector.
+   */
   void update(double newData)
   {
     brush.update(newData);

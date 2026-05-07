@@ -55,14 +55,16 @@ public:
   using utils::Smooth::Smooth;
 
   /**
-   * @brief Calculates tilt (aka "pitch") measurement
+   * @brief Calculates tilt (aka "pitch") measurement.
    *
-   * @param accel Measured in G's
-   * @param gyro Measured in degrees/sec
-   * @param mag Measured in Gauss
-   * @param period_sec Measured in seconds
+   * This method updates the internal IMU orientation filter using the
+   * provided accelerometer, gyroscope, and magnetometer readings.
    *
-   * @return Output range of [- PI /2, PI /2]
+   * @param accel Accelerometer vector in G's.
+   * @param gyro Gyroscope vector in degrees per second.
+   * @param mag Magnetometer vector in Gauss.
+   * @param period_sec Time elapsed since the previous sample, in seconds.
+   * @return Tilt value in radians, in the range [-PI/2, PI/2].
    */
   double tilt(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec)
   {
@@ -74,7 +76,10 @@ public:
   }
 
   /**
-   * @brief Clears list of all previous inputs
+   * @brief Clear the internal smoothing history.
+   *
+   * This resets any previously accumulated smoothing state inherited from
+   * `utils::Smooth`.
    */
   void clear_smooth() { clear(); }
 };
