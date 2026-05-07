@@ -3,7 +3,7 @@ on:
   push:
 
 jobs:
-  build-project:
+  Desktop-OS-Tests:
     strategy:
       matrix:
         config:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
     steps:
       - name: Checkout Project
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: recursive
 
@@ -45,3 +45,147 @@ jobs:
         run: |
           cd build
           ctest -V -C Release
+
+  PlatformIO-Tests-with-3rd-Party-Libraries:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: |
+          pip install platformio
+
+      - name: Generate PlatformIO configuration
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          bash tests/generate-platformio.ini.sh $COMMIT_HASH
+
+      - name: Build PlatformIO project
+        run: |
+          cd tests/platformio
+          platformio run -e build_with_3rdparty_libs
+  
+      - name: Generate Wokwi config
+        run: |
+          cat > tests/platformio/wokwi.toml <<'EOF'
+          [wokwi]
+          version = 1
+          firmware = '.pio/build/build_with_3rdparty_libs/firmware.bin'
+          elf = '.pio/build/build_with_3rdparty_libs/firmware.elf'
+          EOF
+
+      - name: Generate Wokwi diagram.json
+        run: |
+          cat > tests/platformio/diagram.json <<'EOF'
+          {
+            "version": 1,
+            "editor": "wokwi",
+            "author": "puara-gestures",
+            "parts": [
+              {
+                "type": "wokwi-tinypico",
+                "id": "esp",
+                "attrs": {}
+              }
+            ],
+            "connections": [ 
+              [
+                "esp:TX0",
+                "$serialMonitor:RX",
+                ""
+              ],
+              [
+                "esp:RX0",
+                "$serialMonitor:TX",
+                ""
+              ]
+            ]
+          }
+          EOF
+      
+      - name: Simulate and test with Wokwi
+        uses: wokwi/wokwi-ci-action@v1
+        with:
+          token: ${{ secrets.WOKWI_CLI_TOKEN }}
+          path: tests/platformio  
+          timeout: 30000
+          expect_text: '=== EMBEDDED TESTS PASSED ==='   
+          
+  PlatformIO-Tests-with-Arduino-Librairies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install PlatformIO
+        run: |
+          pip install platformio
+
+      - name: Generate PlatformIO configuration
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          bash tests/generate-platformio.ini.sh $COMMIT_HASH
+
+      - name: Build PlatformIO project
+        run: |
+          cd tests/platformio
+          platformio run -e build_with_arduino_libs 
+
+      - name: Generate Wokwi config
+        run: |
+          cat > tests/platformio/wokwi.toml <<'EOF'
+          [wokwi]
+          version = 1
+          firmware = '.pio/build/build_with_arduino_libs/firmware.bin'
+          elf = '.pio/build/build_with_arduino_libs/firmware.elf'
+          EOF
+
+      - name: Generate Wokwi diagram.json
+        run: |
+          cat > tests/platformio/diagram.json <<'EOF'
+          {
+            "version": 1,
+            "editor": "wokwi",
+            "author": "puara-gestures",
+            "parts": [
+              {
+                "type": "wokwi-tinypico",
+                "id": "esp",
+                "attrs": {}
+              }
+            ],
+            "connections": [
+              [
+                "esp:TX0",
+                "$serialMonitor:RX",
+                ""
+              ],
+              [
+                "esp:RX0",
+                "$serialMonitor:TX",
+                ""
+              ]
+            ]
+          }
+          EOF
+
+      - name: Simulate and test with Wokwi
+        uses: wokwi/wokwi-ci-action@v1
+        with:
+          token: ${{ secrets.WOKWI_CLI_TOKEN }}
+          path: tests/platformio  
+          timeout: 30000
+          expect_text: '=== EMBEDDED TESTS PASSED ==='   

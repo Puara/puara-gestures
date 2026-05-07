@@ -1,3 +1,5 @@
+#pragma once
+
 #include <puara/utils.h>
 #include <puara/utils/leakyintegrator.h>
 

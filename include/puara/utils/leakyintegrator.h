@@ -1,29 +1,51 @@
-//********************************************************************************//
-// Puara Gestures - Utilities (.h)                                                //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
-
 #pragma once
 
-#include <chrono>
+
+#include <puara/utils/chrono.h>
+
 
 namespace puara_gestures::utils
 {
 /**
  *  @brief Simple leaky integrator implementation.
+ *
+ *  This class combines the current reading with a fraction of the previous
+ *  output, so the signal changes more smoothly over time.
+ *
+ *  Example:
+ *    puara_gestures::utils::LeakyIntegrator integrator(0.0, 0.0, 0.5, 0, 0);
+ *    double out1 = integrator.integrate(10.0); // 10.0
+ *    double out2 = integrator.integrate(17.0); // 17.0 + 10.0 * 0.5 = 22.0
+ *
+ *  `leak` controls memory: 0.0 ignores history, 1.0 fully retains it.
  */
 class LeakyIntegrator
 {
 public:
+  /**
+   * @brief The most recent filtered output.
+   */
   double current_value{};
+
+  /**
+   * @brief Previous integrator output used by the leak formula.
+   */
   double old_value{};
+
+  /**
+   * @brief Leak factor between 0 and 1.
+   */
   double leak{};
-  int frequency{}; // leaking frequency (Hz)
+
+  /**
+   * @brief Target update frequency in Hz. Use 0 or negative to disable timing.
+   */
+  int frequency{};
+
+  /**
+   * @brief Last update timestamp in milliseconds.
+   */
   unsigned long long timer{};
-  long long getCurrentTimeMicroseconds();
 
   explicit LeakyIntegrator(
       double currentValue = 0, double oldValue = 0, double leakValue = 0.5,
@@ -37,22 +59,22 @@ public:
   }
 
   /**
-   * @brief Call integrator
+   * @brief Integrate a new sample using the configured leak and frequency.
    *
-   * @param reading new value to add into the integrator
-   * @param custom_leak between 0 and 1
-   * @param time in microseconds
-   * @return double
+   * This behaves like an attenuator: each new reading is combined with a
+   * fraction of the previous value, controlled by `leak`.
+   *
+   * @param reading New value to add into the integrator.
+   * @param custom_leak Leak factor between 0 and 1.
+   * @param timerValue Reference to the current timer value, in milliseconds.
+   * @return The updated integrator output.
    */
 
   double integrate(
       double reading, double oldValue, double leakValue, int freq,
       unsigned long long& timerValue)
   {
-    auto currentTimePoint = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-        currentTimePoint.time_since_epoch());
-    unsigned long long current_time = duration.count();
+    const auto current_time = utils::getCurrentTimeMicroseconds();
 
     if(freq <= 0)
     {
@@ -88,3 +110,4 @@ public:
 };
 
 }
+

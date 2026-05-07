@@ -8,6 +8,7 @@
 
 #pragma once
 
+
 #include <puara/structs.h>
 
 #include <list>
@@ -16,52 +17,81 @@
 namespace puara_gestures::utils
 {
 /**
-  * @brief "Smoothing" algorithm takes the average of a given number of previous
-  * inputs. Can stabilize an erratic input stream.
-  */
+ * @brief Simple rolling average smoother for recent numeric values.
+ *
+ * Smooth stores the most recent values and returns their average. It is
+ * intended for stabilizing noisy sensor readings in a small moving window.
+ *
+ * Example:
+ *   Smooth smoother(5.0);
+ *   double filtered = smoother.smooth(rawValue);
+ *
+ * The public field `size` defines how many values are kept. When the window
+ * is full, the oldest reading is dropped as a new value arrives.
+ */
 class Smooth
 {
 public:
+  /**
+   * @brief History of the most recent values.
+   */
   std::list<double> list;
-  double size;
 
   /**
-   * @brief Constructor for Smooth class
-   *
-   * @param Size number of previous values that "smoother" object averages
+   * @brief Number of recent values to average.
    */
-  explicit Smooth(double Size = 50.)
+  std::size_t size = 0;
+
+  /**
+   * @brief Constructor for Smooth.
+   *
+   * @param Size Number of previous values to include in the average.
+   */
+  explicit Smooth(std::size_t Size = 50)
       : size(Size)
+      , sum(0.0)
   {
   }
 
   /**
-   * @brief Calls updateList then finds average of previous inputs
+   * @brief Smooth a new reading and return the rolling average.
    */
   double smooth(double reading)
   {
     updateList(reading);
-    double sumList = std::accumulate(list.begin(), list.end(), 0.0);
-    return (sumList / list.size());
+    if (list.empty())
+    {
+      return 0.0;
+    }
+    return (sum / static_cast<double>(list.size()));
   }
 
   /**
-  * @brief Updates list of previous inputs with current input
-  */
+   * @brief Update the rolling window with a new value.
+   */
   void updateList(double reading)
   {
     list.push_front(reading);
-    // ensure list stays at desired size
-    while(list.size() > size)
+    sum += reading;
+
+    while (list.size() > static_cast<std::size_t>(size))
     {
+      sum -= list.back();
       list.pop_back();
     }
   }
 
   /**
-   * @brief Clears list of all previous inputs
+   * @brief Clear the stored history and reset the sum.
    */
-  void clear() { list.clear(); }
+  void clear()
+  {
+    list.clear();
+    sum = 0.0;
+  }
+
+private:
+  double sum = 0.0;
 };
 
 }

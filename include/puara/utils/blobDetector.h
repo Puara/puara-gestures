@@ -1,30 +1,29 @@
 #pragma once
 
-#include <boost/container/small_vector.hpp>
 
 namespace puara_gestures
 {
 
 /**
  * @class BlobDetector
- * @brief A Class for detecting contiguous regions (blobs) of `1`s in binary arrays.
+ * @brief Detects contiguous runs of `1` values in a 1D binary array.
  *
- * The `BlobDetector` identifies contiguous blobs in a binary input array where elements are either
- * `0` or `1`.
- * For each blob, it computes:
- * - The start position (`blobStartPos`)
- * - The size in terms of consecutive `1`s (`blobSize`)
- * - The center index (`blobCenter`)
+ * Example:
+ *   puara_gestures::BlobDetector<4> detector;
+ *   int data[] = {1, 1, 0, 1, 1, 1, 0};
+ *   detector.detect1D(data, 7);
  *
- * @tparam maxNumBlobs The maximum number of blobs that the blob detector can detect at once.
+ *   // detector.blobCount == 2
+ *   // detector.blobStartPos[0] == 0
+ *   // detector.blobSize[0] == 2
+ *   // detector.blobStartPos[1] == 3
+ *   // detector.blobSize[1] == 3
  *
- * @warning Most of these values are reset when a detection function, e.g., detect1D(), is called,
- * and calculated during the detection funtion calls -- so their value is only really valid right
- * after such a call. There is no locking mechanism on any of these values so it is on the client
- * to ensure there is no race conditions.
+ * This class records the start index, length, and center index for each
+ * contiguous group of `1` values, up to `maxNumBlobs` results.
+ * Additional blobs beyond the limit are ignored.
  *
- * @note
- * - If the input contains more blobs than `maxNumBlobs`, the additional blobs are ignored.
+ * @tparam maxNumBlobs Maximum number of blobs the detector will store.
  */
 template <int maxNumBlobs>
 class BlobDetector
@@ -83,7 +82,7 @@ public:
 
       //continue the blob until we no longer have 1s
       int sizeCounter = 1;
-      while((stripe + sizeCounter) <= touchArraySize && touchArray[stripe + sizeCounter] == 1)
+      while((stripe + sizeCounter) < touchArraySize && touchArray[stripe + sizeCounter] == 1)
         ++sizeCounter;
 
       blobSize[blobCount] = sizeCounter;
