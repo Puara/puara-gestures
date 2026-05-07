@@ -51,7 +51,6 @@ REFERENCES_RELATION    = YES
 # HTML
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_TIMESTAMP         = YES
 HTML_DYNAMIC_SECTIONS  = NO
 
 # Dot/Graphviz
@@ -62,7 +61,6 @@ INTERACTIVE_SVG        = NO
 
 # Misc
 GENERATE_TAGFILE       = 
-GENERATE_PDF           = NO
 
 # Optional project logo or resources
 PROJECT_LOGO           = 
