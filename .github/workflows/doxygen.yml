@@ -7,8 +7,10 @@ permissions:
 
 on:
   push:
-  pull_request:
-    branches: [main]
+    branches: 
+      - main
+    tags:
+      - v*
 
 jobs:
   build-docs:
