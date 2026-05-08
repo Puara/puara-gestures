@@ -1,13 +1,12 @@
-//********************************************************************************//
-// Puara Gestures - Utilities (.h)                                                //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
-
+/**
+ * @file wrap.h
+ * @brief Unwrap and wrap utilities for angle normalization and continuity.
+ * @see https://github.com/Puara/puara-gestures
+ * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+ * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+ * @author Edu Meneses (2024) - https://www.edumeneses.com
+ */
 #pragma once
-
 
 #include <cmath>
 #include <boost/math/constants/constants.hpp>
@@ -19,20 +18,18 @@
 namespace puara_gestures::utils
 {
 /**
+ * @class Unwrap
  * @brief Convert wrapped angular values into a continuous angle stream.
  *
+ * @details
  * Unwrap is useful when you have a sequence of periodic measurements and
  * you want to recover a continuous value that keeps increasing or decreasing
  * across the wrap boundary.
  *
  * For example, if your input goes:
- * @code
- *   3.0, 3.1, -3.0, -2.9
- * @endcode
+ *   3.0, 3.1, -3.0, -2.9  (notice passage of -pi to +pi boundary here)
  * then the reported unwrapped values should be:
- * @code
- *   3.0, 3.1, 3.283..., 3.383...
- * @endcode
+ *   3.0, 3.1, 3.283..., 3.383... (notice the continuous increase without jumping back to -3.0)
  *
  * This class uses a simple threshold-based strategy: if the jump between
  * the new reading and the previous reading is larger than half the interval,
@@ -140,8 +137,10 @@ public:
 };
 
 /**
+ * @class Wrap
  * @brief Wrap a value into a periodic interval.
  *
+ * @details
  * Wrap is useful for angle normalization and other periodic ranges.
  * It maps a value into the half-open interval [min, max), where max is the
  * wrap boundary. That means `min` is included and `max` is treated as the

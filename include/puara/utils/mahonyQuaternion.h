@@ -12,7 +12,7 @@
 #include <puara/utils/chrono.h>
 
 /**
- * 
+ * @class MahonyQuaternionFilter 
  * @brief MahonyQuaternionFilter for 9-DoF IMU orientation estimation.
  *
  * @details A lightweight Mahony AHRS filter for 9-DoF IMU data. This 

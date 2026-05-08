@@ -1,10 +1,11 @@
-//********************************************************************************//
-// Puara Gestures - Jab (.h)                                                      //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
+/**
+ * @file jab.h
+ * @brief Identify directional motion from accelerometer data.
+ * @see https://github.com/Puara/puara-gestures
+ * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+ * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+ * @author Edu Meneses (2024) - https://www.edumeneses.com
+ */
 #pragma once
 
 #include <puara/structs.h>
@@ -14,7 +15,8 @@ namespace puara_gestures
 {
 
 /**
- * @brief Simple 1D jab detector.
+ * @class Jab
+ * @brief 1D directional impulse detector.
  *
  * @details
  * Use Jab to watch one acceleration axis and turn a quick change into a
@@ -165,8 +167,10 @@ private:
 };
 
 /**
- * @brief Simple 2D jab detector.
+ * @class Jab2D
+ * @brief 2D directional impulse detector.
  *
+ * @details
  * Jab2D combines two Jab detectors to report jab-like motion on X and Y.
  * It is useful when your sensor has two acceleration axes and you want a
  * compact per-axis motion score instead of raw accelerometer values.
@@ -271,8 +275,10 @@ public:
 };
 
 /**
- * @brief Simple 3D jab detector.
+ * @class Jab3D
+ * @brief 3D directional impulse detector.
  *
+ * @details
  * Jab3D combines three Jab detectors to watch X, Y and Z separately.
  * It is useful when you want a lightweight motion score for full 3D
  * accelerometer motion.

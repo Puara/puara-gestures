@@ -1,9 +1,9 @@
 /**
-* @file discretizer.h
-* @brief Evaluates whether a new numeric value is different from the previous one from continuous input. 
-* @see https://github.com/Puara/puara-gestures
-* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
-*/
+ * @file discretizer.h
+ * @brief Detects when a numeric input value changes from continuous input.
+ * @see https://github.com/Puara/puara-gestures
+ * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+ */
 
 #pragma once
 
@@ -15,7 +15,7 @@ namespace puara_gestures::utils
 
 /**
  * @class Discretizer
- * @brief Detects when a numeric input value changes.
+ * @brief Detects when a numeric input value changes from continuous input.
  *
  * @details
  * Discretizer stores the most recent input and reports whether a new value is

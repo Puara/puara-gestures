@@ -14,6 +14,7 @@
 #include <puara/utils/chrono.h>
 
 /**
+ * @class MadgwickQuaternionFilter
  * @brief MadgwickQuaternionFilter for 9-DoF IMU orientation estimation.
  *
  * @details This header defines a lightweight Madgwick AHRS filter that consumes 9-DoF

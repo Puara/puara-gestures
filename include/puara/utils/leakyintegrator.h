@@ -1,14 +1,20 @@
+/**
+* @file leakyintegrator.h
+* @brief Input smoothing with leak and timing control.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
 #pragma once
 
-
 #include <puara/utils/chrono.h>
-
-
+  
 namespace puara_gestures::utils
 {
 /**
  * @class LeakyIntegrator
- * @brief Simple leaky integrator implementation.
+ * @brief Input smoothing with leak and timing control.
  *
  * This class combines the current reading with a fraction of the previous
  * output, so the signal changes more smoothly over time.

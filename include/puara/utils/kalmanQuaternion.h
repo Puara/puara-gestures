@@ -1,6 +1,23 @@
 /**
+* @file kalmanQuaternion.h
+* @brief Simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+*/
+#pragma once
+
+#include <algorithm>
+#include <boost/math/constants/constants.hpp>
+#include <cmath>
+#include <cstdint>
+#include <puara/structs.h>
+#include <puara/utils/chrono.h>
+
+/**
+ * @class KalmanQuaternionFilter
  * @brief Simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
  *
+ * @details
  * This implementation performs gyro-based quaternion prediction and then
  * blends toward an accel/magnetometer-based orientation measurement.
  * It is intentionally compact and similar in usage style to the Madgwick and
@@ -28,16 +45,6 @@
  *   }
  * @endcode
  */
-
-#pragma once
-
-
-#include <algorithm>
-#include <boost/math/constants/constants.hpp>
-#include <cmath>
-#include <cstdint>
-#include <puara/structs.h>
-#include <puara/utils/chrono.h>
 
 namespace puara_gestures {
 

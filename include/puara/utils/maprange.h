@@ -1,11 +1,11 @@
-//********************************************************************************//
-// Puara Gestures - Utilities (.h)                                                //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
-
+/**
+ * @file maprange.h
+ * @brief Utilities for remapping values between numeric ranges.
+ * @see https://github.com/Puara/puara-gestures
+ * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+ * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+ * @author Edu Meneses (2024) - https://www.edumeneses.com
+ */
 #pragma once
 
 #include <puara/structs.h>
@@ -14,10 +14,12 @@ namespace puara_gestures::utils
 {
 
 /**
- *  @brief Simple class to remap values from one numeric range to another.
+ * @class MapRange
+ * @brief Simple class to remap values from one numeric range to another.
  *
- *  This helper is useful for scaling sensor values, normalizing feature inputs,
- *  or converting between coordinate ranges.
+ * @details
+ * This helper is useful for scaling sensor values, normalizing feature inputs,
+ * or converting between coordinate ranges.
  *
  *  Example usage:
  * @code
@@ -28,17 +30,20 @@ namespace puara_gestures::utils
  *   mapper.outMax = 1;
  *
  *   double normalized = mapper.range(512); // ~0.5
+ *   double normalized2 = mapper.range(1023); // 1.0
+ *   double normalized3 = mapper.range(0); // 0.0
  * @endcode
  *
- *  Notes:
- *    - `inMin` / `inMax` defines the input range.
- *    - `outMin` / `outMax` defines the output range.
- *    - If `outMin == outMax`, the output becomes constant at `outMin`.
- *    - If `inMax == inMin`, the implementation returns `outMin` to avoid a divide-by-zero.
- *    - Reversed ranges are supported: `inMin > inMax` inverts the input mapping, and
- *      `outMin > outMax` inverts the output direction.
+ * @note
+ *   - `inMin` / `inMax` defines the source range for the input value.
+ *   - `outMin` / `outMax` defines the target range for the mapped output.
+ *   - If `outMin == outMax`, every input maps to the constant value `outMin`.
+ *   - If `inMax == inMin`, the implementation returns `outMin` to avoid a divide-by-zero.
+ *   - Reversed ranges are supported:
+ *     - `inMin > inMax` inverts the direction of the input mapping.
+ *     - `outMin > outMax` inverts the direction of the output mapping.
  *
- *  The class also provides overloads for float and int values.
+ * The class also provides overloads for float and int values.
  */
 class MapRange
 {
