@@ -1,5 +1,10 @@
 name: Doxygen Documentation
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 on:
   push:
   pull_request:
@@ -55,3 +60,5 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v5
+        with:
+          token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
