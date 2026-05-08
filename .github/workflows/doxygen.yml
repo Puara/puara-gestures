@@ -43,18 +43,15 @@ jobs:
           path: docs/doxygen/html
 
       - name: Configure GitHub Pages
-        if: github.event_name == 'push' 
         uses: actions/configure-pages@v5
         with:
           token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
           enablement: true
 
       - name: Upload Pages artifact
-        if: github.event_name == 'push'
         uses: actions/upload-pages-artifact@v5
         with:
           path: docs/doxygen/html
 
       - name: Deploy to GitHub Pages
-        if: github.event_name == 'push'
         uses: actions/deploy-pages@v5
