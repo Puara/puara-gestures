@@ -1,3 +1,10 @@
+/**
+* @file structs.h
+* @brief Basic coordinate and sensor data structures used throughout puara-gestures.
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+*/
+
 #pragma once
 
 #include <vector>

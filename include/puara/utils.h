@@ -1,10 +1,11 @@
-//********************************************************************************//
-// Puara Gestures - Utilities (.h)                                                //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
+/**
+* @file utils.h
+* @brief Utility functions and helpers for gesture and sensor feature extraction.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
 
 #pragma once
 
