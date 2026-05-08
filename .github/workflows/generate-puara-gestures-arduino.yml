@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - v*
 
 #concurrency:
 #  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -38,8 +36,9 @@ jobs:
 
   push-arduino-library:
     runs-on: ubuntu-latest
-    # only runs this when we push on main --this is temporarily false to test the workflow, but it should be re-enabled before merging
-#   needs: compile-arduino-library
+    needs: compile-arduino-library
+    # only publish when a commit lands on main, not on every PR push
+    # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: push generated arduino library to puara-arduino repository
         uses: puara/actions/puara-gestures/push-arduino-library@main
