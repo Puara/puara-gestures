@@ -22,7 +22,7 @@ framework = arduino
 lib_deps = 
     $PUARA_GESTURES_PATH
     https://github.com/hideakitai/ArduinoEigen.git
-    https://github.com/Puara/IMU_Sensor_Fusion
+    https://github.com/malloch/IMU_Sensor_Fusion
 
 [env:build_with_arduino_libs]
 platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip
@@ -34,5 +34,5 @@ lib_deps =
     $PUARA_GESTURES_PATH
     https://github.com/hideakitai/ArduinoEigen.git
     https://github.com/sat-mtl/boost-embedded-190.git
-    https://github.com/Puara/IMU_Sensor_Fusion
+    https://github.com/malloch/IMU_Sensor_Fusion
 EOL
