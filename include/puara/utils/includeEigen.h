@@ -1,10 +1,12 @@
-// Puara Gestures - Include Eigen Header for Cross-Platform Compatibility
-// This header conditionally includes the appropriate Eigen headers based on 
-// the platform and available libraries. It ensures that the project can use
-// Eigen for linear algebra operations while maintaining compatibility with 
-// both Arduino and native C++ environments. 
+/**
+ * @file includeEigen.h
+ * @brief Include Eigen headers for Arduino or native C++ environments.
+ *
+ * @details
+ * This header conditionally includes `ArduinoEigen.h` when available,
+ * otherwise it falls back to standard Eigen headers.
+ */
 #pragma once
-
 
 #if __has_include(<ArduinoEigen.h>)
   #include <ArduinoEigen.h>

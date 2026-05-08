@@ -1,11 +1,8 @@
 name: Puara-Gestures Arduino CI
 on:
-  pull_request:
   push:
     branches:
       - main
-    tags:
-      - v*
 
 #concurrency:
 #  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

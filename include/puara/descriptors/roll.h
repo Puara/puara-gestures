@@ -1,26 +1,44 @@
-//********************************************************************************//
-// Puara Gestures - Roll (.h)                                                     //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-// Maggie Needham (2024)                                                          //
-//********************************************************************************//
-
+/**
+* @file roll.h
+* @brief Measure roll gestures using 3DoF data from accelerometer, gyroscope, and magnetometer.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+* @author Maggie Needham (2024)
+*/
 #pragma once
 
+#include <cmath>
 #include "IMU_Sensor_Fusion/imu_orientation.h"
 #include <puara/structs.h>
 #include <puara/utils.h>
 
-#include <cmath>
 
 namespace puara_gestures
 {
 
 /**
- * @brief This class measures roll gestures using 3DoF info from an accelerometer,
- * gyroscope, and magnetometer
+ * @class Roll
+ * @brief Measure roll gestures using 3DoF data from accelerometer, gyroscope, and magnetometer.
+ *
+ * @details This class wraps an IMU orientation filter and provides optional unwrap,
+ * smoothing, and wrapping helpers for roll values.
+ *
+ * Example:
+ * @code{.cpp}
+ * #include <puara/descriptors/roll.h>
+ *
+ * puara_gestures::Coord3D accel{0.0, 0.0, 1.0};
+ * puara_gestures::Coord3D gyro{0.0, 0.0, 0.0};
+ * puara_gestures::Coord3D mag{0.3, 0.0, 0.5};
+ * puara_gestures::Roll roll;
+ *
+ * double value = roll.roll(accel, gyro, mag, 0.01);
+ * double smoothValue = roll.smooth(value);
+ * @endcode
+ *
+ * @ingroup puara_gestures_descriptors
  */
 class Roll
 {
@@ -31,12 +49,10 @@ public:
   utils::Wrap wrapper;
 
   /**
-   * @brief Default constructor for Roll
+   * @brief Default construct a Roll detector.
    *
-   * @return Sets "unwrapper" object to undo the modulation effect around a
-   * range of [- PI, PI] due to the output range of IMU Orientation "roll"
-   * @return Sets "smoother" object to average the previous 50 objects
-   * @return Sets "wrapper" object to limit values to a [0, 2 * PI] range
+   * The default constructor configures unwrap to [-PI, PI], smoothing over 50
+   * samples, and wrapping to the range [0, 2*PI].
    */
   Roll()
       : unwrapper(-M_PI, M_PI)
@@ -46,9 +62,9 @@ public:
   }
 
   /**
-   * @brief Constructor for Roll
+   * @brief Construct a Roll detector with custom smoothing.
    *
-   * @param smoothValue number of previous values that "smoother" object averages
+   * @param smoothValue Number of previous values that the smoother averages.
    */
   explicit Roll(double smoothValue)
       : unwrapper(-M_PI, M_PI)
@@ -58,10 +74,10 @@ public:
   }
 
   /**
-   * @brief Constructor for Roll
+   * @brief Construct a Roll detector with custom wrapping range.
    *
-   * @param wrapMin minimum value of desired range for "wrapper" object
-   * @param wrapMax maximum value of desired range for "wrapper" object
+   * @param wrapMin Minimum value of the output wrap range.
+   * @param wrapMax Maximum value of the output wrap range.
    */
   Roll(double wrapMin, double wrapMax)
       : unwrapper(-M_PI, M_PI)
@@ -71,11 +87,11 @@ public:
   }
 
   /**
-   * @brief Constructor for Roll
+   * @brief Construct a Roll detector with custom smoothing and wrap range.
    *
-   * @param smoothValue number of previous values that "smoother" object averages
-   * @param wrapMin minimum value of desired range for "wrapper" object
-   * @param wrapMax maximum value of desired range for "wrapper" object
+   * @param smoothValue Number of previous values that the smoother averages.
+   * @param wrapMin Minimum value of the output wrap range.
+   * @param wrapMax Maximum value of the output wrap range.
    */
   Roll(double smoothValue, double wrapMin, double wrapMax)
       : unwrapper(-M_PI, M_PI)
@@ -85,14 +101,13 @@ public:
   }
 
   /**
-   * @brief Calculates side-to-side measurement of roll
+   * @brief Calculate the current roll angle from IMU data.
    *
-   * @param accel Measured in G's
-   * @param gyro Measured in degrees/sec
-   * @param mag Measured in Gauss
-   * @param period_sec Measured in seconds
-   *
-   * @return Output range of [- PI, PI]
+   * @param accel Accelerometer values in Gs.
+   * @param gyro Gyroscope values in degrees per second.
+   * @param mag Magnetometer values in Gauss.
+   * @param period_sec Time since the previous sample in seconds.
+   * @return Roll angle in radians, normally in the range [-PI, PI].
    */
   double roll(Coord3D accel, Coord3D gyro, Coord3D mag, double period_sec)
   {
@@ -104,32 +119,46 @@ public:
   }
 
   /**
-   * @brief Option to "unwrap" value so that consecutive rolls register as
-   * increases or decreases depending on direction, rather than "wrapping"
-   * around the given range
+   * @brief Unwrap a roll value to avoid discontinuities.
+   *
+   * This is useful when consecutive roll values should appear as a continuous
+   * increase or decrease instead of jumping at the wrap boundary.
+   *
+   * @param reading Roll value to unwrap.
+   * @return Unwrapped roll value.
    */
   double unwrap(double reading) { return unwrapper.unwrap(reading); }
 
   /**
-   * @brief Option to "smooth" value stream by taking the average of a given
-   * number of previous values
-   * Set to 50 in default Roll constructor
+   * @brief Smooth a roll value by averaging recent samples.
+   *
+   * The default smooth window is 50 samples.
+   * @param reading Roll value to smooth.
+   * @return Smoothed roll value.
    */
   double smooth(double reading) { return smoother.smooth(reading); }
 
   /**
-   * @brief Option to "wrap" values again to limit to a given range
-   * Set to [0, 2 * PI] in default Roll constructor
+   * @brief Wrap a roll value into the configured range.
+   *
+   * The default wrapping range is [0, 2 * PI].
+   * @param reading Roll value to wrap.
+   * @return Wrapped roll value.
    */
   double wrap(double reading) { return wrapper.wrap(reading); }
 
   /**
-   * @brief Resets accumulated value, sets object as "empty"
+   * @brief Reset unwrap state.
+   *
+   * Clears the internal unwrapping history so subsequent values are treated
+   * as a new sequence.
    */
   void clear_unwrap() { unwrapper.clear(); }
 
   /**
-   * @brief Clears list of all previous inputs
+   * @brief Clear the smoothing history.
+   *
+   * After this call, the smoother starts fresh without previously accumulated values.
    */
   void clear_smooth() { smoother.clear(); }
 };

@@ -235,7 +235,7 @@ TEST_CASE("BlobDetector handles full array blob", "[blobDetector]")
 }
 // calibration.h not is this file
 
-// chrono.h 
+// chrono.h
 TEST_CASE("getCurrentTimeMicroseconds is monotonic", "[utils]")
 {
     auto t0 = getCurrentTimeMicroseconds();
@@ -263,7 +263,7 @@ TEST_CASE("CircularBuffer retains most recent values", "[utils]")
     REQUIRE(buf.buffer[2] == Approx(2.0));
 }
 
-// discretizer.h 
+// discretizer.h
 TEST_CASE("Discretizer detects changes in data flow", "[utils]")
 {
     puara_gestures::utils::Discretizer detector;
@@ -374,7 +374,7 @@ TEST_CASE("Threshold clamps values to the specified range", "[utils]")
 
     REQUIRE(thresh.update(-2.0) == Approx(-1.0));
     REQUIRE(thresh.update(0.5) == Approx(0.5));
-    REQUIRE(thresh.update(-0.5) == Approx(-0.5));  
+    REQUIRE(thresh.update(-0.5) == Approx(-0.5));
 }
 
 

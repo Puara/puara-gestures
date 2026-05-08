@@ -470,7 +470,7 @@ static void testIMUFilters() {
         almostEqual(mahony.getQuaternion().x, 0.0) &&
         almostEqual(mahony.getQuaternion().y, 0.0) &&
         almostEqual(mahony.getQuaternion().z, 0.0) &&
-        almostEqual(mahony.lastUpdateMicros, 0);                    
+        almostEqual(mahony.lastUpdateMicros, 0);
 
   ok &= (mahony.updateWithTimestamp(imu, 0, true) == false);
   ok &= (mahony.updateWithTimestamp(imu, 1000, true) == false);
@@ -495,7 +495,7 @@ static void testIMUFilters() {
   kalman.reset();
   ok &= almostEqual(kalman.getQuaternion().w, 1.0) &&
         almostEqual(kalman.getQuaternion().x, 0.0) &&
-        almostEqual(kalman.getQuaternion().y, 0.0) && 
+        almostEqual(kalman.getQuaternion().y, 0.0) &&
         almostEqual(kalman.getQuaternion().z, 0.0) &&
         almostEqual(kalman.lastUpdateMicros, 0);
 
@@ -536,8 +536,8 @@ static void testEmbeddedMagnetometerCalibration() {
     puara_gestures::Imu9Axis raw{};
     raw.magn = samples[i];
     calib.applyMagnetometerCalibration(raw);
-    const double r = std::sqrt(calib.myCalIMU.magn.x * calib.myCalIMU.magn.x + 
-                              calib.myCalIMU.magn.y * calib.myCalIMU.magn.y + 
+    const double r = std::sqrt(calib.myCalIMU.magn.x * calib.myCalIMU.magn.x +
+                              calib.myCalIMU.magn.y * calib.myCalIMU.magn.y +
                               calib.myCalIMU.magn.z * calib.myCalIMU.magn.z);
     ok &= almostEqual(r, 1.0, 0.25);
   }
