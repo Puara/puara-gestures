@@ -23,6 +23,7 @@
  * x-io.co.uk open-source IMU/AHRS code. The filter uses accelerometer,
  * gyroscope and magnetometer data to fuse a stable quaternion estimate.
  *
+ * @ingroup puara_gestures_utils
  * Usage:
  * @li The class stores orientation as `puara_gestures::Quaternion`.
  * @li Input data is accepted through `puara_gestures::Imu9Axis`.

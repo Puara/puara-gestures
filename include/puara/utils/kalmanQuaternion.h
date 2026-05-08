@@ -17,6 +17,7 @@
  * @class KalmanQuaternionFilter
  * @brief Simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
  *
+ * @ingroup puara_gestures_utils
  * @details
  * This implementation performs gyro-based quaternion prediction and then
  * blends toward an accel/magnetometer-based orientation measurement.

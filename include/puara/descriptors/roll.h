@@ -37,6 +37,8 @@ namespace puara_gestures
  * double value = roll.roll(accel, gyro, mag, 0.01);
  * double smoothValue = roll.smooth(value);
  * @endcode
+ *
+ * @ingroup puara_gestures_descriptors
  */
 class Roll
 {

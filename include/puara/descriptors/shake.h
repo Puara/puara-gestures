@@ -40,6 +40,8 @@ namespace puara_gestures
  * motion calms down.
  *
  * `Shake2D` and `Shake3D` work the same way for two or three axes.
+ *
+ * @ingroup puara_gestures_descriptors
  */
 class Shake
 {

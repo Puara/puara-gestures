@@ -50,6 +50,8 @@ namespace puara_gestures
    *
    * If you prefer not to use `tied_data`, call `button.update(value)`
    * directly with the input value.
+   *
+   * @ingroup puara_gestures_descriptors
    */
 class Button
 {

@@ -20,6 +20,7 @@
  * to maintain an orientation quaternion. The filter blends gyroscope 
  * integration with feedback from accelerometer/magnetometer error.
  *
+ * @ingroup puara_gestures_utils
  * Usage:
  * @li The class stores orientation as `puara_gestures::Quaternion`.
  * @li Input data is accepted through `puara_gestures::Imu9Axis`.

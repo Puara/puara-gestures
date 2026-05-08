@@ -1,6 +1,11 @@
 /**
 * @file brushRub.h
 * @brief Simple "brush" and "rub" touch features based on movement input.
+* @details
+* This file contains touch feature integration helpers used by descriptor
+* classes that detect brush and rub motion.
+* @defgroup puara_gestures_descriptors Gesture descriptors
+* @ingroup puara_gestures
 * @see https://github.com/Puara/puara-gestures
 * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
 * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
@@ -20,6 +25,7 @@ namespace puara_gestures
  * @class ValueIntegrator
  * @brief Internal base class for brush/rub feature integration.
  *
+ * @ingroup puara_gestures_descriptors
  * @details
  * ValueIntegrator is an implementation detail used by the public `Brush`
  * and `Rub` classes below. It provides the shared leaky-integrator logic
@@ -149,6 +155,7 @@ private:
 /**
  * @class Brush
  * @brief "Brush" touch feature that integrates directional movement input.
+ * @ingroup puara_gestures_descriptors
  * @details The brush feature value increases with movement in a specific direction,
  * making it ideal for detecting directional gestures like swipes or strokes.
  *
@@ -189,6 +196,7 @@ private:
 /**
  * @class Rub
  * @brief "Rub" touch feature that integrates bidirectional movement input.
+ * @ingroup puara_gestures_descriptors
  *
  * @details The rub feature value is based on the absolute value of movement.
  * This increases as the sensors are rubbed in any direction, making it ideal
@@ -232,6 +240,7 @@ private:
 /**
  * @class BrushRubDetector
  * @brief Detector that updates both brush and rub features.
+ * @ingroup puara_gestures_descriptors
  * @details BrushRubDetector is a convenience class that combines both `Brush` and `Rub` features.
  * It allows you to update both features simultaneously from a shared input value.
  * This is useful when you want to track both directional and bidirectional movement features together.

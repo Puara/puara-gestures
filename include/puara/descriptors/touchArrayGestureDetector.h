@@ -58,6 +58,7 @@ namespace puara_gestures
  * element is either 1 (touch present) or 0 (no touch). After `update()` it
  * computes region averages and gesture motion values.
  *
+ * @ingroup puara_gestures_descriptors
  * @tparam maxNumBlobs The maximum number of touch blobs that can be detected.
  * @tparam touchSizeEdge The number of stripes reserved for the top and bottom regions.
  */

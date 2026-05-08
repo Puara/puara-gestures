@@ -15,9 +15,10 @@ namespace puara_gestures
 {
 
 /**
- * @class three_dof_tilt_roll
+ * @class Tilt_Roll
  * @brief Lightweight 3DoF tilt and roll extractor for IMUs without a magnetometer.
  *
+ * @ingroup puara_gestures_descriptors
  * @details This class computes tilt and roll from accelerometer data using a simple
  * trig-based approximation. It does not perform full attitude estimation or
  * magnetic heading correction, and it assumes the accelerometer is dominated by
@@ -26,6 +27,9 @@ namespace puara_gestures
  *
  * It can optionally use a tied `Coord3D` pointer so the caller may update raw
  * IMU data externally and then call `update()` without parameters.
+ *
+ * @note The `three_dof_tilt_roll` and `simple_tilt_roll` aliases are provided
+ * for backwards compatibility and refer to the same `Tilt_Roll` type.
  *
  * Example:
  * @code{.cpp}

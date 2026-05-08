@@ -44,6 +44,8 @@ namespace puara_gestures
  *   Serial.println(tiltValue);
  * }
  * @endcode
+ *
+ * @ingroup puara_gestures_descriptors
  */
 class Tilt : public utils::Smooth
 {

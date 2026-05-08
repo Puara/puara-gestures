@@ -1,6 +1,14 @@
 /**
 * @file utils.h
 * @brief Utility functions and helpers for gesture and sensor feature extraction.
+* @details
+* This file aggregates embedded-friendly utility helpers for sensor and gesture
+* processing, including filters, coordinate conversions, range mapping, and
+* quaternion-based orientation estimation.
+* @defgroup puara_gestures Puara Gestures
+* @brief Root group for the puara-gestures library.
+* @defgroup puara_gestures_utils Utility helpers
+* @ingroup puara_gestures
 * @see https://github.com/Puara/puara-gestures
 * @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
 * @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
@@ -146,7 +154,22 @@ namespace convert
 {
 
 /**
- * @brief Convert g's to m/s^2
+ * @namespace puara_gestures::utils::convert
+ * @brief Unit and coordinate conversion helpers for sensor and motion data.
+ *
+ * @details
+ * The `convert` namespace provides lightweight, embedded-friendly helpers
+ * for converting between common measurement units used in gesture and
+ * IMU processing, including acceleration, angular velocity, magnetic field,
+ * and spherical/cartesian coordinate systems.
+ *
+ * These functions are intended for simple, direct conversions and do not
+ * depend on external libraries beyond the core math utilities already used
+ * by the library.
+ */
+
+/**
+ * @brief Convert g's to m/s^2.
  *
  */
 inline double g_to_ms2(double reading)

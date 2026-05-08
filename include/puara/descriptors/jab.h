@@ -37,6 +37,8 @@ namespace puara_gestures
  *
  * You can also use `update(data)` directly if you do not want to tie an
  * external variable. `Jab2D` and `Jab3D` follow the same pattern for 2D and 3D axes.
+ *
+ * @ingroup puara_gestures_descriptors
  */
 class Jab
 {
