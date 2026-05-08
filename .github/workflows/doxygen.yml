@@ -46,7 +46,7 @@ jobs:
         if: github.event_name == 'push' 
         uses: actions/configure-pages@v5
         with:
-          token: ${{ secrets.PUARA_GESTURES_ARDUINO_REPO_TOKEN }}
+          token: ${{ secrets.PUARA_ARDUINO_REPO_TOKEN }}
           enablement: true
 
       - name: Upload Pages artifact
