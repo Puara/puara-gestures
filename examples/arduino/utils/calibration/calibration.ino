@@ -1,5 +1,32 @@
 // Puara Gestures - Embedded_Magnetometer_Calibration example
 //
+// Why calibrate a magnetometer?
+// -----------------------------
+// A magnetometer measures the Earth's magnetic field to provide an absolute
+// heading (yaw) reference — something accelerometers and gyroscopes alone
+// cannot supply.  Without it, any orientation filter (Madgwick, Mahony, …)
+// will drift in the yaw axis over time with no way to correct itself.
+//
+// The problem is that the raw readings are almost never a clean measure of
+// the Earth's field.  Two categories of distortion corrupt the signal:
+//
+//   Hard-iron distortion — permanent magnetic fields fixed to the PCB
+//     (battery, speaker, ferrite beads, DC motors).  They add a constant
+//     DC offset to every reading, shifting the sphere of readings off-centre.
+//
+//   Soft-iron distortion — nearby ferromagnetic materials (steel enclosures,
+//     screws) that bend the field lines.  They deform the sphere of readings
+//     into an ellipsoid, stretching or squashing individual axes.
+//
+// Calibration estimates and removes both effects:
+//   1. A hard-iron bias vector is subtracted to re-centre the data.
+//   2. A soft-iron scale matrix is applied to restore spherical symmetry.
+//
+// After calibration the sensor output is a consistent unit sphere regardless
+// of the device's orientation, which is what AHRS filters expect.  In
+// practice this turns a compass that is 20-40° off into one that is within
+// 1-3° — a significant difference for heading-sensitive applications.
+//
 // Workflow
 // --------
 //  1. On startup the device reads the magnetometer every loop iteration.
