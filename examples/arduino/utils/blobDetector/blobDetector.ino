@@ -4,7 +4,7 @@
 // you can watch the blob information change in the Serial Monitor.
 
 #include <Arduino.h>
-#include <puara/utils/blobDetector.h>
+#include <puara_gestures.cpp>
 
 static const int DATA_SIZE = 10;
 static const int MAX_BLOBS = 4;
