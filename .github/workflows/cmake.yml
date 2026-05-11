@@ -1,6 +1,6 @@
 name: Build
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   Desktop-OS-Tests:
