@@ -1,9 +1,10 @@
-//********************************************************************************//
-// Puara Gestures - Sensor fusion and gestural descriptors algorithms             //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-//********************************************************************************//
+/**
+* @file gestures.h
+* @brief Sensor fusion and gestural descriptors algorithms.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+*/
 
 #pragma once
 

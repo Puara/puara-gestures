@@ -1,19 +1,42 @@
+/**
+* @file brushRub.h
+* @brief Simple "brush" and "rub" touch features based on movement input.
+* @details
+* This file contains touch feature integration helpers used by descriptor
+* classes that detect brush and rub motion.
+* @defgroup puara_gestures_descriptors Gesture descriptors
+* @ingroup puara_gestures
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
 #pragma once
 
+#include <cmath>
 #include <puara/utils.h>
 #include <puara/utils/leakyintegrator.h>
 
-#include <cmath>
 
 namespace puara_gestures
 {
 
 /**
- * @brief Base class representing a generic touch feature.
- * This class provides a framework for interpreting touch features based on
- * movement input. It uses a leaky integrator for smoothing and allows derived
- * classes to define specific integration behavior.
+ * @class ValueIntegrator
+ * @brief Internal base class for brush/rub feature integration.
+ *
+ * @ingroup puara_gestures_descriptors
+ * @details
+ * ValueIntegrator is an implementation detail used by the public `Brush`
+ * and `Rub` classes below. It provides the shared leaky-integrator logic
+ * and handles tied input values, while the derived classes define how
+ * movement is converted into a brush or rub feature.
+ *
+ * @note
+ * This class is not intended to be used directly by most library users.
+ * See `Brush` and `Rub` later in this file for the public touch feature API.
  */
+
 class ValueIntegrator
 {
 public:
@@ -41,6 +64,11 @@ public:
   void reset() { value = 0; }
 
   double prevValue{};
+
+  /**
+   * @brief Update the feature with a new raw input value.
+   * @param newValue The new input sample used to compute the integrated value.
+   */
   void update(double newValue)
   {
     const auto delta = newValue - prevValue;
@@ -125,9 +153,17 @@ private:
 //======================================================================
 
 /**
- * @brief Derived class implementing the "brush" touch feature.
- * The feature value is a signed value that increases or
- * decreases based on the brush movement direction.
+ * @class Brush
+ * @brief "Brush" touch feature that integrates directional movement input.
+ * @ingroup puara_gestures_descriptors
+ * @details The brush feature value increases with movement in a specific direction,
+ * making it ideal for detecting directional gestures like swipes or strokes.
+ *
+ * @code
+ * Brush brush;
+ * brush.update(0.7);
+ * double brushValue = brush.value; // Access the brush feature value
+ * @endcode
  */
 class Brush : public ValueIntegrator
 {
@@ -158,10 +194,20 @@ private:
 //======================================================================
 
 /**
- * @brief Derived class implementing the "rub" touch feature.
- * The feature value is based on the absolute value of movement. This increases
- * as the sensors are rubbed in any direction, making it ideal for detecting
- * bidirectional or multidirectional gestures.
+ * @class Rub
+ * @brief "Rub" touch feature that integrates bidirectional movement input.
+ * @ingroup puara_gestures_descriptors
+ *
+ * @details The rub feature value is based on the absolute value of movement.
+ * This increases as the sensors are rubbed in any direction, making it ideal
+ * for detecting bidirectional or multidirectional gestures.
+ *
+ * Example:
+ * @code
+ * Rub rub;
+ * rub.update(0.7);
+ * double rubValue = rub.value; // Access the rub feature value
+ * @endcode
  */
 class Rub : public ValueIntegrator
 {
@@ -191,12 +237,32 @@ private:
 
 //======================================================================
 
+/**
+ * @class BrushRubDetector
+ * @brief Detector that updates both brush and rub features.
+ * @ingroup puara_gestures_descriptors
+ * @details BrushRubDetector is a convenience class that combines both `Brush` and `Rub` features.
+ * It allows you to update both features simultaneously from a shared input value.
+ * This is useful when you want to track both directional and bidirectional movement features together.
+ *
+ * Example:
+ * @code
+ * BrushRubDetector detector;
+ * detector.update(0.5);
+ * double brushValue = detector.brush.value; // Access the brush feature value
+ * double rubValue = detector.rub.value;     // Access the rub feature value
+ * @endcode
+ */
 class BrushRubDetector
 {
 public:
   Brush brush;
   Rub rub;
 
+  /**
+   * @brief Update both brush and rub features from a shared input.
+   * @param newData The new input value used by each detector.
+   */
   void update(double newData)
   {
     brush.update(newData);

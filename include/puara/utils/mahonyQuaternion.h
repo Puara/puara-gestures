@@ -1,31 +1,48 @@
-/*
- * MahonyQuaternionFilter
- * ----------------------
- *
- * A lightweight Mahony AHRS filter for 9-DoF IMU data.
- * This implementation uses accelerometer, gyroscope, and magnetometer
- * data to maintain an orientation quaternion. The filter blends gyroscope
- * integration with feedback from accelerometer/magnetometer errors.
- *
- * Usage:
- *   - The class stores orientation as `puara_gestures::Quaternion`.
- *   - Input data is accepted through `puara_gestures::Imu9Axis`.
- *   - Gyroscope values are assumed to be in radians/sec by default.
- *   - Use `gyroDegrees = true` when gyro values are in degrees/sec.
- *
- * Example:
- *   puara_gestures::MahonyQuaternionFilter filter(1.0, 0.0);
- *   puara_gestures::Imu9Axis imu{ {0.0, 0.0, 9.81}, {1.0, 2.0, 3.0}, {0.3, 0.0, 0.5} };
- *   bool ok = filter.update(imu, true);
- */
-
+/**
+* @file mahonyQuaternion.h
+* @brief Mahony AHRS filter for 9-DoF IMU orientation estimation.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+*/
 #pragma once
-
 
 #include <cmath>
 #include <cstdint>
 #include <puara/structs.h>
 #include <puara/utils/chrono.h>
+
+/**
+ * @class MahonyQuaternionFilter 
+ * @brief MahonyQuaternionFilter for 9-DoF IMU orientation estimation.
+ *
+ * @details A lightweight Mahony AHRS filter for 9-DoF IMU data. This 
+ * implementation uses accelerometer, gyroscope, and magnetometer data 
+ * to maintain an orientation quaternion. The filter blends gyroscope 
+ * integration with feedback from accelerometer/magnetometer error.
+ *
+ * @ingroup puara_gestures_utils
+ * Usage:
+ * @li The class stores orientation as `puara_gestures::Quaternion`.
+ * @li Input data is accepted through `puara_gestures::Imu9Axis`.
+ * @li Gyroscope values are assumed to be in radians/sec by default.
+ * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
+ *
+ * Example:
+ * @code{.cpp}
+ *   puara_gestures::MahonyQuaternionFilter filter(1.0, 0.0);
+ *   puara_gestures::Imu9Axis imu{
+ *       {0.0, 0.0, 9.81},
+ *       {1.0, 2.0, 3.0},
+ *       {0.3, 0.0, 0.5}
+ *   };
+ *
+ *   if (filter.update(imu, true)) {
+ *       double roll, pitch, yaw;
+ *       filter.getEulerDegrees(roll, pitch, yaw);
+ *       // use roll/pitch/yaw values for control, visualization, or gesture detection
+ *   }
+ * @endcode
+ */
 
 namespace puara_gestures {
 

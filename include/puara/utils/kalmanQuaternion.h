@@ -1,28 +1,10 @@
-/*
- * KalmanQuaternionFilter
- * -----------------------
- *
- * A simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
- * This implementation performs gyro-based quaternion prediction and then
- * blends toward an accel/magnetometer-based orientation measurement.
- *
- * It is intentionally compact and similar in usage style to the Madgwick
- * and Mahony filters in this project.
- *
- * Usage:
- *   - The class stores orientation as `puara_gestures::Quaternion`.
- *   - Input data is accepted through `puara_gestures::Imu9Axis`.
- *   - Gyroscope values are assumed to be in radians/sec by default.
- *   - Use `gyroDegrees = true` when gyro values are in degrees/sec.
- *
- * Example:
- *   puara_gestures::KalmanQuaternionFilter filter(0.001, 0.01);
- *   puara_gestures::Imu9Axis imu{ {0.0, 0.0, 9.81}, {1.0, 2.0, 3.0}, {0.3, 0.0, 0.5} };
- *   bool ok = filter.update(imu, true);
- */
-
+/**
+* @file kalmanQuaternion.h
+* @brief Simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+*/
 #pragma once
-
 
 #include <algorithm>
 #include <boost/math/constants/constants.hpp>
@@ -30,6 +12,40 @@
 #include <cstdint>
 #include <puara/structs.h>
 #include <puara/utils/chrono.h>
+
+/**
+ * @class KalmanQuaternionFilter
+ * @brief Simplified Kalman-style quaternion filter for 9-DoF IMU orientation.
+ *
+ * @ingroup puara_gestures_utils
+ * @details
+ * This implementation performs gyro-based quaternion prediction and then
+ * blends toward an accel/magnetometer-based orientation measurement.
+ * It is intentionally compact and similar in usage style to the Madgwick and
+ * Mahony filters in this project.
+ *
+ * Usage:
+ * @li The class stores orientation as `puara_gestures::Quaternion`.
+ * @li Input data is accepted through `puara_gestures::Imu9Axis`.
+ * @li Gyroscope values are assumed to be in radians/sec by default.
+ * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
+ *
+ * Example:
+ * @code
+ *   puara_gestures::KalmanQuaternionFilter filter(0.001, 0.01);
+ *   puara_gestures::Imu9Axis imu{
+ *       {0.0, 0.0, 9.81},
+ *       {1.0, 2.0, 3.0},
+ *       {0.3, 0.0, 0.5}
+ *   };
+ *   bool ok = filter.update(imu, true);
+ *   if (ok) {
+ *       auto q = filter.getQuaternion();
+ *       double roll, pitch, yaw;
+ *       filter.getEulerDegrees(roll, pitch, yaw);
+ *   }
+ * @endcode
+ */
 
 namespace puara_gestures {
 
@@ -91,7 +107,7 @@ struct KalmanQuaternionFilter {
         pitch *= RadToDeg;
         yaw *= RadToDeg;
     }
-  // updateWithTimestamp is exposed for testing with synthetic timestamps, but 
+  // updateWithTimestamp is exposed for testing with synthetic timestamps, but
   // typical usage is to call update() with real-time data.
     bool updateWithTimestamp(const Imu9Axis& imu, uint64_t currentMicros, bool gyroDegrees) {
         if (currentMicros == 0) {

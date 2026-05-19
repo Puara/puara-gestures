@@ -1,11 +1,12 @@
-//********************************************************************************//
-// Puara Gestures - Embedded Magnetometer Calibration (.h)
-// https://github.com/Puara/puara-gestures
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca
-//********************************************************************************//
+/**
+* @file magnetometerCalibration_MinMaxScaling.h
+* @brief Embedded-friendly magnetometer calibration helper.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Charles Bicari (2026)
+*/
 
 #pragma once
-
 
 #include <algorithm>
 #include <array>
@@ -19,11 +20,31 @@ namespace puara_gestures::utils
 {
 
 /**
+ * @class Embedded_Magnetometer_Calibration
  * @brief Embedded-friendly magnetometer calibration helper.
  *
- * This implementation preserves the same public API as the desktop
+ * @details This implementation preserves the same public API as the desktop
  * calibration path, but avoids heavy dynamic Eigen workloads by using a
  * simplified hard-iron / soft-iron estimate and a fixed sample count.
+ *
+ * Example:
+ * @code{.cpp}
+ *   puara_gestures::utils::Embedded_Magnetometer_Calibration calibrator(100);
+ *   std::vector<puara_gestures::Coord3D> samples;
+ *
+ *   // fill samples with raw magnetometer readings collected during motion
+ *   // e.g. from a 3-axis magnetometer on a wearable sensor.
+ *   samples.push_back({0.3, 0.1, 0.5});
+ *   samples.push_back({-0.2, 0.4, 0.6});
+ *   // ... collect more samples until you have enough data
+ *
+ *   if (calibrator.generateMagnetometerMatrices(samples.data(), samples.size())) {
+ *       puara_gestures::Imu9Axis imu;
+ *       imu.magn = samples[0];
+ *       calibrator.applyMagnetometerCalibration(imu);
+ *       // imu.magn now contains calibrated magnetometer values
+ *   }
+ * @endcode
  */
 class Embedded_Magnetometer_Calibration
 {

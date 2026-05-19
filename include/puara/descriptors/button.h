@@ -1,3 +1,13 @@
+/**
+* @file button.h
+* @brief Helper to identify taps, double taps, triple taps, counts and holds from discrete button inputs.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
+
+
 #pragma once
 
 #include <puara/utils.h>
@@ -5,8 +15,8 @@
 namespace puara_gestures
 {
   /**
-   * @file button.h
-   * @brief Simple helper for discrete button inputs to identify taps, double 
+   * @class Button
+   * @brief Simple helper for discrete button inputs to identify taps, double
    * taps, triple taps, counts and holds.
    *
    * Example usage with tied data:
@@ -40,15 +50,21 @@ namespace puara_gestures
    *
    * If you prefer not to use `tied_data`, call `button.update(value)`
    * directly with the input value.
+   *
+   * @ingroup puara_gestures_descriptors
    */
 class Button
 {
 private:
-  // long long getCurrentTimeMicroseconds();
   long timer = 0;
   const int* tied_data{};
 
 public:
+  /**
+   * @brief Default-construct a Button without tied input data.
+   *
+   * Use `update(value)` to provide input directly.
+   */
   Button() noexcept
   : tied_data(nullptr)
   {
@@ -59,11 +75,20 @@ public:
   Button& operator=(const Button&) noexcept = default;
   Button& operator=(Button&&) noexcept = default;
 
+  /**
+   * @brief Construct a Button tied to external input data.
+   *
+   * When tied, calling `update()` reads the current value from `tied_data`.
+   * @param tied Pointer to an external integer source for button input.
+   */
   explicit Button(int* tied)
   : tied_data(tied)
   {
   }
 
+  /**
+   * @brief Number of button press events counted during the current detection window.
+   */
   unsigned int count = 0;
   bool press = false;
   unsigned int tap = 0;
@@ -75,6 +100,12 @@ public:
   unsigned int countInterval = 200;
   unsigned int holdInterval = 5000;
 
+  /**
+   * @brief Update the button from a direct input value.
+   *
+   * This method updates internal tap/hold state using the provided value.
+   * @param value Current button input value.
+   */
   void update(int value)
   {
     long currentTime = puara_gestures::utils::getCurrentTimeMicroseconds() / 1000LL;
@@ -136,6 +167,12 @@ public:
     }
   }
 
+  /**
+   * @brief Update the button from the tied external input value.
+   *
+   * This overload reads the latest input from `tied_data` and processes it.
+   * @return 1 when update succeeds; 0 if no tied input is available.
+   */
   int update()
   {
     if(tied_data != nullptr)

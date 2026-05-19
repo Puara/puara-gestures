@@ -1,23 +1,34 @@
+/**
+* @file leakyintegrator.h
+* @brief Input smoothing with leak and timing control.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
 #pragma once
 
-
 #include <puara/utils/chrono.h>
-
-
+  
 namespace puara_gestures::utils
 {
 /**
- *  @brief Simple leaky integrator implementation.
+ * @class LeakyIntegrator
+ * @brief Input smoothing with leak and timing control.
  *
- *  This class combines the current reading with a fraction of the previous
- *  output, so the signal changes more smoothly over time.
+ * This class combines the current reading with a fraction of the previous
+ * output, so the signal changes more smoothly over time.
  *
- *  Example:
- *    puara_gestures::utils::LeakyIntegrator integrator(0.0, 0.0, 0.5, 0, 0);
- *    double out1 = integrator.integrate(10.0); // 10.0
- *    double out2 = integrator.integrate(17.0); // 17.0 + 10.0 * 0.5 = 22.0
+ * Example:
+ * @code
+ *   puara_gestures::utils::LeakyIntegrator integrator(0.0, 0.0, 0.5, 0, 0);
+ *   double out1 = integrator.integrate(10.0); // out1 == 10.0
+ *   double out2 = integrator.integrate(17.0); // out2 == 22.0, because 17 + 10*0.5
+ *   double out3 = integrator.integrate(5.0);  // out3 == 16.0, because 5 + 22*0.5
+ * @endcode
  *
- *  `leak` controls memory: 0.0 ignores history, 1.0 fully retains it.
+ *  In this example the integrator keeps half of the previous output on each step.
+ *  A `leak` of 0.0 ignores history, and 1.0 fully retains it.
  */
 class LeakyIntegrator
 {

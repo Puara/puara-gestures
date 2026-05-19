@@ -1,22 +1,37 @@
-/*
- * MadgwickQuaternionFilter
- * ------------------------
+/**
+* @file madgwickQuaternion.h
+* @brief Madgwick AHRS filter for 9-DoF IMU orientation estimation.
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+*/
+#pragma once
+
+#include <algorithm>
+#include <boost/math/constants/constants.hpp>
+#include <cmath>
+#include <cstdint>
+#include <puara/structs.h>
+#include <puara/utils/chrono.h>
+
+/**
+ * @class MadgwickQuaternionFilter
+ * @brief MadgwickQuaternionFilter for 9-DoF IMU orientation estimation.
  *
- * This header defines a lightweight Madgwick AHRS filter that consumes 9-DoF
+ * @details This header defines a lightweight Madgwick AHRS filter that consumes 9-DoF
  * IMU readings and produces a normalized quaternion representing orientation.
- *
  * It is based on the Madgwick AHRS algorithm implementation from the
  * x-io.co.uk open-source IMU/AHRS code. The filter uses accelerometer,
  * gyroscope and magnetometer data to fuse a stable quaternion estimate.
  *
+ * @ingroup puara_gestures_utils
  * Usage:
- *   - The class stores orientation as `puara_gestures::Quaternion`.
- *   - Input data is accepted through `puara_gestures::Imu9Axis`.
- *   - By default, gyroscope data is expected in radians/sec.
- *   - Use `gyroDegrees = true` when gyro values are in degrees/sec.
+ * @li The class stores orientation as `puara_gestures::Quaternion`.
+ * @li Input data is accepted through `puara_gestures::Imu9Axis`.
+ * @li By default, gyroscope data is expected in radians/sec.
+ * @li Use `gyroDegrees = true` when gyro values are in degrees/sec.
  *
  * Example:
- *
+ * @code{.cpp}
  *   #include <puara/descriptors/madgwickQuaternion.h>
  *
  *   void example() {
@@ -35,17 +50,8 @@
  *           filter.getEulerDegrees(roll, pitch, yaw);
  *       }
  *   }
+ * @endcode
  */
-
-#pragma once
-
-
-#include <algorithm>
-#include <boost/math/constants/constants.hpp>
-#include <cmath>
-#include <cstdint>
-#include <puara/structs.h>
-#include <puara/utils/chrono.h>
 
 namespace puara_gestures {
 
@@ -168,7 +174,7 @@ private:
         // Sebastian O.H. Madgwick
         // April 30, 2010
         // http://www.x-io.co.uk/open-source-imu-and-ahrs-algorithms/
-        
+
         double recipNorm = 0.0;
         double s0 = 0.0, s1 = 0.0, s2 = 0.0, s3 = 0.0;
         double qDot1 = 0.0, qDot2 = 0.0, qDot3 = 0.0, qDot4 = 0.0;

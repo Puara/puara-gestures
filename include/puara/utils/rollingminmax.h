@@ -1,16 +1,15 @@
-//********************************************************************************//
-// Puara Gestures - Utilities (.h)                                                //
-// https://github.com/Puara/puara-gestures                                        //
-// Société des Arts Technologiques (SAT) - https://sat.qc.ca                      //
-// Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org //
-// Edu Meneses (2024) - https://www.edumeneses.com                                //
-//********************************************************************************//
-
+/**
+* @file rollingminmax.h
+* @brief Rolling Min/Max Tracker for Puara Gestures
+* @see https://github.com/Puara/puara-gestures
+* @author Société des Arts Technologiques (SAT) - https://sat.qc.ca
+* @author Input Devices and Music Interaction Laboratory (IDMIL) - https://www.idmil.org
+* @author Edu Meneses (2024) - https://www.edumeneses.com
+*/
 #pragma once
 
-
-#include <puara/utils/circularbuffer.h>
 #include <puara/structs.h>
+#include <puara/utils/circularbuffer.h>
 
 namespace puara_gestures::utils
 {
@@ -19,20 +18,21 @@ template <typename T>
 /**
  * @brief Tracks the min and max values over the last N updates.
  *
- * RollingMinMax stores at most `buffer_size` values and recomputes the
+ * @details RollingMinMax stores at most `buffer_size` values and recomputes the
  * minimum and maximum each time a new value is added.
- *
  * This is useful for sliding-window feature extraction in gesture or
  * sensor processing, where you want the current range of recent values.
  *
  * Example:
- *   RollingMinMax<int> window(3);
+ * @code{.cpp}
+ *   puara_gestures::utils::RollingMinMax<int> window(3);
  *   window.update(10);
  *   window.update(4);
- *   auto range = window.update(7);  //update() returns MinMax struct from puara structs.h
- * 
+ *   auto range = window.update(7);  // returns MinMax<int> from puara_gestures::MinMax
+ *
  *   // range.min == 4, range.max == 10
  *   // window.current_value holds the same range after the last update
+ * @endcode
  *
  */
 class RollingMinMax
