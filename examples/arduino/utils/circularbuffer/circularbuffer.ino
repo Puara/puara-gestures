@@ -26,7 +26,7 @@ void setup() {
   // Capacity of 4; a fifth push evicts the oldest element
   puara_gestures::utils::CircularBuffer<double> buf(4);
 
-  double values[] = {10.0, 20.0, 30.0, 40.0, 50.0};
+  constexpr double values[] = {10.0, 20.0, 30.0, 40.0, 50.0};
   for (double v : values) {
     buf.add(v);
     Serial.print("Added ");
