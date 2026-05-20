@@ -9,7 +9,7 @@ void setup() {
 
   puara_gestures::utils::Discretizer<int> detector;
 
-  int readings[] = {5, 5, 5, 7, 7, 3, 3, 3, 5};
+  constexpr int readings[] = {5, 5, 5, 7, 7, 3, 3, 3, 5};
   Serial.println("Discretizer (int):");
   for (int r : readings) {
     bool changed = detector.isNew(r);
