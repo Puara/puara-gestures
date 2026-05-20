@@ -5,9 +5,9 @@ on:
       - main
       - 89-make-arduino-examples-for-all-classes  # or remove the filter entirely
 
-#concurrency:
-#  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-#  cancel-in-progress: true
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 # These jobs uses the actions defined in the puara/actions repository. These actions are shared with puara-module-templates.
 jobs:
