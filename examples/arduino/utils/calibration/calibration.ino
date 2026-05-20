@@ -68,7 +68,7 @@ static constexpr int BUTTON_PIN = 0;  // GPIO0 / BOOT button on most ESP32 devki
 // State
 // ---------------------------------------------------------------------------
 
-static puara_gestures::utils::Embedded_Magnetometer_Calibration magCal(MAX_CAL_SAMPLES);
+static puara_gestures::utils::Embedded_Magnetometer_Calibration magCal{MAX_CAL_SAMPLES};
 static puara_gestures::Coord3D calSamples[MAX_CAL_SAMPLES];
 static size_t calSampleCount  = 0;
 static bool   calibrationMode = false;

@@ -19,7 +19,7 @@ static const int patterns[][DATA_SIZE] = {
   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},  // one large blob covering everything
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},  // no touch
 };
-static const int NUM_PATTERNS = sizeof(patterns) / sizeof(patterns[0]);
+static constexpr int NUM_PATTERNS = sizeof(patterns) / sizeof(patterns[0]);
 
 static puara_gestures::BlobDetector<MAX_BLOBS> detector;
 static int patternIndex = 0;
