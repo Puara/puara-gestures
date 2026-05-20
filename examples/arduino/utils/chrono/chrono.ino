@@ -1,9 +1,9 @@
 // Puara Gestures - chrono example
 // Demonstrates the portable high-resolution timer helpers.
+// Functions defined in puara/utils/chrono.h
 
 #include <Arduino.h>
-#include <puara/utils/chrono.h>
-
+#include <puara-gestures.h>
 void setup() {
   Serial.begin(115200);
 

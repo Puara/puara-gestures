@@ -47,9 +47,11 @@
 // in your sensor library (LSM9DS1, BNO080, ICM-42688, …) without restructuring
 // the example.  The simulated data block shows what kind of values you would
 // substitute with real sensor reads.
+//
+// Functions defined in puara/utils/calibration.h
 
 #include <Arduino.h>
-#include <puara/utils/calibration.h>
+#include <puara-gestures.h>
 
 // ---------------------------------------------------------------------------
 // Configuration
