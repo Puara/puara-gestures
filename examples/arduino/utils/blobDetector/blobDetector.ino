@@ -4,7 +4,6 @@
 // you can watch the blob information change in the Serial Monitor.
 
 #include <Arduino.h>
-#include <ArduinoEigen.h>
 #include <boost-embedded-190.h>
 #include <puara-gestures.h>
 

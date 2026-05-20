@@ -15,6 +15,7 @@
  */
 #pragma once
 #include <puara/utils/includeEigen.h>
+
 #if defined(PUARA_HAS_EIGEN)
   #include <puara/utils/magnetometerCalibration_MinMaxScaling.h>
 #endif

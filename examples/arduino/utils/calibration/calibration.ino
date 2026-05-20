@@ -51,6 +51,7 @@
 // Functions defined in puara/utils/calibration.h
 
 #include <Arduino.h>
+#include <ArduinoEigen.h>
 #include <puara-gestures.h>
 
 // ---------------------------------------------------------------------------
