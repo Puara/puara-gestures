@@ -1,11 +1,15 @@
 // Puara Gestures - KalmanQuaternionFilter example
 // Shows how to fuse accelerometer, gyroscope, and magnetometer data
-// into roll / pitch / yaw angles using a Kalman-style filter.
+// into orientation using a Kalman-style filter.
+//
+// Demonstrates the two main output formats:
+//   - getEulerDegrees() : roll / pitch / yaw in degrees (intuitive for most use cases)
+//   - getQuaternion()   : raw quaternion (w, x, y, z) for 3D engines and further math
 //
 // In a real project, replace the simulated sensor values below with
 // readings from your actual IMU sensor.
 //
-// Open the Arduino Serial Plotter to see roll, pitch, and yaw as live curves.
+// Open the Arduino Serial Plotter to see all values as live curves.
 
 #include <Arduino.h>
 #include <boost-embedded-190.h>
@@ -18,7 +22,7 @@ puara_gestures::Imu9Axis imu;
 void setup() {
   Serial.begin(115200);
 
-  Serial.println("roll,pitch,yaw");  // CSV header for Serial Plotter
+  Serial.println("roll,pitch,yaw,qw,qx,qy,qz");  // CSV header for Serial Plotter
 }
 
 void loop() {
@@ -30,14 +34,21 @@ void loop() {
   imu.accl = {sin(t) * 2.0, sin(t * 0.7) * 1.5, 9.81};  // accelerometer (m/s²)
   imu.magn = {0.3, 0.0, 0.5};                            // magnetometer (static)
 
-  // Update the filter and print the resulting orientation
   if (filter.update(imu, false)) {
+    // Euler angles: intuitive roll/pitch/yaw in degrees
     double roll, pitch, yaw;
     filter.getEulerDegrees(roll, pitch, yaw);
 
-    Serial.print(roll);   Serial.print(",");
-    Serial.print(pitch);  Serial.print(",");
-    Serial.println(yaw);
+    // Raw quaternion: use this for 3D math, game engines, or further processing
+    auto q = filter.getQuaternion();
+
+    Serial.print(roll);    Serial.print(",");
+    Serial.print(pitch);   Serial.print(",");
+    Serial.print(yaw);     Serial.print(",");
+    Serial.print(q.w, 4);  Serial.print(",");
+    Serial.print(q.x, 4);  Serial.print(",");
+    Serial.print(q.y, 4);  Serial.print(",");
+    Serial.println(q.z, 4);
   }
 
   delay(50);  // ~20 Hz update rate
