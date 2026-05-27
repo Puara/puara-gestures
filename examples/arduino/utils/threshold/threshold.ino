@@ -3,7 +3,8 @@
 // `current` always holds the raw (unclamped) input.
 
 #include <Arduino.h>
-#include <puara/utils/threshold.h>
+#include <boost-embedded-190.h>
+#include <puara-gestures.h>
 
 void setup() {
   Serial.begin(115200);

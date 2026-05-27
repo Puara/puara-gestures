@@ -2,7 +2,8 @@
 // Rolling average smoother: keeps the last N values and returns their mean.
 
 #include <Arduino.h>
-#include <puara/utils/smooth.h>
+#include <boost-embedded-190.h>
+#include <puara-gestures.h>
 
 void setup() {
   Serial.begin(115200);

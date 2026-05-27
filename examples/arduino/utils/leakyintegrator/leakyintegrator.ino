@@ -3,7 +3,8 @@
 // signal accumulates then slowly decays when the input drops to zero.
 
 #include <Arduino.h>
-#include <puara/utils/leakyintegrator.h>
+#include <boost-embedded-190.h>
+#include <puara-gestures.h>
 
 void setup() {
   Serial.begin(115200);

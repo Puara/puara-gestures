@@ -18,7 +18,8 @@
 // internally for exactly this reason.
 
 #include <Arduino.h>
-#include <puara/utils/circularbuffer.h>
+#include <boost-embedded-190.h>
+#include <puara-gestures.h>
 
 void setup() {
   Serial.begin(115200);

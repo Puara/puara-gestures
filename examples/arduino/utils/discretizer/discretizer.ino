@@ -2,7 +2,8 @@
 // Reports only when a value changes; ignores repeated identical readings.
 
 #include <Arduino.h>
-#include <puara/utils/discretizer.h>
+#include <boost-embedded-190.h>
+#include <puara-gestures.h>
 
 void setup() {
   Serial.begin(115200);

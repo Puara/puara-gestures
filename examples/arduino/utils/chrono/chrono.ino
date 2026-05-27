@@ -3,7 +3,9 @@
 // Functions defined in puara/utils/chrono.h
 
 #include <Arduino.h>
+#include <boost-embedded-190.h>
 #include <puara-gestures.h>
+
 void setup() {
   Serial.begin(115200);
 

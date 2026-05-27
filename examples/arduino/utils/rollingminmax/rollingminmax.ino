@@ -2,7 +2,8 @@
 // Tracks the minimum and maximum over the last N values using a sliding window.
 
 #include <Arduino.h>
-#include <puara/utils/rollingminmax.h>
+#include <boost-embedded-190.h>
+#include <puara-gestures.h>
 
 void setup() {
   Serial.begin(115200);
