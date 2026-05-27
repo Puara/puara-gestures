@@ -52,6 +52,7 @@
 
 #include <Arduino.h>
 #include <ArduinoEigen.h>
+#include <boost-embedded-190.h>
 #include <puara-gestures.h>
 
 // ---------------------------------------------------------------------------
