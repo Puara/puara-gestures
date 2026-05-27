@@ -10,7 +10,9 @@
 
 #if __has_include(<ArduinoEigen.h>)
   #include <ArduinoEigen.h>
-#else
+  #define PUARA_HAS_EIGEN 1 
+#elif __has_include(<Eigen/Core>) && __has_include(<Eigen/Dense>)
   #include <Eigen/Core>
   #include <Eigen/Dense>
+  #define PUARA_HAS_EIGEN 1
 #endif

@@ -14,9 +14,12 @@
  * for release.
  */
 #pragma once
+#include <puara/utils/includeEigen.h>
 
+#if defined(PUARA_HAS_EIGEN)
+  #include <puara/utils/magnetometerCalibration_MinMaxScaling.h>
+#endif
 
-#include <puara/utils/magnetometerCalibration_MinMaxScaling.h>
 
 // Optional ellipsoid-fit calibration implementation.
 // This code path is currently omitted pending validation and release readiness.
