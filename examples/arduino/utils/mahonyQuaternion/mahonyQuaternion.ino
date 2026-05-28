@@ -18,7 +18,7 @@
 // Create the filter with proportional gain Kp = 1.0 and integral gain Ki = 0.0.
 // Kp controls how fast accelerometer/magnetometer feedback corrects orientation.
 // Ki accumulates slow gyroscope bias corrections over time (0.0 = disabled).
-puara_gestures::MahonyQuaternionFilter filter(1.0, 0.0);
+puara_gestures::MahonyQuaternionFilter filter{1.0, 0.0};
 puara_gestures::Imu9Axis imu;
 
 void setup() {
