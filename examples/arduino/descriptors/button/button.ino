@@ -20,7 +20,7 @@
 // --- Tied mode ---
 // button_data is updated each loop; the Button object reads it automatically.
 int button_data = 0;
-puara_gestures::Button button(&button_data);
+puara_gestures::Button button{&button_data};
 
 // --- Direct mode (alternative, no tied variable) ---
 // puara_gestures::Button button;
