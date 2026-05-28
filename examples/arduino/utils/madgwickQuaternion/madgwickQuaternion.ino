@@ -17,7 +17,7 @@
 
 // Create the filter with a fusion gain of 0.1 (default).
 // Larger values correct drift faster; smaller values produce smoother output.
-puara_gestures::MadgwickQuaternionFilter filter(0.1);
+puara_gestures::MadgwickQuaternionFilter filter{0.1};
 puara_gestures::Imu9Axis imu;
 
 void setup() {
