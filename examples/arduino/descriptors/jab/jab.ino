@@ -26,7 +26,7 @@
 // Watches a single acceleration axis.
 // The detector reads from accel_x automatically each update().
 double accel_x = 0.0;
-puara_gestures::Jab jab(&accel_x);
+puara_gestures::Jab jab{&accel_x};
 
 // --- Jab2D (direct mode) ---
 // Watches X and Y axes independently.
@@ -36,7 +36,7 @@ puara_gestures::Jab2D jab2d;
 // --- Jab3D (tied mode with Coord3D) ---
 // Watches all three axes. Tied to a Coord3D struct.
 puara_gestures::Coord3D accel3d;
-puara_gestures::Jab3D jab3d(&accel3d);
+puara_gestures::Jab3D jab3d{&accel3d};
 
 void setup() {
   Serial.begin(115200);
