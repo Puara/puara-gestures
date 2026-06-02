@@ -35,7 +35,7 @@ jobs:
 
   push-arduino-library:
     runs-on: ubuntu-latest
-    needs: compile-arduino-library
+    needs: [compile-arduino-library, lint-arduino-library]
     steps:
       - name: push generated arduino library to puara-arduino repository
         uses: puara/actions/puara-gestures/push-arduino-library@main
