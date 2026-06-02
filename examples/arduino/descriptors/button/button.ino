@@ -13,6 +13,7 @@
 // Open the Arduino Serial Plotter to see all outputs as live curves.
 
 #include <Arduino.h>
+#include <boost-embedded-190.h>
 #include <puara-gestures.h>
 
 #define BUTTON_PIN 2
