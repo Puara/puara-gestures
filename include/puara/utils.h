@@ -244,15 +244,15 @@ inline double utesla_to_gauss(double reading)
  * positive z-axis.
  * See : https://en.wikipedia.org/wiki/Spherical_coordinate_system
  */
-inline Coord3D spheric_to_cartesian(Spherical polarCoords)
+inline Coord3D spheric_to_cartesian(Spherical sphericCoords)
 {
   Coord3D cartesianCoords;
 
   cartesianCoords.x
-      = polarCoords.r * cos(polarCoords.azimuth) * sin(polarCoords.elevation);
+      = sphericCoords.r * cos(sphericCoords.azimuth) * sin(sphericCoords.elevation);
   cartesianCoords.y
-      = polarCoords.r * sin(polarCoords.elevation) * sin(polarCoords.azimuth);
-  cartesianCoords.z = polarCoords.r * cos(polarCoords.elevation);
+      = sphericCoords.r * sin(sphericCoords.elevation) * sin(sphericCoords.azimuth);
+  cartesianCoords.z = sphericCoords.r * cos(sphericCoords.elevation);
 
   return cartesianCoords;
 }

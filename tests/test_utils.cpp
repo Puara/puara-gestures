@@ -76,7 +76,7 @@ TEST_CASE("unit conversion helpers", "[utils]")
     REQUIRE(tesla_to_gauss(1.0) == Approx(10000.0));
 }
 
-TEST_CASE("polar_to_cartesian and cartesian_to_polar round trip", "[utils]")
+TEST_CASE("spheric_to_cartesian and cartesian_to_spheric round trip", "[utils]")
 {
     using namespace puara_gestures::utils::convert;
 
