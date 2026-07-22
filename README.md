@@ -99,6 +99,7 @@ The `include/puara/utils` folder contains small helpers for sensor and data proc
 - `rollingminmax.h` — sliding min/max over a short window
 - `leakyintegrator.h` — smooth decay and signal energy tracking
 - `maprange.h` — scale one numeric range into another
+- `normalizer.h` — auto-ranging normalizer: map an unknown-range signal to 0..1 from its own extremes
 - `smooth.h` — moving average smoothing
 - `threshold.h` — clamp values inside a range
 - `wrap.h` — angle wrapping utilities
