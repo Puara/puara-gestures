@@ -8,6 +8,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Jab`, `Jab2D`, `Jab3D` — simple motion burst detectors for 1, 2, or 3 axes.
 - `Shake`, `Shake2D`, `Shake3D` — smooth motion energy tracking for vibration and shaking.
 - `Tilt` and `Roll` — orientation signals from 9DoF IMU data.
+- `Heading` — tilt-compensated compass heading (yaw) from accelerometer + magnetometer.
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
@@ -21,6 +22,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - a jab intensity score
 - shake energy that grows with movement and decays smoothly
 - tilt and roll values ready for gesture use
+- a compass heading that stays stable even when the device is tilted
 - touch brush/rub metrics
 - button interactions like taps and holds
 
@@ -65,6 +67,19 @@ accel.y = readAccelerationY();
 accel.z = readAccelerationZ();
 shake3d.update();
 auto energy = shake3d.current_value();
+```
+
+### Compass heading (tilt-compensated)
+
+```cpp
+puara_gestures::Imu9Axis imu;
+puara_gestures::Heading heading(&imu);
+heading.declination = -14.5; // your local magnetic declination, degrees
+
+imu.accl = readAccel();
+imu.magn = readMag(); // calibrate the magnetometer for accuracy
+heading.update();
+double bearing = heading.heading; // degrees, 0 = north
 ```
 
 ### Tilt/Roll from accelerometer only
