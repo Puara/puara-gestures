@@ -5,3 +5,4 @@ build/
 *code-workspace
 .pio
 exampleProjects/touch/.gitignore
+.claude/
