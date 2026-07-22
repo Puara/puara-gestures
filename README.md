@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Breath` — wind-controller features (envelope, blowing gate, tonguing, blow/draw) from a pressure sensor.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- breath control: loudness envelope, note on/off, tonguing and blow/draw
 
 ## Quick examples
 
@@ -90,6 +92,23 @@ if (button.tap) {
 if (button.hold) {
     // hold detected
 }
+```
+
+### Breath / wind control
+
+```cpp
+double pressure_raw = 0.0;
+puara_gestures::Breath breath(&pressure_raw);
+breath.onThreshold  = 0.1;
+breath.offThreshold = 0.05;
+breath.articulation = 0.15; // sharp-rise threshold for tonguing
+
+pressure_raw = readPressureSensor();
+breath.update();
+double loudness = breath.pressure; // smooth envelope
+if (breath.onset)   { /* note on */ }
+if (breath.tongued) { /* re-articulate */ }
+if (breath.ended)   { /* note off */ }
 ```
 
 ## Utilities

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <IMU_Sensor_Fusion/imu_orientation.h>
+#include <puara/descriptors/breath.h>
 #include <puara/descriptors/button.h>
 #include <puara/descriptors/jab.h>
 #include <puara/descriptors/roll.h>
