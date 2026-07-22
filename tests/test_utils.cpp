@@ -446,3 +446,53 @@ TEST_CASE("Unwrap continues decreasing through the negative boundary and resets 
     double restart = u.unwrap(1.0);
     REQUIRE(restart == Approx(1.0));
 }
+
+TEST_CASE("SchmittTrigger switches with hysteresis and reports edges", "[utils][schmitt]")
+{
+    SchmittTrigger gate{0.3, 0.7};  // low, high
+
+    // Starts OFF; a value between the thresholds does not switch it on.
+    REQUIRE(gate.update(0.5) == false);
+    REQUIRE(gate.rose == false);
+    REQUIRE(gate.fell == false);
+
+    // Rising to `high` switches ON and flags the rising edge once.
+    REQUIRE(gate.update(0.8) == true);
+    REQUIRE(gate.rose == true);
+    REQUIRE(gate.fell == false);
+
+    // Back in the hysteresis band: stays ON, no edge.
+    REQUIRE(gate.update(0.5) == true);
+    REQUIRE(gate.rose == false);
+    REQUIRE(gate.fell == false);
+
+    // Falling to `low` switches OFF and flags the falling edge once.
+    REQUIRE(gate.update(0.2) == false);
+    REQUIRE(gate.fell == true);
+    REQUIRE(gate.rose == false);
+
+    // In the band again: stays OFF.
+    REQUIRE(gate.update(0.5) == false);
+    REQUIRE(gate.rose == false);
+    REQUIRE(gate.fell == false);
+}
+
+TEST_CASE("SchmittTrigger rejects chatter around a single level", "[utils][schmitt]")
+{
+    SchmittTrigger gate{0.4, 0.6};
+    gate.update(0.7);  // ON
+
+    // Jitter within the hysteresis band must not toggle the state.
+    int transitions = 0;
+    double jitter[] = {0.55, 0.45, 0.58, 0.42, 0.5, 0.59, 0.41};
+    for(double v : jitter)
+    {
+        gate.update(v);
+        if(gate.rose || gate.fell)
+        {
+            transitions++;
+        }
+    }
+    REQUIRE(transitions == 0);
+    REQUIRE(gate.state == true);
+}

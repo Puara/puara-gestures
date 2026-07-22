@@ -101,6 +101,7 @@ The `include/puara/utils` folder contains small helpers for sensor and data proc
 - `maprange.h` — scale one numeric range into another
 - `smooth.h` — moving average smoothing
 - `threshold.h` — clamp values inside a range
+- `schmitttrigger.h` — two-threshold hysteresis gate for chatter-free on/off
 - `wrap.h` — angle wrapping utilities
 - `discretizer.h` — detect value changes
 - `circularbuffer.h` — fixed-size history storage
