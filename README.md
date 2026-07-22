@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Segmenter` — split an activity signal into movement phrases (onset/offset + duration).
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- phrase boundaries (gesture start/end and duration) from an activity signal
 
 ## Quick examples
 
@@ -90,6 +92,20 @@ if (button.tap) {
 if (button.hold) {
     // hold detected
 }
+```
+
+### Movement phrase segmentation
+
+```cpp
+double energy = 0.0;
+puara_gestures::Segmenter phrase(&energy);
+phrase.onThreshold  = 0.1;
+phrase.offThreshold = 0.05;
+
+energy = shake.current_value();
+phrase.update();
+if (phrase.onset)  { /* gesture started */ }
+if (phrase.offset) { /* gesture ended, phrase.duration ms long */ }
 ```
 
 ## Utilities
