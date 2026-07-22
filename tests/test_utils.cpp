@@ -446,3 +446,45 @@ TEST_CASE("Unwrap continues decreasing through the negative boundary and resets 
     double restart = u.unwrap(1.0);
     REQUIRE(restart == Approx(1.0));
 }
+
+TEST_CASE("PeakDetector finds peaks and troughs as the signal turns", "[utils][peak]")
+{
+    PeakDetector detector;  // delta 0
+
+    // Rising then falling: the top is a peak.
+    detector.update(0.0);
+    detector.update(1.0);
+    detector.update(2.0);   // running max
+    bool atPeak = detector.update(1.5);  // turned down -> peak at 2.0
+    REQUIRE(atPeak == true);
+    REQUIRE(detector.peak == true);
+    REQUIRE(detector.peakValue == Approx(2.0));
+
+    // Continue down then up: the bottom is a trough.
+    detector.update(0.5);
+    detector.update(0.0);   // running min
+    detector.update(0.8);   // turned up -> trough at 0.0
+    REQUIRE(detector.trough == true);
+    REQUIRE(detector.troughValue == Approx(0.0));
+}
+
+TEST_CASE("PeakDetector delta rejects small wiggles", "[utils][peak]")
+{
+    PeakDetector detector{1.0};  // require a swing of 1.0
+
+    detector.update(0.0);
+    detector.update(5.0);   // rising, running max 5.0
+
+    // A tiny dip (< delta) must not be reported as a peak.
+    detector.update(4.5);
+    REQUIRE(detector.peak == false);
+
+    // Resume rising: still no peak, the max just extends.
+    detector.update(6.0);
+    REQUIRE(detector.peak == false);
+
+    // A real drop past delta from the max confirms the peak at 6.0.
+    detector.update(4.0);
+    REQUIRE(detector.peak == true);
+    REQUIRE(detector.peakValue == Approx(6.0));
+}
