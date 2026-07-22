@@ -446,3 +446,49 @@ TEST_CASE("Unwrap continues decreasing through the negative boundary and resets 
     double restart = u.unwrap(1.0);
     REQUIRE(restart == Approx(1.0));
 }
+
+TEST_CASE("Normalizer auto-ranges a signal to 0..1", "[utils][normalizer]")
+{
+    Normalizer norm;  // outputs 0..1, expand-only
+
+    // First sample seeds the range and maps to outMin.
+    REQUIRE(norm.update(5.0) == Approx(0.0));
+
+    // A larger value becomes the new max -> maps to 1.0.
+    REQUIRE(norm.update(10.0) == Approx(1.0));
+    REQUIRE(norm.max == Approx(10.0));
+
+    // A smaller value becomes the new min -> maps to 0.0.
+    REQUIRE(norm.update(0.0) == Approx(0.0));
+    REQUIRE(norm.min == Approx(0.0));
+
+    // Now the range is [0, 10]: the midpoint maps to 0.5.
+    REQUIRE(norm.update(5.0) == Approx(0.5));
+}
+
+TEST_CASE("Normalizer honours a custom output range", "[utils][normalizer]")
+{
+    Normalizer norm{-1.0, 1.0};
+
+    norm.update(0.0);    // seed min
+    norm.update(100.0);  // seed max -> maps to outMax
+    REQUIRE(norm.current_value == Approx(1.0));
+
+    // Midpoint of [0,100] maps to the middle of [-1, 1] = 0.
+    REQUIRE(norm.update(50.0) == Approx(0.0));
+    // Bottom maps to outMin.
+    REQUIRE(norm.update(0.0) == Approx(-1.0));
+}
+
+TEST_CASE("Normalizer freezes the range when not calibrating", "[utils][normalizer]")
+{
+    Normalizer norm;
+    norm.update(0.0);
+    norm.update(10.0);  // range [0, 10]
+
+    norm.calibrating = false;
+
+    // A value beyond the frozen range is clamped, not learned.
+    REQUIRE(norm.update(20.0) == Approx(1.0));
+    REQUIRE(norm.max == Approx(10.0));  // range unchanged
+}
