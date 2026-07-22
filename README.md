@@ -10,6 +10,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt` and `Roll` — orientation signals from 9DoF IMU data.
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
+- `MultiTouch` — pinch/spread (scale), twist (rotation) and pan from two touch positions.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
@@ -22,6 +23,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - shake energy that grows with movement and decays smoothly
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
+- pinch, twist and pan from two-finger touch positions
 - button interactions like taps and holds
 
 ## Quick examples
@@ -74,6 +76,22 @@ puara_gestures::Tilt_Roll simple;
 simple.update(0.0, 0.0, 1.0);
 double roll = simple.current_roll_value();
 double tilt = simple.current_tilt_value();
+```
+
+### Multi-touch pinch / twist
+
+```cpp
+puara_gestures::Coord2D finger1{}, finger2{};
+puara_gestures::MultiTouch touch(&finger1, &finger2);
+
+// touch.anchor(); // call when a new two-finger gesture starts
+finger1 = readTouch(0);
+finger2 = readTouch(1);
+touch.update();
+
+double zoom = touch.scale;    // pinch/spread factor (1.0 = reference)
+double dial = touch.rotation; // twist since anchor, radians
+auto   xy   = touch.center;   // midpoint (pan)
 ```
 
 ### Button interaction
