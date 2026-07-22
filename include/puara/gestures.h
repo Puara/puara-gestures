@@ -10,6 +10,7 @@
 
 #include <IMU_Sensor_Fusion/imu_orientation.h>
 #include <puara/descriptors/button.h>
+#include <puara/descriptors/envelope.h>
 #include <puara/descriptors/jab.h>
 #include <puara/descriptors/roll.h>
 #include <puara/descriptors/shake.h>
