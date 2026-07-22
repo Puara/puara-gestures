@@ -27,6 +27,7 @@
 #include <puara/utils/leakyintegrator.h>
 #include <puara/utils/maprange.h>
 #include <puara/utils/rollingminmax.h>
+#include <puara/utils/schmitttrigger.h>
 #include <puara/utils/smooth.h>
 #include <puara/utils/threshold.h>
 #include <puara/utils/wrap.h>
