@@ -47,6 +47,16 @@ namespace puara_gestures
    * work identically whether `update()` is called from an Arduino `loop()`,
    * a dedicated thread, or an ossia score process callback.
    *
+   * @warning Time-signature detection is a best-effort heuristic, not a
+   * reliable meter tracker. Frequency, interval, period, tempo, figure and
+   * subdivision are derived directly from onset timing and are dependable;
+   * `beat`/`bar` are a plain phase counter over the estimated period. The
+   * meter itself (`timeSignatureNumerator`/`timeSignatureDenominator`)
+   * cannot be recovered from onset timing alone without accent/velocity
+   * information, so it defaults to whatever you configure. The optional
+   * `estimateTimeSignature` guess (see below) is experimental and only works
+   * when bars are separated by a clear pause; treat its output as a hint.
+   *
    * Example usage with tied data:
    * @code
    * #include <puara/descriptors/rhythm.h>
@@ -124,6 +134,13 @@ public:
    * treated as a bar boundary and `timeSignatureNumerator` is set to the
    * number of onsets counted since the previous such gap. Off by default so
    * the meter stays whatever you configure it to.
+   *
+   * @warning Experimental and low-confidence. It only fires when bars are
+   * separated by a pause of roughly 1.75x the beat or more; steady playing
+   * with no gap between bars, or subdivisions longer than that ratio, will
+   * mislead it. It never sets the denominator. Prefer configuring
+   * `timeSignatureNumerator`/`timeSignatureDenominator` directly when the
+   * meter is known.
    */
   bool estimateTimeSignature = false;
 
@@ -149,9 +166,18 @@ public:
   unsigned int beat = 0;
   /** @brief Number of completed bars since construction/reset. */
   unsigned int bar = 0;
-  /** @brief Working meter numerator (beats per bar). */
+  /**
+   * @brief Working meter numerator (beats per bar).
+   * @warning Not reliably detectable from onset timing alone. Defaults to the
+   * value you set; only re-estimated (numerator only) when
+   * `estimateTimeSignature` is on and a bar-length gap is seen. See the class
+   * warning.
+   */
   int timeSignatureNumerator = 4;
-  /** @brief Working meter denominator (note value that gets the beat). */
+  /**
+   * @brief Working meter denominator (note value that gets the beat).
+   * @warning Never auto-detected; always the value you configure.
+   */
   int timeSignatureDenominator = 4;
 
   /**
