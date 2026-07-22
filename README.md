@@ -10,6 +10,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt` and `Roll` — orientation signals from 9DoF IMU data.
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
+- `Ribbon` — 1D touch-strip gestures: position, slide velocity/direction, and taps.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
@@ -22,6 +23,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - shake energy that grows with movement and decays smoothly
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
+- ribbon/strip gestures: position, glissando speed and taps
 - button interactions like taps and holds
 
 ## Quick examples
@@ -74,6 +76,20 @@ puara_gestures::Tilt_Roll simple;
 simple.update(0.0, 0.0, 1.0);
 double roll = simple.current_roll_value();
 double tilt = simple.current_tilt_value();
+```
+
+### Ribbon / touch strip
+
+```cpp
+puara_gestures::Ribbon ribbon;
+
+bool touched = ribbonTouched();
+double pos = ribbonPosition(); // e.g. 0..1
+ribbon.update(pos, touched);
+
+double pitch = ribbon.position;  // absolute position
+double slide = ribbon.velocity;  // glissando speed
+if (ribbon.tap) triggerNote();   // quick, short touch
 ```
 
 ### Button interaction
