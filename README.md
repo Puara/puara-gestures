@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Freefall` — detect free-fall (near-weightless) moments and their duration from acceleration.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- free-fall detection for throw-, catch- or drop-activated gestures
 
 ## Quick examples
 
@@ -90,6 +92,19 @@ if (button.tap) {
 if (button.hold) {
     // hold detected
 }
+```
+
+### Free-fall detection
+
+```cpp
+puara_gestures::Coord3D accel{};
+puara_gestures::Freefall freefall(&accel);
+freefall.threshold = 0.3; // g (near weightless)
+
+accel = readAcceleration(); // in g
+freefall.update();
+if (freefall.onset)  { /* dropped */ }
+if (freefall.landed) { /* caught / landed, freefall.fallTime = ms */ }
 ```
 
 ## Utilities
