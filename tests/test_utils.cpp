@@ -446,3 +446,73 @@ TEST_CASE("Unwrap continues decreasing through the negative boundary and resets 
     double restart = u.unwrap(1.0);
     REQUIRE(restart == Approx(1.0));
 }
+
+TEST_CASE("OneEuro passes the first sample through unchanged", "[utils][oneeuro]")
+{
+    OneEuro filter;
+    REQUIRE(filter.filter(5.0, 0.01) == Approx(5.0));
+    REQUIRE(filter.current_value == Approx(5.0));
+}
+
+TEST_CASE("OneEuro holds steady on a constant signal", "[utils][oneeuro]")
+{
+    OneEuro filter{1.0, 0.0};
+    filter.filter(3.0, 0.01);
+    for(int i = 0; i < 50; ++i)
+    {
+        filter.filter(3.0, 0.01);
+    }
+    REQUIRE(filter.current_value == Approx(3.0).margin(1e-6));
+}
+
+TEST_CASE("OneEuro smooths a step response monotonically toward the target",
+          "[utils][oneeuro]")
+{
+    OneEuro filter{1.0, 0.0};  // low cutoff, no speed adaptation
+    filter.filter(0.0, 0.01);  // settle at 0
+
+    double prev = filter.current_value;
+    // Feed a step to 1.0; the output should climb gradually, staying in (0, 1).
+    for(int i = 0; i < 5; ++i)
+    {
+        double out = filter.filter(1.0, 0.01);
+        REQUIRE(out > prev);       // moving toward the target
+        REQUIRE(out > 0.0);
+        REQUIRE(out < 1.0);        // lagging, not jumping
+        prev = out;
+    }
+
+    // Given enough samples it approaches the target.
+    for(int i = 0; i < 500; ++i)
+    {
+        filter.filter(1.0, 0.01);
+    }
+    REQUIRE(filter.current_value == Approx(1.0).margin(0.01));
+}
+
+TEST_CASE("OneEuro rejects jitter more than it delays fast motion", "[utils][oneeuro]")
+{
+    // Jitter around a constant: filtered output should sit near the mean.
+    OneEuro still{1.0, 0.0};
+    still.filter(0.0, 0.01);
+    double sign = 1.0;
+    double maxDeviation = 0.0;
+    for(int i = 0; i < 200; ++i)
+    {
+        still.filter(sign * 1.0, 0.01);  // raw swings +/-1
+        sign = -sign;
+        maxDeviation = std::max(maxDeviation, std::fabs(still.current_value));
+    }
+    REQUIRE(maxDeviation < 0.5);  // heavily attenuated vs the +/-1 raw jitter
+
+    // With speed adaptation on, a sustained fast ramp is tracked closely.
+    OneEuro fast{1.0, 1.0};
+    double value = 0.0;
+    fast.filter(value, 0.01);
+    for(int i = 0; i < 100; ++i)
+    {
+        value += 1.0;  // fast, steady ramp
+        fast.filter(value, 0.01);
+    }
+    REQUIRE(fast.current_value == Approx(value).margin(2.0));
+}
