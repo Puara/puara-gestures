@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Rhythm` — tempo, frequency, figure/subdivision and beat/bar tracking from discrete inputs over time.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- rhythmic features like tempo, subdivision and beat position from repeated inputs
 
 ## Quick examples
 
@@ -90,6 +92,24 @@ if (button.tap) {
 if (button.hold) {
     // hold detected
 }
+```
+
+### Rhythm from repeated inputs
+
+```cpp
+int tap = 0;
+puara_gestures::Rhythm rhythm(&tap);
+rhythm.timeSignatureNumerator = 4;
+
+// tap the same discrete input over time (e.g. a button)
+tap = readDigitalInput();
+rhythm.update();
+
+double tempo = rhythm.tempo;        // BPM
+double freq  = rhythm.frequency;    // Hz
+double fig   = rhythm.figure;       // 1 = beat, 0.5 = eighth, 2 = half note
+int    sub   = rhythm.subdivision;  // 2 = eighths, 3 = triplet, 4 = sixteenths
+unsigned beat = rhythm.beat;        // beat position inside the bar
 ```
 
 ## Utilities
