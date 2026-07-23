@@ -15,9 +15,6 @@
 #include <puara/utils.h>
 
 #include <cmath>
-#if __has_include(<numbers>)
-#include <numbers>
-#endif
 
 namespace puara_gestures
 {
@@ -131,14 +128,14 @@ public:
 
     double yaw = std::atan2(bfy, bfx);  // radians, (-pi, pi]
 
-    double degrees = yaw * (180.0 / pi) + declination;
+    double degrees = yaw * (180.0 / M_PI) + declination;
     degrees = std::fmod(degrees, 360.0);
     if(degrees < 0.0)
     {
       degrees += 360.0;
     }
     heading = degrees;
-    heading_radians = degrees * (pi / 180.0);
+    heading_radians = degrees * (M_PI / 180.0);
     return heading;
   }
 
@@ -194,12 +191,6 @@ public:
   }
 
 private:
-#if defined(__cpp_lib_math_constants)
-  static constexpr double pi = std::numbers::pi;
-#else
-  static constexpr double pi = 3.14159265358979323846;
-#endif
-
   const Imu9Axis* tied_data{};
 };
 }
