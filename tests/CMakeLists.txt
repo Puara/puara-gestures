@@ -29,6 +29,7 @@ set(TEST_INCLUDE_DIRS
 
 add_executable(test_descriptors
  test_descriptors.cpp
+ descriptors/derivative.cpp
  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
 )
 target_compile_features(test_descriptors PRIVATE cxx_std_20)
