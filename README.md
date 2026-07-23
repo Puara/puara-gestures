@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Impact` — percussive strike detection with intensity from a magnitude signal.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- percussive strikes with a velocity-like intensity, one trigger per hit
 
 ## Quick examples
 
@@ -89,6 +91,20 @@ if (button.tap) {
 }
 if (button.hold) {
     // hold detected
+}
+```
+
+### Impact / strike detection
+
+```cpp
+puara_gestures::Impact impact;
+impact.threshold = 2.0;        // magnitude to fire a strike
+impact.releaseThreshold = 0.8; // must fall below this to re-arm
+impact.minInterval = 30;       // ms refractory (0 = hysteresis only)
+
+impact.update(readAccelerationMagnitude());
+if (impact.strike) {
+    triggerNote(impact.intensity); // one note-on per hit, with velocity
 }
 ```
 
