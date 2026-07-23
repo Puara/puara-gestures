@@ -14,6 +14,7 @@
 #include <puara/descriptors/roll.h>
 #include <puara/descriptors/shake.h>
 #include <puara/descriptors/simple_tilt_roll.h>
+#include <puara/descriptors/stillness.h>
 #include <puara/descriptors/tilt.h>
 #include <puara/descriptors/touchArrayGestureDetector.h>
 #include <puara/utils.h>

@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Stillness` — detect held-still moments and how long they last, from an activity signal.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- held-still detection with a settle time, to freeze or snapshot on stillness
 
 ## Quick examples
 
@@ -90,6 +92,19 @@ if (button.tap) {
 if (button.hold) {
     // hold detected
 }
+```
+
+### Stillness detection
+
+```cpp
+double activity = 0.0;
+puara_gestures::Stillness stillness(&activity);
+stillness.threshold  = 0.05; // activity below this counts as still
+stillness.settleTime = 500;  // ms of quiet before "settled"
+
+activity = shake.current_value();
+stillness.update();
+if (stillness.settled) snapshotPose();
 ```
 
 ## Utilities
