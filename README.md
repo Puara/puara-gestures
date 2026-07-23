@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Envelope` — amplitude/energy follower with separate attack and release for any 1D signal.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- a smooth loudness-style envelope from any energy or motion signal
 
 ## Quick examples
 
@@ -90,6 +92,18 @@ if (button.tap) {
 if (button.hold) {
     // hold detected
 }
+```
+
+### Envelope follower
+
+```cpp
+puara_gestures::Envelope envelope;
+envelope.attack = 0.6;   // rise fast
+envelope.release = 0.05; // fall slowly
+envelope.rectify = true; // follow |value| of a bipolar signal
+
+envelope.update(readAccelerationMagnitude());
+double loudness = envelope.current_value();
 ```
 
 ## Utilities
