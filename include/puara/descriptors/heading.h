@@ -15,7 +15,9 @@
 #include <puara/utils.h>
 
 #include <cmath>
+#if __has_include(<numbers>)
 #include <numbers>
+#endif
 
 namespace puara_gestures
 {
@@ -192,7 +194,11 @@ public:
   }
 
 private:
+#if defined(__cpp_lib_math_constants)
   static constexpr double pi = std::numbers::pi;
+#else
+  static constexpr double pi = 3.14159265358979323846;
+#endif
 
   const Imu9Axis* tied_data{};
 };
