@@ -12,6 +12,7 @@
 #include <puara/descriptors/button.h>
 #include <puara/descriptors/jab.h>
 #include <puara/descriptors/roll.h>
+#include <puara/descriptors/segmenter.h>
 #include <puara/descriptors/shake.h>
 #include <puara/descriptors/simple_tilt_roll.h>
 #include <puara/descriptors/tilt.h>
