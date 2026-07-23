@@ -8,6 +8,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Jab`, `Jab2D`, `Jab3D` — simple motion burst detectors for 1, 2, or 3 axes.
 - `Shake`, `Shake2D`, `Shake3D` — smooth motion energy tracking for vibration and shaking.
 - `Tilt` and `Roll` — orientation signals from 9DoF IMU data.
+- `Spin`, `Spin3D` — rotation speed, accumulated angle and turn counting from gyroscope data.
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
@@ -21,6 +22,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - a jab intensity score
 - shake energy that grows with movement and decays smoothly
 - tilt and roll values ready for gesture use
+- rotation speed and full-turn counts from a gyroscope
 - touch brush/rub metrics
 - button interactions like taps and holds
 
@@ -65,6 +67,20 @@ accel.y = readAccelerationY();
 accel.z = readAccelerationZ();
 shake3d.update();
 auto energy = shake3d.current_value();
+```
+
+### Spin from a gyroscope axis
+
+```cpp
+double gyro_z = 0.0; // degrees/second
+puara_gestures::Spin spin(&gyro_z);
+spin.revolution = 360.0; // 360 for deg/s, 2*pi for rad/s
+spin.deadzone = 1.0;     // ignore small rates as noise
+
+gyro_z = readGyroZ();
+spin.update();
+double speed = spin.velocity; // signed rate
+long turns   = spin.turns;    // completed full turns
 ```
 
 ### Tilt/Roll from accelerometer only
