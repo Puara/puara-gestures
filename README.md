@@ -11,6 +11,7 @@ It is designed for embedded systems and real-time projects that need gesture-sty
 - `Tilt_Roll` — fast roll/tilt computation using accelerometer data only.
 - `TouchArrayGestureDetector` — brush/rub and swipe-style touch features for sensor arrays.
 - `Button` — tap, double-tap, hold and press tracking from digital button input.
+- `Derivative` — velocity, acceleration and jerk from a continuous position signal.
 - `utils/` — reusable helpers for smoothing, thresholds, mapping, timing, and sensor support.
 
 ## Why it is useful
@@ -23,6 +24,7 @@ Instead of reading raw acceleration or touch values, you can get:
 - tilt and roll values ready for gesture use
 - touch brush/rub metrics
 - button interactions like taps and holds
+- velocity, acceleration and jerk from any position-like sensor
 
 ## Quick examples
 
@@ -90,6 +92,19 @@ if (button.tap) {
 if (button.hold) {
     // hold detected
 }
+```
+
+### Derivative (velocity / jerk)
+
+```cpp
+double position = 0.0;
+puara_gestures::Derivative derivative(&position);
+
+position = readSlider();   // smooth the input first for musical results
+derivative.update();
+double speed = derivative.velocity;     // 1st derivative
+double accel = derivative.acceleration; // 2nd
+double jerk  = derivative.jerk;         // 3rd
 ```
 
 ## Utilities
