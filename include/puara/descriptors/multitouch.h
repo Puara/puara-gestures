@@ -14,6 +14,7 @@
 #include <puara/utils.h>
 
 #include <cmath>
+#include <numbers>
 
 namespace puara_gestures
 {
@@ -208,7 +209,7 @@ public:
   }
 
 private:
-  static constexpr double pi = 3.14159265358979323846;
+  static constexpr double pi = std::numbers::pi;
   static constexpr double epsilon = 1e-9;
 
   /** @brief Wrap an angle difference to (-pi, pi]. */
