@@ -12,8 +12,12 @@
 #include <puara/utils/chrono.h>
 
 #include <cmath>
-#if __has_include(<numbers>)
-#include <numbers>
+#include <boost/math/constants/constants.hpp>
+
+// The library routes pi through M_PI with a Boost fallback so it stays
+// portable across Arduino cores where <cmath> does not define M_PI.
+#ifndef M_PI
+#define M_PI boost::math::constants::pi<double>()
 #endif
 
 namespace puara_gestures::utils
@@ -128,16 +132,10 @@ public:
   }
 
 private:
-#if defined(__cpp_lib_math_constants)
-  static constexpr double pi = std::numbers::pi;
-#else
-  static constexpr double pi = 3.14159265358979323846;
-#endif
-
   /** @brief Smoothing factor for a given cutoff frequency and time step. */
   static double alpha(double cutoff, double dt)
   {
-    double tau = 1.0 / (2.0 * pi * cutoff);
+    double tau = 1.0 / (2.0 * M_PI * cutoff);
     return 1.0 / (1.0 + tau / dt);
   }
 
