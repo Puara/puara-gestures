@@ -27,8 +27,17 @@ set(TEST_INCLUDE_DIRS
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# One translation unit per descriptor keeps these files small as the
+# descriptor library grows. Add a new descriptor's test as its own
+# descriptors/<name>.cpp entry here.
 add_executable(test_descriptors
- test_descriptors.cpp
+ descriptors/roll.cpp
+ descriptors/tilt.cpp
+ descriptors/simple_tilt_roll.cpp
+ descriptors/jab.cpp
+ descriptors/shake.cpp
+ descriptors/touch_array.cpp
+ descriptors/button.cpp
  ../3rdparty/IMU_Sensor_Fusion/imu_orientation.cpp
 )
 target_compile_features(test_descriptors PRIVATE cxx_std_20)
