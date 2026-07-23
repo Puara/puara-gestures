@@ -12,6 +12,7 @@
 #include <puara/utils/chrono.h>
 
 #include <cmath>
+#include <numbers>
 
 namespace puara_gestures::utils
 {
@@ -125,7 +126,7 @@ public:
   }
 
 private:
-  static constexpr double pi = 3.14159265358979323846;
+  static constexpr double pi = std::numbers::pi;
 
   /** @brief Smoothing factor for a given cutoff frequency and time step. */
   static double alpha(double cutoff, double dt)
